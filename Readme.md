@@ -12,4 +12,4 @@ or run it directly
 
 ```jruby -Ilib lib/jbundler.rb```
 
-to get the classpath setup in *.jbundler/classpath*
+to get the classpath setup in *.jbundler/classpath.rb* and loaded
