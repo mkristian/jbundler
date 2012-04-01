@@ -1,0 +1,2 @@
+jar 'org.slf4j:slf4j-nop', '1.5.10' # needs version since artifact has corrupted version on maven central
+jar 'org.apache.maven.wagon:wagon-http-shared'
