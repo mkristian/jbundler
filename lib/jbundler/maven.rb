@@ -61,7 +61,6 @@ module JBundler
       end
 
       def self.create_maven
-        require 'java' # done lazily, so we're not loading it all the time
         bin = nil
         if ENV['M2_HOME'] # use M2_HOME if set
           bin = File.join(ENV['M2_HOME'], "bin")
