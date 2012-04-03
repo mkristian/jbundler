@@ -48,3 +48,5 @@ some example (see also: TODO link)
 ```pom 'my.group:my-artifact-id', '=1.2.3'```
 ```jar 'my.group.id:artifact-id', '>1.2.3'```
 ```jar 'my.group:artifact-id', '>1.2.3', '=<2.0.1'```
+
+the not version **!3.4.5** can not be mapped properly to maven version ranges. **>3.4.5** is used instead in these (rare) cases.
