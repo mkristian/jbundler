@@ -1,0 +1,1 @@
+<?xml version="1.0" ?><project><modelVersion>4.0.0</modelVersion><groupId>ruby.bundler</groupId><artifactId>gem_with_jar</artifactId><version>0.0.0</version><dependencies><dependency><groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>1.5.10</version></dependency></dependencies></project>

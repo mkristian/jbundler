@@ -1,5 +1,4 @@
 require 'jbundler/maven'
-
 mavenfile = 'Mvnfile'
 classpathfile = '.jbundler/classpath.rb'
 if !File.exists?(classpathfile) || (File.mtime(mavenfile) > File.mtime(classpathfile))

@@ -1,0 +1,21 @@
+PATH
+  remote: ../../..
+  specs:
+    jbundler (0.0.1)
+
+PATH
+  remote: ../gem_with_jar
+  specs:
+    gem_with_jar (0.0.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+
+PLATFORMS
+  java
+  ruby
+
+DEPENDENCIES
+  gem_with_jar!
+  jbundler!

@@ -1,0 +1,4 @@
+source :rubygems
+
+gem 'jbundler', :path => '../../..'
+gem 'gem_with_jar', :path => '../gem_with_jar'
