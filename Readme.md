@@ -22,4 +22,29 @@ execute *example/my_project/info.rb* to see it in action:
 
 ## limitations ##
 
-the current implmentation is proof of concept. for example the embedding of maven is kind of crude and the local maven repository needs to be under $HOME/.m2/repository, etc
+the current implementation is proof of concept. for example the embedding of maven is kind of crude and the local maven repository needs to be under $HOME/.m2/repository, etc
+
+## jar/pom dependencies ##
+
+these dependencies can be used either in **Mvnfile** or inside the gemspec through the requirements (see also the example directory of this project):
+
+    Gem::Specification.new do |s|
+      s.name = 'gem_with_jar'
+      s.version = '0.0.0'
+      s.requirements << "jar 'org.slf4j:slf4j-api', '1.5.10'"
+    end
+    
+### with maven like version ###
+
+```jar 'my.group.id:my-artifact-id', '1.2.3'```
+
+this will add the jar dependency for the maven artifact **my.group.id:my-artifact-id** with version **1.2.3**. this version will be treated as **maven version**, i.e. in case of a version conflict the one which is closer to project root will be used (see also: TODO link)
+
+### with rubygem like version ###
+
+some example (see also: TODO link)
+
+```jar 'my.group.id:my-artifact-id', '1.2.3'```
+```pom 'my.group:my-artifact-id', '=1.2.3'```
+```jar 'my.group.id:artifact-id', '>1.2.3'```
+```jar 'my.group:artifact-id', '>1.2.3', '=<2.0.1'```
