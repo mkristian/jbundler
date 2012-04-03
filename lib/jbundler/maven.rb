@@ -62,21 +62,23 @@ module JBundler
           ).each {|i| java_import i }
     end
 
-    def self.create_maven
-      require 'java' # done lazily, so we're not loading it all the time
-      bin = nil
-      if ENV['M2_HOME'] # use M2_HOME if set
-        bin = File.join(ENV['M2_HOME'], "bin")
-      else
-        ENV['PATH'].split(File::PATH_SEPARATOR).detect do |path|
-          mvn = File.join(path, "mvn")
-          if File.exists?(mvn)
-            if File.symlink?(mvn)
-              link = File.readlink(mvn)
-              if link =~ /^\// # is absolute path
-                bin = File.dirname(File.expand_path(link))
-              else # is relative path so join with dir of the maven command
-                bin = File.dirname(File.expand_path(File.join(File.dirname(mvn), link)))
+      def self.create_maven
+        bin = nil
+        if ENV['M2_HOME'] # use M2_HOME if set
+          bin = File.join(ENV['M2_HOME'], "bin")
+        else
+          ENV['PATH'].split(File::PATH_SEPARATOR).detect do |path|
+            mvn = File.join(path, "mvn")
+            if File.exists?(mvn)
+              if File.symlink?(mvn)
+                link = File.readlink(mvn)
+                if link =~ /^\// # is absolute path
+                  bin = File.dirname(File.expand_path(link))
+                else # is relative path so join with dir of the maven command
+                  bin = File.dirname(File.expand_path(File.join(File.dirname(mvn), link)))
+                end
+              else # is no link so just expand it
+                bin = File.expand_path(path)
               end
             else # is no link so just expand it
               bin = File.expand_path(path)
