@@ -1,17 +1,13 @@
-require 'uri'
-require 'tempfile'
 require 'fileutils'
-require 'set'
 require 'jbundler/gemfile_lock'
-require 'jbundler/maven_version'
-require 'java'
+require 'jbundler/maven_util'
 
-# A modified maven_gemify2 taken from https://github.com/ANithian/bundler/blob/a29d4550dfb2f24372bf6e60f00e633ff92d5d64/lib/bundler/maven_gemify2.rb
 module JBundler
 
   class Pom
 
-    include MavenVersion
+    include MavenUtil
+
     def writeElement(xmlWriter,element_name, text)
       xmlWriter.writeStartElement(element_name.to_java)
       xmlWriter.writeCharacters(text.to_java)
@@ -55,7 +51,7 @@ module JBundler
           writeElement(xmlStreamWriter,"groupId",group_id)
           writeElement(xmlStreamWriter,"artifactId",artifact_id)
           # default to complete version range
-          mversion = second_version ? convert_version(version, second_version) : convert_version(version)
+          mversion = second_version ? to_version(version, second_version) : to_version(version)
           writeElement(xmlStreamWriter,"version", mversion.to_s)
           
           writeElement(xmlStreamWriter,"type", "pom") if line =~ /^\s*pom\s+/

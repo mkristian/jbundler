@@ -1,7 +1,17 @@
 module JBundler
-  module MavenVersion
+  module MavenUtil
+    
+    def to_coordinate(line)
+      name, version, second_version = line.sub(/\s*[a-z]+\s+/, '').sub(/#.*/,'').gsub(/\s+/,'').gsub(/'/, '').split(/,/)
+      mversion = second_version ? to_version(version, second_version) : convert_version(version)
+      "#{name}:#{mversion}"
+    end
 
-    def convert_version(*args)
+    def to_extension(line)
+      line.strip.sub(/\s+.*/, '')
+    end
+
+    def to_version(*args)
       if args.size == 0
         "[0,)"
       else

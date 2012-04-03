@@ -24,6 +24,8 @@ execute *example/my_project/info.rb* to see it in action:
 
 the current implementation is proof of concept. for example the embedding of maven is kind of crude and the local maven repository needs to be under $HOME/.m2/repository, etc
 
+the **Mvnfile.lock** gets generated but is not used to prepare the classpath file.
+
 ## jar/pom dependencies ##
 
 these dependencies can be used either in **Mvnfile** or inside the gemspec through the requirements (see also the example directory of this project):
@@ -49,4 +51,8 @@ some example (see also: TODO link)
 ```jar 'my.group.id:artifact-id', '>1.2.3'```
 ```jar 'my.group:artifact-id', '>1.2.3', '=<2.0.1'```
 
-the not version **!3.4.5** can not be mapped properly to maven version ranges. **>3.4.5** is used instead in these (rare) cases.
+the no version will default to **[0,)** - maven speak - which is **>=0** in the rubygems world.
+
+```jar 'group:artifact-id'```
+
+the *not* version **!3.4.5** can not be mapped properly to maven version ranges. **>3.4.5** is used instead in these (rare) cases.
