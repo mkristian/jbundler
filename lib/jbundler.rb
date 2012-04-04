@@ -1,26 +1,27 @@
-mavenfile = 'Mvnfile'
-classpathfile = '.jbundler/classpath.rb'
-#TODO make the JBundler::Mavenfile lazy loading the locked version and let it
-# inherit from File or so
-# and put the check into ClasspathFile
-if !File.exists?(classpathfile) || (File.mtime(mavenfile) > File.mtime(classpathfile)) || !File.exists?(mavenfile + ".lock") || (File.mtime("Gemfile.lock") > File.mtime(classpathfile))
+require 'jbundler/mavenfile'
+require 'jbundler/classpath_file'
+require 'jbundler/gemfile_lock'
+
+mavenfile = JBundler::Mavenfile.new('Mvnfile')
+classpath_file = JBundler::ClasspathFile.new('.jbundler/classpath.rb')
+gemfile_lock = JBundler::GemfileLock.new('Gemfile.lock')
+
+if classpath_file.uptodate?(mavenfile, gemfile_lock)
   require 'jbundler/aether'
-  require 'jbundler/mavenfile'
-  require 'jbundler/classpath_file'
-  require 'jbundler/gemfile_lock'
+
   resolver = JBundler::Aether.new
-  mfile = JBundler::Mavenfile.new(mavenfile)
-  mfile.add_artifacts(resolver)
-  JBundler::GemfileLock.new.add_artifacts(resolver, mfile)
-  mfile.add_locked_artifacts(resolver)
+
+  mavenfile.add_artifacts(resolver)
+  gemfile_lock.add_artifacts(resolver, mavenfile)
+  mavenfile.add_locked_artifacts(resolver)
+
   resolver.resolve
-  JBundler::ClasspathFile.generate(resolver)
-  mfile.generate_lockfile(resolver)
+
+  classpath_file.generate(resolver)
+  mavenfile.generate_lockfile(resolver)
 end
-if File.exists?(classpathfile)
+
+if classpath_file.exists?
   require 'java'
-  require classpathfile 
-  true
-else
-  false
+  classpath_file.require
 end

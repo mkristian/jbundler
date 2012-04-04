@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'jbundler/gemfile_lock'
 require 'jbundler/maven_util'
 
 module JBundler

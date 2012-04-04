@@ -2,9 +2,29 @@ module JBundler
 
   class ClasspathFile
 
-    def self.generate(resolver, classpathfile = '.jbundler/classpath.rb')
-      FileUtils.mkdir_p(File.dirname(classpathfile))
-      File.open(classpathfile, 'w') do |f|
+    def initialize(classpathfile = '.jbundler/classpath.rb')
+      @classpathfile = classpathfile
+    end
+
+    def require
+      Kernel.require @classpathfile
+    end
+
+    def mtime
+      File.mtime(@classpathfile)
+    end
+
+    def exists?
+      File.exists?(@classpathfile)
+    end
+
+    def uptodate?(mavenfile, gemfile_lock)
+      !mavenfile.exists? || !exists? || (mavenfile.mtime > mtime) || !mavenfile.exists_lock? || (gemfile_lock.mtime > mtime)
+    end
+
+    def generate(resolver)
+      FileUtils.mkdir_p(File.dirname(@classpathfile))
+      File.open(@classpathfile, 'w') do |f|
         f.puts "JBUNDLER_CLASSPATH = []"
         path_separator = java.lang.System.getProperty("path.separator").to_s
         resolver.classpath.split(/#{path_separator}/).each do |path|

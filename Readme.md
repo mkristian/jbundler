@@ -1,5 +1,14 @@
 # jbundler #
 
+* the DSL mimics the one from bundler
+* you can use maven like version declaration or rubygems/bundler like version ranges
+* it locks down the versions like bundler inside "Mvnfile.lock"
+* you can declare jar dependency within a rubygems using the requirements directive of the gem specification. jbundler will include those jar dependencies into its classpath
+* on the first run everything get resolved, any further run just the setup of classpath is done (without any maven involved)
+* it integrates nicely with bundler when Bundler.require is used
+
+## get started
+
 just add it as **first** entry in your *Gemfile* (pending since no gem is released)
 
 ```gem 'jbundler'```
@@ -28,7 +37,7 @@ update of single artifacts is not possible.
 
 there are no specs in place (yet) so expect a few more bugs ;-)
 
-since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of failure of the second one there could be another set of versions for the gems which would then succeed the jars/poms resolution.
+since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of failure of the second one there could be another set of versions for the gems which would then succeed the jars/poms resolution. but there is plenty of possible ways to improve this (maven could resolve the gems as well, etc)
 
 ## jar/pom dependencies ##
 
@@ -68,4 +77,4 @@ the *not* version **!3.4.5** can not be mapped properly to maven version ranges.
 
 ## update ##
 
-update of a single artifact is not possible (yet). but to update the whole set of artifactsjust delete the lockfile *Mvnfile.lock*
+update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Mvnfile.lock*
