@@ -8,13 +8,19 @@ to build the jar for the lib directory (prepare the jar before packaging the gem
 
 ```rmvn prepare-package```
 
-to build the gem. the create gem will be **target/jbundler-0.0.1.gem**
+to build the gem in **target/jbundler-0.0.1.gem**
 
 ```rmvn package```
 
+or once the jar file is in place then
+
+```gem build jbundler.gemspec```
+
+will do as well.
+
 ## pom.xml for the IDE ##
 
-the pom.xml is generated from the *jbundler.gemspec* and *Mavenfile*. it will be written out to *jbundler.gemspec.pom*. in case the IDE needs a pom.xml just set a symlic link.
+the pom.xml is generated from the *jbundler.gemspec* and *Mavenfile*. it will be written out to *jbundler.gemspec.pom*. in case the IDE needs a pom.xml just set a symbolic link.
 
 ## proper maven ##
 

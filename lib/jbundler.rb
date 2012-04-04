@@ -3,7 +3,7 @@ classpathfile = '.jbundler/classpath.rb'
 #TODO make the JBundler::Mavenfile lazy loading the locked version and let it
 # inherit from File or so
 # and put the check into ClasspathFile
-if !File.exists?(classpathfile) || (File.mtime(mavenfile) > File.mtime(classpathfile)) || !File.exists?(mavenfile + ".lock") || File.mtime("Gemfile.lock") > File.mtime(classpathfile))
+if !File.exists?(classpathfile) || (File.mtime(mavenfile) > File.mtime(classpathfile)) || !File.exists?(mavenfile + ".lock") || (File.mtime("Gemfile.lock") > File.mtime(classpathfile))
   require 'jbundler/aether'
   require 'jbundler/mavenfile'
   require 'jbundler/classpath_file'
