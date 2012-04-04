@@ -21,7 +21,8 @@ if you use only **rubygems** or **isolate** then following require will trigger 
 
 ## example ##
 
-*example/my_project* has a Gemfile which uses a gem which itself depends on jar dependency - see *example/gem_with_jar/gem_with_jar.gemspec* how the jar got declared.
+please first build the jar file for the jbundler gem, see [Build.md](Build.md).
+*example/my_project* has a Gemfile which uses a gem which depends on jar dependency. see *example/gem_with_jar/gem_with_jar.gemspec* how the jar gets declared.
 
 execute *example/my_project/info.rb* to see it in action:
 
@@ -40,6 +41,8 @@ there are no specs in place (yet) so expect a few more bugs ;-)
 since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of failure of the second one there could be another set of versions for the gems which would then succeed the jars/poms resolution. but there is plenty of possible ways to improve this (maven could resolve the gems as well, etc)
 
 ## jar/pom dependencies ##
+
+a pom dependency is not associated with a jar file but has dependencies to other poms or jars. 
 
 dependencies can be declared either in **Mvnfile**
 
@@ -64,16 +67,16 @@ this will add the jar dependency for the maven artifact **my.group.id:my-artifac
 
 some example (see also: TODO link)
 
-```jar 'my.group.id:my-artifact-id', '1.2.3'```
-```pom 'my.group:my-artifact-id', '=1.2.3'```
-```jar 'my.group.id:artifact-id', '>1.2.3'```
-```jar 'my.group:artifact-id', '>1.2.3', '=<2.0.1'```
+    jar 'my.group.id:my-artifact-id', '1.2.3'
+    pom 'my.group:my-artifact-id', '=1.2.3'
+    jar 'my.group.id:artifact-id', '>1.2.3'
+    jar 'my.group:artifact-id', '>1.2.3', '=<2.0.1'
 
-the no version will default to **[0,)** - maven speak - which is **>=0** in the rubygems world.
+the no version will default to **[0,)** (maven version range) which is **>=0** in the rubygems world.
 
-```jar 'group:artifact-id'```
+    jar 'group:artifact-id'
 
-the *not* version **!3.4.5** can not be mapped properly to maven version ranges. **>3.4.5** is used instead in these (rare) cases.
+the *not* version **!3.4.5** can not be mapped properly to a maven version ranges. **>3.4.5** is used instead in these (rare) cases.
 
 ## update ##
 
