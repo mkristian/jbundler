@@ -2,11 +2,9 @@ package jbundler;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.apache.maven.repository.internal.MavenServiceLocator;
@@ -76,7 +74,6 @@ public class DependencyResolver {
         }
        
         CollectRequest collectRequest = new CollectRequest();
-
         for( Artifact a: artifacts ){
             collectRequest.addDependency( new Dependency( a, "compile" ) );
         }
@@ -123,8 +120,8 @@ public class DependencyResolver {
         return buffer.toString();
     }
     
-    public Map<String, List<String>> getDependencyMap() {
-        Map<String, List<String>> result = new HashMap<String, List<String>>();
+    public List<String> getDependencyCoordinates() {
+        List<String> result = new ArrayList<String>();
         
         PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
         node.accept( nlg );
@@ -136,13 +133,9 @@ public class DependencyResolver {
                 Artifact artifact = node.getDependency().getArtifact();
                 if ( artifact.getFile() != null)
                 {
-                    String coord = artifact.getGroupId() + ":" + artifact.getArtifactId() + " (" + artifact.getVersion() + ")";
-                    List<String> deps = new ArrayList<String>(node.getChildren().size());
-                    for(DependencyNode n : node.getChildren()){
-                        Artifact a = n.getDependency().getArtifact();
-                        deps.add(a.getGroupId() + ":" + a.getArtifactId());
-                    }
-                    result.put(coord, deps);
+                    StringBuilder coord = new StringBuilder(artifact.getGroupId()).append(":").append(artifact.getArtifactId())
+                            .append(":").append(artifact.getExtension()).append(":").append(artifact.getVersion());
+                    result.add(coord.toString());
                 }
             }
         }

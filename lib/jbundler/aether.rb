@@ -71,10 +71,14 @@ module JBundler
       @resolver = DependencyResolver.new
     end
 
-    def add_artifact(coordinate, extension = 'jar')
-      coord = coordinate.split(/:/)
-      coord.insert(2, extension)
-      artifact = DefaultArtifact.new(*coord)
+    def add_artifact(coordinate, extension = nil)
+      if extension
+        coord = coordinate.split(/:/)
+        coord.insert(2, extension)
+        artifact = DefaultArtifact.new(*coord)
+      else
+        artifact = DefaultArtifact.new(coordinate)
+      end
       @resolver.add_artifact(artifact)
     end
 
@@ -96,6 +100,10 @@ module JBundler
     
     def repositories
       @resolver.repositories
+    end
+
+    def dependency_coordinates
+      @resolver.dependency_coordinates
     end
     
   end

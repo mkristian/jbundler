@@ -36,38 +36,24 @@ module JBundler
       end
     end
 
-    def add_artifacts(resolver)
+    def add_artifacts(resolver, mavenfile)
       gemspecs.each do |name, s|
         spec = Gem::Specification.load(s)
         jars = []
         spec.requirements.each do |r|
-          #deps << r if r =~ /^jar\s/
           jars << r if r =~ /^jar\s/
         end
         pom = "#{ENV['HOME']}/.m2/repository/ruby/bundler/#{name}/#{spec.version}/#{name}-#{spec.version}.pom"
         unless jars.empty?
-          Pom.new(pom, name, spec.version, jars, "pom")
-          resolver.add_artifact("ruby.bundler:#{name}:#{spec.version.to_s}", "pom")
+          unless File.exists?(pom)
+            Pom.new(pom, name, spec.version, jars, "pom")
+          end
+          coord = "ruby.bundler:#{name}:#{spec.version.to_s}"
+          unless mavenfile.locked?(coord)
+            resolver.add_artifact(coord, "pom")
+          end
         end
       end
-    end
-
-    def jar_deps
-      deps = []
-      gemspecs.each do |name, s|
-        spec = Gem::Specification.load(s)
-        jars = []
-        spec.requirements.each do |r|
-          #deps << r if r =~ /^jar\s/
-          jars << r if r =~ /^jar\s/
-        end
-        pom = "#{ENV['HOME']}/.m2/repository/ruby/bundler/#{name}/#{spec.version}/#{name}-#{spec.version}.pom"
-        unless jars.empty?
-          Pom.new(pom, name, spec.version, jars, "pom")
-          deps << "pom 'ruby.bundler:#{name}', '#{spec.version.to_s}'"
-        end
-      end
-      deps
     end
   end
   

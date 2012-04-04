@@ -22,13 +22,22 @@ execute *example/my_project/info.rb* to see it in action:
 
 ## limitations ##
 
-the current implementation is proof of concept. for example the embedding of maven is kind of crude and the local maven repository needs to be under $HOME/.m2/repository, etc
+the current implementation is proof of concept. for example the local maven repository needs to be under $HOME/.m2/repository, etc
 
-the **Mvnfile.lock** gets generated but is not used to prepare the classpath file.
+update of single artifacts is not possible.
+
+there are no specs in place (yet) so expect a few more bugs ;-)
+
+since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of failure of the second one there could be another set of versions for the gems which would then succeed the jars/poms resolution.
 
 ## jar/pom dependencies ##
 
-these dependencies can be used either in **Mvnfile** or inside the gemspec through the requirements (see also the example directory of this project):
+dependencies can be declared either in **Mvnfile**
+
+    jar 'org.slf4j:slf4j-simple', '> 1.6.2', '< 1.7.0'
+    jar 'org.sonatype.aether:aether-api', '1.13'
+
+or inside the gemspec through the requirements (see also the example directory of this project):
 
     Gem::Specification.new do |s|
       s.name = 'gem_with_jar'
@@ -36,13 +45,13 @@ these dependencies can be used either in **Mvnfile** or inside the gemspec throu
       s.requirements << "jar 'org.slf4j:slf4j-api', '1.5.10'"
     end
     
-### with maven like version ###
+### maven like version ###
 
 ```jar 'my.group.id:my-artifact-id', '1.2.3'```
 
 this will add the jar dependency for the maven artifact **my.group.id:my-artifact-id** with version **1.2.3**. this version will be treated as **maven version**, i.e. in case of a version conflict the one which is closer to project root will be used (see also: TODO link)
 
-### with rubygem like version ###
+### rubygem like version ###
 
 some example (see also: TODO link)
 
@@ -56,3 +65,7 @@ the no version will default to **[0,)** - maven speak - which is **>=0** in the 
 ```jar 'group:artifact-id'```
 
 the *not* version **!3.4.5** can not be mapped properly to maven version ranges. **>3.4.5** is used instead in these (rare) cases.
+
+## update ##
+
+update of a single artifact is not possible (yet). but to update the whole set of artifactsjust delete the lockfile *Mvnfile.lock*
