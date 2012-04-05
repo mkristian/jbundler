@@ -3,11 +3,7 @@ module JBundler
 
   class Maven
     def self.home
-      @home ||= begin
-                  gem 'ruby-maven', ">=0"
-                  bin = File.dirname(Gem.bin_path('ruby-maven', "rmvn"))
-                  File.dirname(bin)
-                end
+      @home ||= File.dirname(File.dirname(Gem.bin_path('ruby-maven', "rmvn")))
     end
   end
 
