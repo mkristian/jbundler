@@ -2,7 +2,7 @@
 
 the build uses ruby-maven
 
-```jruby -S gem install ruby-maven'```
+```jruby -S bundle install```
 
 to build the jar for the lib directory (prepare the jar before packaging the gem)
 
@@ -20,7 +20,7 @@ will do as well.
 
 ## proper maven and IDEs ##
 
-once ```rmvn``` generated the **jbundler.gemspec.pom** you can use proper maven3 by setting a sybolic link **pom.xml** to **jbundler.gemspec.pom**. in the end rmvn is just ruby wrapper around maven3. the **jbundler.gemspec.pom** is generated from the *jbundler.gemspec* and *Mavenfile*. 
+once ```rmvn``` generated the **jbundler.gemspec.pom** you can use proper maven3 by setting a sybolic link **pom.xml** to **jbundler.gemspec.pom**. in the end rmvn is just ruby wrapper around maven3. the **jbundler.gemspec.pom** is generated from the *jbundler.gemspec* and *Mavenfile*.
 
 your IDE might be able to use the pom.xml to manage the project and its java sources.
 
