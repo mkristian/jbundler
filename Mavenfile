@@ -12,7 +12,8 @@ jar 'org.sonatype.aether:aether-connector-asynchttpclient', aether_version
 jar 'org.sonatype.aether:aether-connector-wagon', aether_version
 jar 'org.apache.maven:maven-aether-provider', maven_version
 jar 'org.apache.maven.wagon:wagon-file', wagon_version
-jar 'org.apache.maven.wagon:wagon-http', wagon_version
+#jar 'org.apache.maven.wagon:wagon-http', wagon_version
+jar 'org.apache.maven.wagon:wagon-http-lightweight', wagon_version
 
 plugin(:jar, '2.3.1').in_phase('prepare-package').execute_goal(:jar).with :outputDirectory => '${project.basedir}/lib', :finalName => '${project.artifactId}'
 
