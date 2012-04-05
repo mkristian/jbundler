@@ -3,6 +3,8 @@ module JBundler
 
   class Maven
 
+    class Maven3NotFound < StandardError; end
+
     def self.home
       
       bin = nil
