@@ -18,10 +18,9 @@ or once the jar file is in place then
 
 will do as well.
 
-## pom.xml for the IDE ##
+## proper maven and IDEs ##
 
-the pom.xml is generated from the *jbundler.gemspec* and *Mavenfile*. it will be written out to *jbundler.gemspec.pom*. in case the IDE needs a pom.xml just set a symbolic link.
+once ```rmvn``` generated the **jbundler.gemspec.pom** you can use proper maven3 by setting a sybolic link **pom.xml** to **jbundler.gemspec.pom**. in the end rmvn is just ruby wrapper around maven3. the **jbundler.gemspec.pom** is generated from the *jbundler.gemspec* and *Mavenfile*. 
 
-## proper maven ##
+your IDE might be able to use the pom.xml to manage the project and its java sources.
 
-once ```rmvn``` generated the pom.xml proper maven3 can do the same job as rmvn. in the end rmvn is just ruby wrapper around maven3.

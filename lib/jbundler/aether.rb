@@ -2,53 +2,13 @@ require 'java'
 module JBundler
 
   class Maven
-
-    class Maven3NotFound < StandardError; end
-
     def self.home
-      
-      bin = nil
-      if ENV['M2_HOME'] # use M2_HOME if set
-        bin = File.join(ENV['M2_HOME'], "bin")
-      else
-        ENV['PATH'].split(File::PATH_SEPARATOR).detect do |path|
-          mvn = File.join(path, "mvn")
-          if File.exists?(mvn)
-            if File.symlink?(mvn)
-              link = File.readlink(mvn)
-              if link =~ /^\// # is absolute path
-                bin = File.dirname(File.expand_path(link))
-              else # is relative path so join with dir of the maven command
-                bin = File.dirname(File.expand_path(File.join(File.dirname(mvn), link)))
-              end
-            else # is no link so just expand it
-              bin = File.expand_path(path)
-            end
-          else
-            nil
-          end
-        end
-      end
-      bin = "/usr/share/maven2/bin" if bin.nil? # OK let's try debian default
-      if File.exists?(bin)
-        @mvn = File.join(bin, "mvn")
-        if Dir.glob(File.join(bin, "..", "lib", "maven-core-3.*jar")).size == 0
-          begin
-            gem 'ruby-maven', ">=0"
-            bin = File.dirname(Gem.bin_path('ruby-maven', "rmvn"))
-            @mvn = File.join(bin, "rmvn")
-          rescue LoadError
-            bin = nil
-          end
-        end
-      else
-        bin = nil
-      end
-      raise Maven3NotFound.new("can not find maven3 installation. install ruby-maven with\n\n\tjruby -S gem install ruby-maven\n\n") if bin.nil?
-
-      File.dirname(bin)
+      @home ||= begin
+                  gem 'ruby-maven', ">=0"
+                  bin = File.dirname(Gem.bin_path('ruby-maven', "rmvn"))
+                  File.dirname(bin)
+                end
     end
-  
   end
 
   class Aether
@@ -63,7 +23,7 @@ module JBundler
     def self.setup_classloader
       # TODO reduce to the libs which are really needed
       Dir.glob(File.join(Maven.home, 'lib', "*jar")).each {|path| require path }
-      require File.join(File.dirname(__FILE__), '..', 'jbundler.jar') 
+      require 'jbundler.jar'
       java_imports
     end
 

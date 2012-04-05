@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.maven.repository.internal.DefaultServiceLocator;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
-import org.apache.maven.repository.internal.MavenServiceLocator;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
@@ -17,7 +17,6 @@ import org.sonatype.aether.connector.wagon.WagonProvider;
 import org.sonatype.aether.connector.wagon.WagonRepositoryConnectorFactory;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.impl.internal.DefaultServiceLocator;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.DependencyRequest;
@@ -42,7 +41,7 @@ public class DependencyResolver {
     }
     
     private RepositorySystem newRepositorySystem() {
-        DefaultServiceLocator locator = new MavenServiceLocator();   
+        DefaultServiceLocator locator = new DefaultServiceLocator();//MavenServiceLocator() when using maven 3.0.4   
         //locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
         locator.addService( RepositoryConnectorFactory.class, WagonRepositoryConnectorFactory.class );
         locator.setServices( WagonProvider.class, new ManualWagonProvider() );

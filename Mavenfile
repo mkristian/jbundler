@@ -1,8 +1,8 @@
 #-*- mode: ruby -*-
 
-aether_version = '1.13'
-maven_version = '3.0.4'
-wagon_version = '2.2'
+aether_version = '1.11' # '1.13'
+maven_version = '3.0.3' #'3.0.4'
+wagon_version = '1.0-beta-7' #'2.2'
 
 jar 'org.sonatype.aether:aether-api', aether_version
 jar 'org.sonatype.aether:aether-util', aether_version
