@@ -22,7 +22,7 @@ module JBundler
     end
 
     def load_lockfile
-      locked = []
+      _locked = []
       if exists_lock?
         in_artifacts = false
         File.read(@lockfile).each do |line|
@@ -39,7 +39,7 @@ module JBundler
           end
         end
       end
-      locked
+      _locked
     end
 
     def locked
