@@ -13,7 +13,7 @@ module JBundler
       File.mtime(@lockfile) if @lockfile
     end
 
-    def add_artifacts(resolver, mavenfile)
+    def add_artifacts(aether, mavenfile)
       if @lockfile
         # assuming we run in Bundler context here 
         # at we have a Gemfile.lock :)
@@ -24,14 +24,11 @@ module JBundler
               jars << r if r =~ /^jar\s/
             end
           end
-          pom = "#{ENV['HOME']}/.m2/repository/ruby/bundler/#{spec.name}/#{spec.version}/#{spec.name}-#{spec.version}.pom"
           unless jars.empty?
-            unless File.exists?(pom)
-              Pom.new(pom, spec.name, spec.version, jars, "pom")
-            end
-            coord = "ruby.bundler:#{spec.name}:#{spec.version.to_s}"
-            unless mavenfile.locked?(coord)
-              resolver.add_artifact(coord, "pom")
+            pom = Pom.new(spec.name, spec.version, jars, "pom")
+            aether.install(pom.coordinate, pom.file)
+            unless mavenfile.locked?(pom.coordinate)
+              aether.add_artifact(pom.coordinate)
             end
           end
         end

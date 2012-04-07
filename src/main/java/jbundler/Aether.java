@@ -17,54 +17,66 @@ import org.sonatype.aether.connector.wagon.WagonProvider;
 import org.sonatype.aether.connector.wagon.WagonRepositoryConnectorFactory;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
+import org.sonatype.aether.impl.Installer;
+import org.sonatype.aether.installation.InstallRequest;
+import org.sonatype.aether.installation.InstallationException;
 import org.sonatype.aether.repository.LocalRepository;
+import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.resolution.DependencyResolutionException;
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
+import org.sonatype.aether.spi.locator.ServiceLocator;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
-public class DependencyResolver {
+public class Aether {
     
     private DependencyNode node;
     private RepositorySystem repoSystem;
     private RepositorySystemSession session;
     private List<Artifact> artifacts = new LinkedList<Artifact>();
     private List<RemoteRepository> repos = new LinkedList<RemoteRepository>();
+    private Installer installer;
     
-    public DependencyResolver(){
-        repoSystem = newRepositorySystem();
-        session = newSession( repoSystem );
+    public Aether(String localRepo, boolean verbose){
+        ServiceLocator locator = newServiceLocator();
+        repoSystem = locator.getService( RepositorySystem.class );
+        installer = locator.getService( Installer.class );
+        
+        session = newSession( repoSystem, localRepo, verbose );
 
         RemoteRepository central = new RemoteRepository( "central", "default", "http://repo1.maven.org/maven2/" );
         repos.add(central);
     }
     
-    private RepositorySystem newRepositorySystem() {
+    private ServiceLocator newServiceLocator() {
         DefaultServiceLocator locator = new DefaultServiceLocator();//MavenServiceLocator() when using maven 3.0.4   
         //locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
         locator.addService( RepositoryConnectorFactory.class, WagonRepositoryConnectorFactory.class );
+        
         locator.setServices( WagonProvider.class, new ManualWagonProvider() );
 
-        return locator.getService( RepositorySystem.class );
+        return locator;
     }
     
-    private RepositorySystemSession newSession( RepositorySystem system ) {
+    private RepositorySystemSession newSession( RepositorySystem system, String localRepoPath, boolean verbose ) {
         MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
         // TODO use settings.xml to find the right one
-        LocalRepository localRepo = new LocalRepository( System.getProperty("user.home") + "/.m2/repository" );
+        LocalRepository localRepo = new LocalRepository( localRepoPath );
         session.setLocalRepositoryManager( system.newLocalRepositoryManager( localRepo ) );
-
+        session.setRepositoryListener( new ConsoleRepositoryListener(verbose) );
+        session.setTransferListener( new ConsoleTransferListener() );
         return session;
     }
     
-    public void addArtifact(Artifact artifact){
-        artifacts.add(artifact);
+    public void addArtifact(String coordinate){
+        artifacts.add(new DefaultArtifact(coordinate));
     }
     
-    public void addRepository(RemoteRepository repo){
-        repos.add(repo);
+    public void addRepository(String id, String url){
+        repos.add(new RemoteRepository(id, null, url));
     }
     
     public void resolve() throws DependencyCollectionException, DependencyResolutionException {
@@ -141,4 +153,29 @@ public class DependencyResolver {
 
         return result;
     }
+    
+    public void install(String coordinate, String file) throws InstallationException{
+        LocalRepositoryManager lrm = session.getLocalRepositoryManager();
+
+        Artifact artifact = new DefaultArtifact(coordinate);
+        
+        File dstFile = new File( lrm.getRepository().getBasedir(), lrm.getPathForLocalArtifact( artifact ) );
+//        System.out.println(dstFile.getAbsolutePath());
+//        try {
+//            System.out.println(new FileInputStream(file));
+//        } catch (FileNotFoundException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
+        if (!dstFile.exists() ){
+            artifact = artifact.setFile(new File(file));
+            InstallRequest request = new InstallRequest();
+            request.addArtifact(artifact);
+            //try {
+            installer.install(session, request);
+//            }catch(Exception e){
+//                e.getCause().printStackTrace();
+//            }
+        }
+   }
 }

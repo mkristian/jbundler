@@ -51,29 +51,29 @@ module JBundler
       locked.detect { |l| l.sub(/\:[^:]+$/, '') == coord }
     end
 
-    def add_artifacts(resolver)
+    def add_artifacts(aether)
       File.read(@file).each_line do |line|
         coord = to_coordinate(line)
         unless locked?(coord)
-          resolver.add_artifact(to_coordinate(line),
+          aether.add_artifact(to_coordinate(line),
                                 to_extension(line)) if line =~ /^\s*(jar|pom)\s/
         end
       end
     end
 
-    def add_locked_artifacts(resolver)
-      locked.each { |l| resolver.add_artifact(l) }
+    def add_locked_artifacts(aether)
+      locked.each { |l| aether.add_artifact(l) }
     end
 
-    def generate_lockfile(resolver)
+    def generate_lockfile(aether)
       File.open(@lockfile, 'w') do |f|
         f.puts "remote:"
-        resolver.repositories.each do |r|
+        aether.repositories.each do |r|
           f.puts "  #{r.url}"
         end
         f.puts
         f.puts "artifacts:"
-        resolver.dependency_coordinates.each do |d|
+        aether.dependency_coordinates.each do |d|
           f.puts "  #{d}"
         end
       end

@@ -9,16 +9,16 @@ gemfile_lock = JBundler::GemfileLock.new('Gemfile.lock')
 if classpath_file.uptodate?(mavenfile, gemfile_lock)
   require 'jbundler/aether'
 
-  resolver = JBundler::Aether.new
+  aether = JBundler::AetherRuby.new(JBundler::AetherConfig.new)
 
-  mavenfile.add_artifacts(resolver)
-  gemfile_lock.add_artifacts(resolver, mavenfile)
-  mavenfile.add_locked_artifacts(resolver)
+  mavenfile.add_artifacts(aether)
+  gemfile_lock.add_artifacts(aether, mavenfile)
+  mavenfile.add_locked_artifacts(aether)
 
-  resolver.resolve
+  aether.resolve
 
-  classpath_file.generate(resolver)
-  mavenfile.generate_lockfile(resolver)
+  classpath_file.generate(aether)
+  mavenfile.generate_lockfile(aether)
 end
 
 if classpath_file.exists?

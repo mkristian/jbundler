@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'tempfile'
 require 'jbundler/maven_util'
 
 module JBundler
@@ -7,6 +8,17 @@ module JBundler
 
     include MavenUtil
 
+    private
+    
+    def temp_dir
+      @temp_dir ||=
+        begin
+          d=Dir.mktmpdir
+          at_exit {FileUtils.rm_rf(d.dup)}
+          d
+        end
+    end
+      
     def writeElement(xmlWriter,element_name, text)
       xmlWriter.writeStartElement(element_name.to_java)
       xmlWriter.writeCharacters(text.to_java)
@@ -21,21 +33,37 @@ module JBundler
           ).each {|i| java_import i }
     end
 
+    GROUP_ID = 'ruby.bundler'
+    
     public
     
-    def initialize(file, name, version, deps, packaging = nil)
-      java_imports
-      
-      FileUtils.mkdir_p(File.dirname(file))
+    def coordinate
+      @coord ||= "#{GROUP_ID}:#{@name}:#{@packaging}:#{@version}"
+    end
+    
+    def file
+      @file
+    end
 
-      out = java.io.BufferedOutputStream.new(java.io.FileOutputStream.new(file.to_java))
+    def initialize(name, version, deps, packaging = nil)
+      unless defined? XMLOutputFactory
+        java_imports
+      end
+
+      @name = name
+      @packaging = packaging || 'jar'
+      @version = version
+
+      @file = File.join(temp_dir, 'pom.xml')
+
+      out = java.io.BufferedOutputStream.new(java.io.FileOutputStream.new(@file.to_java))
       outputFactory = XMLOutputFactory.newFactory()
       xmlStreamWriter = outputFactory.createXMLStreamWriter(out)
       xmlStreamWriter.writeStartDocument
       xmlStreamWriter.writeStartElement("project")
       
       writeElement(xmlStreamWriter,"modelVersion","4.0.0")
-      writeElement(xmlStreamWriter,"groupId", "ruby.bundler")
+      writeElement(xmlStreamWriter,"groupId", GROUP_ID)
       writeElement(xmlStreamWriter,"artifactId", name.to_java)
       writeElement(xmlStreamWriter,"version", version.to_s.to_java)
       writeElement(xmlStreamWriter,"packaging", packaging) if packaging
