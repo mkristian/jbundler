@@ -47,7 +47,8 @@ module JBundler
     end
 
     def locked?(coordinate)
-      locked.detect { |l| l.sub(/\:[^:]+\:[^:]+$/, '') == coordinate.sub(/\:[^:]+$/, '') }
+      coord = coordinate.sub(/\:[^:]+$/, '')
+      locked.detect { |l| l.sub(/\:[^:]+$/, '') == coord }
     end
 
     def add_artifacts(resolver)
