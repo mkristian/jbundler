@@ -52,7 +52,7 @@ module JBundler
     end
 
     def add_artifacts(resolver)
-      File.read(@file).each do |line|
+      File.read(@file).each_line do |line|
         coord = to_coordinate(line)
         unless locked?(coord)
           resolver.add_artifact(to_coordinate(line),
