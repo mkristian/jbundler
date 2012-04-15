@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'tempfile'
 require 'jbundler/maven_util'
+require 'java'
 
 module JBundler
 
@@ -13,8 +14,8 @@ module JBundler
     def temp_dir
       @temp_dir ||=
         begin
-          d=Dir.mktmpdir
-          at_exit {FileUtils.rm_rf(d.dup)}
+          d = Dir.mktmpdir
+          at_exit { FileUtils.rm_rf(d.dup) }
           d
         end
     end
@@ -64,24 +65,22 @@ module JBundler
       
       writeElement(xmlStreamWriter,"modelVersion","4.0.0")
       writeElement(xmlStreamWriter,"groupId", GROUP_ID)
-      writeElement(xmlStreamWriter,"artifactId", name.to_java)
+      writeElement(xmlStreamWriter,"artifactId", name)
       writeElement(xmlStreamWriter,"version", version.to_s.to_java)
       writeElement(xmlStreamWriter,"packaging", packaging) if packaging
       
       xmlStreamWriter.writeStartElement("dependencies".to_java)
       
       deps.each do |line|
-        if line =~ /^\s*jar\s+/ || line =~ /^\s*pom\s+/
-          group_id, artifact_id, version, second_version = line.sub(/\s*pom\s+/, '').sub(/\s*jar\s+/, '').sub(/#.*/,'').gsub(/\s+/,'').gsub(/'/, '').gsub(/:/, ',').split(/,/)
+        if coord = to_coordinate(line)
+          group_id, artifact_id, extension, version = coord.split(/:/)
 
           xmlStreamWriter.writeStartElement("dependency".to_java)
-          writeElement(xmlStreamWriter,"groupId",group_id)
-          writeElement(xmlStreamWriter,"artifactId",artifact_id)
-          # default to complete version range
-          mversion = second_version ? to_version(version, second_version) : to_version(version)
-          writeElement(xmlStreamWriter,"version", mversion.to_s)
+          writeElement(xmlStreamWriter,"groupId", group_id)
+          writeElement(xmlStreamWriter,"artifactId", artifact_id)
+          writeElement(xmlStreamWriter,"version", version)
           
-          writeElement(xmlStreamWriter,"type", "pom") if line =~ /^\s*pom\s+/
+          writeElement(xmlStreamWriter,"type", extension) if extension != 'jar'
           xmlStreamWriter.writeEndElement #dependency
         end
       end

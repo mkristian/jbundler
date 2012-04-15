@@ -2,6 +2,7 @@ package jbundler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,11 +64,9 @@ public class Aether {
     private RepositorySystemSession newSession( RepositorySystem system, String localRepoPath, boolean verbose ) {
         MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
-        // TODO use settings.xml to find the right one
         LocalRepository localRepo = new LocalRepository( localRepoPath );
         session.setLocalRepositoryManager( system.newLocalRepositoryManager( localRepo ) );
-        session.setRepositoryListener( new ConsoleRepositoryListener(verbose) );
-        session.setTransferListener( new ConsoleTransferListener() );
+        session.setRepositoryListener( new SimpleRepositoryListener(verbose, session.getLocalRepositoryManager()) );
         return session;
     }
     
@@ -101,7 +100,11 @@ public class Aether {
     }
 
     public List<RemoteRepository> getRepositories(){
-        return repos;
+        return Collections.unmodifiableList( repos );
+    }
+
+    public List<Artifact> getArtifacts(){
+        return Collections.unmodifiableList( artifacts );
     }
     
     public String getClasspath() {
@@ -131,7 +134,7 @@ public class Aether {
         return buffer.toString();
     }
     
-    public List<String> getDependencyCoordinates() {
+    public List<String> getResolvedCoordinates() {
         List<String> result = new ArrayList<String>();
         
         PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
@@ -160,22 +163,11 @@ public class Aether {
         Artifact artifact = new DefaultArtifact(coordinate);
         
         File dstFile = new File( lrm.getRepository().getBasedir(), lrm.getPathForLocalArtifact( artifact ) );
-//        System.out.println(dstFile.getAbsolutePath());
-//        try {
-//            System.out.println(new FileInputStream(file));
-//        } catch (FileNotFoundException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
         if (!dstFile.exists() ){
             artifact = artifact.setFile(new File(file));
             InstallRequest request = new InstallRequest();
             request.addArtifact(artifact);
-            //try {
             installer.install(session, request);
-//            }catch(Exception e){
-//                e.getCause().printStackTrace();
-//            }
         }
    }
 }

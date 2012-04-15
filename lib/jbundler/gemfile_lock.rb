@@ -5,7 +5,8 @@ module JBundler
 
   class GemfileLock
 
-    def initialize(lockfile = 'Gemfile.lock')
+    def initialize(mavenfile, lockfile = 'Gemfile.lock')
+      @mavenfile = mavenfile
       @lockfile = lockfile if File.exists?(lockfile)
     end
 
@@ -13,7 +14,7 @@ module JBundler
       File.mtime(@lockfile) if @lockfile
     end
 
-    def add_artifacts(aether, mavenfile)
+    def populate_depedencies(aether)
       if @lockfile
         # assuming we run in Bundler context here 
         # at we have a Gemfile.lock :)
@@ -27,7 +28,7 @@ module JBundler
           unless jars.empty?
             pom = Pom.new(spec.name, spec.version, jars, "pom")
             aether.install(pom.coordinate, pom.file)
-            unless mavenfile.locked?(pom.coordinate)
+            unless @mavenfile.locked?(pom.coordinate)
               aether.add_artifact(pom.coordinate)
             end
           end

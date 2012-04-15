@@ -21,7 +21,8 @@ if you use only **rubygems** or **isolate** then following require will trigger 
 
 ## example ##
 
-please first build the jar file for the jbundler gem, see [Build.md](Build.md).
+**please first build the jar file for the jbundler gem, see [Build.md](Build.md).** 
+
 *example/my_project* has a Gemfile which uses a gem which depends on jar dependency. see *example/gem_with_jar/gem_with_jar.gemspec* how the jar gets declared.
 
 execute *example/my_project/info.rb* to see it in action:
@@ -81,3 +82,9 @@ the *not* version **!3.4.5** can not be mapped properly to a maven version range
 ## update ##
 
 update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Mvnfile.lock*
+
+if jbundler see that **Gemfile.lock** or **Mvnfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes. the is more a maven-like behaviour and once there are command line tools for jbundler this behaviour might be replaced with a more bundler like handling of things.
+
+## meta-fu ##
+
+bug-reports and pull request are most welcome.

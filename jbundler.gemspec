@@ -8,5 +8,5 @@ END
   s.authors = ['Kristian Meier']
   s.email = ['m.kristian@web.de']
   s.files = Dir['lib/**/*rb'] + ['lib/jbundler.jar', 'MIT-LICENSE'] + Dir['*.md']
-  s.add_runtime_dependency "ruby-maven", "~> 3.0.3.0.28.5"
+  s.add_runtime_dependency "ruby-maven", "= 3.0.3.0.28.7.pre"
 end

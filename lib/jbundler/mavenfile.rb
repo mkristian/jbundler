@@ -17,6 +17,10 @@ module JBundler
       File.exists?(@file)
     end
 
+    def mtime_lock
+      File.mtime(@lockfile)
+    end
+
     def exists_lock?
       File.exists?(@lockfile)
     end
@@ -24,18 +28,10 @@ module JBundler
     def load_lockfile
       _locked = []
       if exists_lock?
-        in_artifacts = false
-        File.read(@lockfile).each do |line|
-          if in_artifacts
-            if line.strip!.size > 0
-              _locked << line
-            else
-              in_artifacts = false
-            end
-          else
-            if line =~ /^artifacts:/
-              in_artifacts = true
-            end
+        File.read(@lockfile).each_line do |line|
+          line.strip!
+          if line.size > 0 && !(line =~ /^\s*#/)
+            _locked << line
           end
         end
       end
@@ -47,34 +43,32 @@ module JBundler
     end
 
     def locked?(coordinate)
-      coord = coordinate.sub(/\:[^:]+$/, '')
-      locked.detect { |l| l.sub(/\:[^:]+$/, '') == coord }
+      coord = coordinate.sub(/^([^:]+:[^:]+):.+/) { $1 }
+      locked.detect { |l| l.sub(/^([^:]+:[^:]+):.+/) { $1 } == coord } != nil
     end
 
-    def add_artifacts(aether)
-      File.read(@file).each_line do |line|
-        coord = to_coordinate(line)
-        unless locked?(coord)
-          aether.add_artifact(to_coordinate(line),
-                                to_extension(line)) if line =~ /^\s*(jar|pom)\s/
+    def populate_unlocked(aether)
+      File.read(@file).each_line do |line| 
+        if coord = to_coordinate(line)
+          unless locked?(coord)
+            aether.add_artifact(coord)
+          end
+        elsif line =~ /^\s*(repository|source)\s/
+          name, url = line.sub(/.*(repository|source)\s+/, '').gsub(/['":]/,'').split(/,/)
+          url = name unless url
+          aether.add_repository(name, url)
         end
       end
     end
 
-    def add_locked_artifacts(aether)
+    def populate_locked(aether)
       locked.each { |l| aether.add_artifact(l) }
     end
 
-    def generate_lockfile(aether)
+    def generate_lockfile(dependency_coordinates)
       File.open(@lockfile, 'w') do |f|
-        f.puts "remote:"
-        aether.repositories.each do |r|
-          f.puts "  #{r.url}"
-        end
-        f.puts
-        f.puts "artifacts:"
-        aether.dependency_coordinates.each do |d|
-          f.puts "  #{d}"
+        dependency_coordinates.each do |d|
+          f.puts d.to_s
         end
       end
     end

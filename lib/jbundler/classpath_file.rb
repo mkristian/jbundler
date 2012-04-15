@@ -6,8 +6,10 @@ module JBundler
       @classpathfile = classpathfile
     end
 
-    def require
-      Kernel.require @classpathfile
+    def require_classpath
+p File.exists? @classpathfile
+p @classpathfile
+      load File.expand_path @classpathfile
     end
 
     def mtime
@@ -18,16 +20,15 @@ module JBundler
       File.exists?(@classpathfile)
     end
 
-    def uptodate?(mavenfile, gemfile_lock)
-      !mavenfile.exists? || !exists? || (mavenfile.mtime > mtime) || !mavenfile.exists_lock? || (gemfile_lock.mtime > mtime)
+    def needs_update?(mavenfile, gemfile_lock)
+      !mavenfile.exists? || !exists? || !mavenfile.exists_lock? || (mavenfile.mtime > mtime) || (mavenfile.mtime_lock > mtime) || (gemfile_lock.mtime > mtime)
     end
 
-    def generate(resolver)
+    def generate(classpath)
       FileUtils.mkdir_p(File.dirname(@classpathfile))
       File.open(@classpathfile, 'w') do |f|
         f.puts "JBUNDLER_CLASSPATH = []"
-        path_separator = java.lang.System.getProperty("path.separator").to_s
-        resolver.classpath.split(/#{path_separator}/).each do |path|
+        classpath.split(/#{File::PATH_SEPARATOR}/).each do |path|
           f.puts "JBUNDLER_CLASSPATH << '#{path}'" unless path =~ /pom$/
         end
         f.puts "JBUNDLER_CLASSPATH.freeze"

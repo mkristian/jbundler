@@ -1,27 +1,34 @@
 require 'jbundler/mavenfile'
 require 'jbundler/classpath_file'
 require 'jbundler/gemfile_lock'
+require 'jbundler/aether'
 
-mavenfile = JBundler::Mavenfile.new('Mvnfile')
+config = JBundler::AetherConfig.new
+
+mavenfile = JBundler::Mavenfile.new(config.mavenfile)
 classpath_file = JBundler::ClasspathFile.new('.jbundler/classpath.rb')
-gemfile_lock = JBundler::GemfileLock.new('Gemfile.lock')
+gemfile_lock = JBundler::GemfileLock.new(mavenfile, config.gemfile + '.lock')
 
-if classpath_file.uptodate?(mavenfile, gemfile_lock)
-  require 'jbundler/aether'
+if classpath_file.needs_update?(mavenfile, gemfile_lock)
+  aether = JBundler::AetherRuby.new(config)
 
-  aether = JBundler::AetherRuby.new(JBundler::AetherConfig.new)
-
-  mavenfile.add_artifacts(aether)
-  gemfile_lock.add_artifacts(aether, mavenfile)
-  mavenfile.add_locked_artifacts(aether)
+  mavenfile.populate_unlocked(aether)
+  gemfile_lock.populate_depedencies(aether)
+  mavenfile.populate_locked(aether)
 
   aether.resolve
 
-  classpath_file.generate(aether)
-  mavenfile.generate_lockfile(aether)
+  classpath_file.generate(aether.classpath)
+  mavenfile.generate_lockfile(aether.resolved_coordinates)
 end
 
 if classpath_file.exists?
   require 'java'
-  classpath_file.require
+  classpath_file.require_classpath
+  if config.verbose
+    warn "jbundler classpath:"
+    JBUNDLER_CLASSPATH.each do |path|
+      warn "\t#{path}"
+    end
+  end
 end

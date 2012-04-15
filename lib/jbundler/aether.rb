@@ -1,18 +1,39 @@
 require 'java'
+require 'yaml'
+
 module JBundler
 
+  # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
   class AetherConfig
 
-    attr_accessor :verbose, :local_maven_repository
+    attr_accessor :verbose, :local_repository, :mavenfile, :gemfile
 
-    def verbose
-      # defaults to false
-      @verbose ||= (ENV['JBUNDLER_VERBOSE'] && ENV['JBUNDLER_VERBOSE'] != 'false')
+    def initialize
+      file = '.jbundlerrc'
+      homefile = File.join(ENV['HOME'], file)
+      home = YAML.load_file() if File.exists? homefile
+      pwd = YAML.load_file(file) if File.exists? file
+      @config = (home || {}).merge(pwd || {})
     end
 
-    def local_maven_repository
+    def verbose
+      verbose = ENV['JBUNDLE_VERBOSE'] || @config['verbose']
+      # defaults to false
+      @verbose ||= verbose && verbose != 'false'
+    end
+
+    def mavenfile
+      @mavenfile ||= ENV['JBUNDLE_MAVENFILE'] || @config['mavenfile'] || 'Mvnfile'
+    end
+
+    def gemfile
+      @gemfile ||= ENV['BUNDLE_GEMFILE'] || 'Gemfile'
+    end
+
+    def local_repository
       # use maven default local repo as default
-      @local_maven_repository ||= (ENV['JBUNDLER_LOCAL_MAVEN_REPOSITORY'] || 
+      @local_maven_repository ||= (ENV['JBUNDLE_LOCAL_REPOSITORY'] || 
+                                   @config['local_repository']|| 
                                    File.join( ENV['HOME'], ".m2", "repository"))
     end
   end
@@ -27,17 +48,22 @@ module JBundler
       begin
         require 'jbundler.jar'
       rescue LoadError
-        # assume this happens only when working on the git clone
-        raise "jbundler.jar is missing - maybe you need to build it first ?"
+        # allow the classes already be added to the classloader
+        begin
+          java_import 'jbundler.Aether'
+        rescue NameError
+          # assume this happens only when working on the git clone
+          raise "jbundler.jar is missing - maybe you need to build it first ?"
+        end
       end
       java_import 'jbundler.Aether'
     end
 
-    def initialize(config)
+    def initialize(config = AetherConfig.new)
       unless defined? Aether
         self.class.setup_classloader
       end
-      @aether = Aether.new(config.local_maven_repository, config.verbose)
+      @aether = Aether.new(config.local_repository, config.verbose)
     end
 
     def add_artifact(coordinate, extension = nil)
@@ -50,7 +76,7 @@ module JBundler
       end
     end
 
-    def add_repository(url, name = "repo_#{repos.size}")
+    def add_repository(name, url)
       @aether.add_repository(name, url)
     end
 
@@ -61,17 +87,17 @@ module JBundler
     def classpath
       @aether.classpath
     end
-    
-    def dependency_map
-      @aether.dependency_map
-    end
-    
+   
     def repositories
       @aether.repositories
     end
 
-    def dependency_coordinates
-      @aether.dependency_coordinates
+    def artifacts
+      @aether.artifacts
+    end
+
+    def resolved_coordinates
+      @aether.resolved_coordinates
     end
 
     def install(coordinate, file)

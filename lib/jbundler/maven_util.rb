@@ -2,17 +2,17 @@ module JBundler
   module MavenUtil
     
     def to_coordinate(line)
-      name, version, second_version = line.sub(/\s*[a-z]+\s+/, '').sub(/#.*/,'').gsub(/\s+/,'').gsub(/'/, '').split(/,/)
-      mversion = second_version ? to_version(version, second_version) : convert_version(version)
-      "#{name}:#{mversion}"
-    end
-
-    def to_extension(line)
-      line.strip.sub(/\s+.*/, '')
+      if line =~ /^\s*(jar|pom)\s/
+        
+        group_id, artifact_id, version, second_version = line.sub(/\s*[a-z]+\s+/, '').sub(/#.*/,'').gsub(/\s+/,'').gsub(/['"],/, ':').gsub(/['"]/, '').split(/:/)
+        mversion = second_version ? to_version(version, second_version) : to_version(version)
+        extension = line.strip.sub(/\s+.*/, '')
+        "#{group_id}:#{artifact_id}:#{extension}:#{mversion}"
+      end
     end
 
     def to_version(*args)
-      if args.size == 0
+      if args.size == 0 || (args.size == 1 && args[0].nil?)
         "[0,)"
       else
         low, high = convert(args[0])
@@ -40,14 +40,14 @@ module JBundler
         [(nil || low), "#{val}]"]
         # treat '!' the same way as '>' since maven can not describe such range
       elsif arg =~ /[!>]/  
-        val = arg.sub(/>\s*/, '')
+        val = arg.sub(/[!>]\s*/, '')
         ["(#{val}", (nil || high)]
       elsif arg =~ /</
         val = arg.sub(/<\s*/, '')
         [(nil || low), "#{val})"]
       elsif arg =~ /\=/
         val = arg.sub(/=\s*/, '')
-        [val, val]
+        ["[" + val, val + '.0.0.0.0.1)']
       else
         [arg, arg]
       end
