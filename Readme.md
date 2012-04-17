@@ -33,13 +33,11 @@ execute *example/my_project/info.rb* to see it in action:
 
 ## limitations ##
 
-the current implementation is proof of concept. for example the local maven repository needs to be under $HOME/.m2/repository, etc
-
 update of single artifacts is not possible.
 
-there are no specs in place (yet) so expect a few more bugs ;-)
-
 since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of failure of the second one there could be another set of versions for the gems which would then succeed the jars/poms resolution. but there is plenty of possible ways to improve this (maven could resolve the gems as well, etc)
+
+**Mvnfile** is **not** a DSL, i.e. it is not ruby though it could use a ruby DSL to read the data (any contribution welcome).
 
 ## jar/pom dependencies ##
 
@@ -83,7 +81,7 @@ the *not* version **!3.4.5** can not be mapped properly to a maven version range
 
 update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Mvnfile.lock*
 
-if jbundler see that **Gemfile.lock** or **Mvnfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes. the is more a maven-like behaviour and once there are command line tools for jbundler this behaviour might be replaced with a more bundler like handling of things.
+if jbundler sees that **Gemfile.lock** or **Mvnfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes. the is a maven-like behaviour and once there are command line tools for jbundler they can behave like bundler.
 
 ## meta-fu ##
 
