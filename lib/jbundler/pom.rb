@@ -1,13 +1,13 @@
 require 'fileutils'
 require 'tempfile'
-require 'jbundler/maven_util'
+require 'maven/tools/coordinate'
 require 'java'
 
 module JBundler
 
   class Pom
 
-    include MavenUtil
+    include Maven::Tools::Coordinate
 
     private
     

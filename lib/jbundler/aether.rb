@@ -6,7 +6,7 @@ module JBundler
   # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
   class AetherConfig
 
-    attr_accessor :verbose, :local_repository, :mavenfile, :gemfile
+    attr_accessor :verbose, :local_repository, :jarfile, :gemfile
 
     def initialize
       file = '.jbundlerrc'
@@ -22,8 +22,12 @@ module JBundler
       @verbose ||= verbose && verbose != 'false'
     end
 
-    def mavenfile
-      @mavenfile ||= ENV['JBUNDLE_MAVENFILE'] || @config['mavenfile'] || 'Mvnfile'
+    def jarfile
+      if File.exists?('Mvnfile')
+        warn "'Mvnfile' name is deprecated, please use 'Jarfile' instead"
+        @jarfile = 'Mvnfile'
+      end
+      @jarfile ||= ENV['JBUNDLE_JARFILE'] || @config['jarfile'] || 'Jarfile'
     end
 
     def gemfile

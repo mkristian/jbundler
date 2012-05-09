@@ -1,16 +1,16 @@
 require 'jbundler/classpath_file'
-require 'jbundler/mavenfile'
+require 'maven/tools/jarfile'
 require 'jbundler/gemfile_lock'
 
 describe JBundler::ClasspathFile do
 
   let(:workdir) { 'target' }
-  let(:mfile) { File.join(workdir, 'tmp-mvnfile') }
+  let(:jfile) { File.join(workdir, 'tmp-jarfile') }
   let(:gfile_lock) { File.join(workdir, 'tmp-gemfile.lock') }
-  let(:mfile_lock) { mfile + ".lock"}
+  let(:jfile_lock) { jfile + ".lock"}
   let(:cpfile) { File.join(workdir, 'tmp-cp.rb') }
-  let(:mavenfile) { JBundler::Mavenfile.new(mfile) }
-  let(:gemfile_lock) { JBundler::GemfileLock.new(mavenfile, gfile_lock) }
+  let(:jarfile) { Maven::Tools::Jarfile.new(jfile) }
+  let(:gemfile_lock) { JBundler::GemfileLock.new(jarfile, gfile_lock) }
   subject { JBundler::ClasspathFile.new(cpfile) }
 
   before do
@@ -19,50 +19,50 @@ describe JBundler::ClasspathFile do
   end
 
   it 'needs update when all files are missing' do
-    subject.needs_update?(mavenfile,gemfile_lock).must_equal true
+    subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
-  it 'needs update when only mavenfile' do
-    FileUtils.touch mfile
-    subject.needs_update?(mavenfile,gemfile_lock).must_equal true
+  it 'needs update when only jarfile' do
+    FileUtils.touch jfile
+    subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
-  it 'needs update when mavenfilelock is missing' do
-    FileUtils.touch mfile
+  it 'needs update when jarfilelock is missing' do
+    FileUtils.touch jfile
     FileUtils.touch cpfile
-    subject.needs_update?(mavenfile,gemfile_lock).must_equal true
+    subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
   it 'needs no update when classpath file is the youngest' do
-    FileUtils.touch mfile
-    FileUtils.touch mfile_lock
+    FileUtils.touch jfile
+    FileUtils.touch jfile_lock
     FileUtils.touch cpfile
-    subject.needs_update?(mavenfile,gemfile_lock).must_equal false
+    subject.needs_update?(jarfile, gemfile_lock).must_equal false
   end
 
   it 'needs update when maven file is the youngest' do
-    FileUtils.touch mfile_lock
+    FileUtils.touch jfile_lock
     FileUtils.touch cpfile
     sleep 1
-    FileUtils.touch mfile
-    subject.needs_update?(mavenfile,gemfile_lock).must_equal true
+    FileUtils.touch jfile
+    subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
   it 'needs update when maven lockfile is the youngest' do
-    FileUtils.touch mfile
+    FileUtils.touch jfile
     FileUtils.touch cpfile
     sleep 1
-    FileUtils.touch mfile_lock
-    subject.needs_update?(mavenfile,gemfile_lock).must_equal true
+    FileUtils.touch jfile_lock
+    subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
   it 'needs update when gem lockfile is the youngest' do
-    FileUtils.touch mfile
+    FileUtils.touch jfile
     FileUtils.touch cpfile
-    FileUtils.touch mfile_lock
+    FileUtils.touch jfile_lock
     sleep 1
     FileUtils.touch gfile_lock
-    subject.needs_update?(mavenfile,gemfile_lock).must_equal true
+    subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
   it 'generates a classpath ruby file' do
