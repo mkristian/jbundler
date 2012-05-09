@@ -1,4 +1,3 @@
-require 'java'
 require 'yaml'
 
 module JBundler
@@ -6,18 +5,35 @@ module JBundler
   # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
   class AetherConfig
 
-    attr_accessor :verbose, :local_repository, :jarfile, :gemfile
+    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip
 
     def initialize
       file = '.jbundlerrc'
       homefile = File.join(ENV['HOME'], file)
-      home = YAML.load_file() if File.exists? homefile
-      pwd = YAML.load_file(file) if File.exists? file
-      @config = (home || {}).merge(pwd || {})
+      home_config = YAML.load_file(homefile) if File.exists?(homefile)
+      pwd_config = YAML.load_file(file) if File.exists?(file)
+      @config = (home_config || {}).merge(pwd_config || {})
+    end
+
+    if defined? JRUBY_VERSION
+      def jbundler_env(key)
+        ENV[key.upcase.gsub(/./, '_')] || java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) || @config[key.downcase.sub(/^j?bundler/, '').sub(/./, '_')]
+      end
+    else
+      def jbundler_env(key)
+        ENV[key.upcase.gsub(/./, '_')] || @config[key.downcase.sub(/^j?bundler/, '').sub(/./, '_')]
+      end
+    end
+    private :jbundler_env
+
+    def skip
+      skip = jbundler_env('JBUNDLE_SKIP')
+      # defaults to false
+      @skip ||= skip && skip != 'false'
     end
 
     def verbose
-      verbose = ENV['JBUNDLE_VERBOSE'] || @config['verbose']
+      verbose = jbundler_env('JBUNDLE_VERBOSE')
       # defaults to false
       @verbose ||= verbose && verbose != 'false'
     end
@@ -27,17 +43,16 @@ module JBundler
         warn "'Mvnfile' name is deprecated, please use 'Jarfile' instead"
         @jarfile = 'Mvnfile'
       end
-      @jarfile ||= ENV['JBUNDLE_JARFILE'] || @config['jarfile'] || 'Jarfile'
+      @jarfile ||= jbundler_env('JBUNDLE_JARFILE') || 'Jarfile'
     end
 
     def gemfile
-      @gemfile ||= ENV['BUNDLE_GEMFILE'] || 'Gemfile'
+      @gemfile ||= jbundler_env('BUNDLE_GEMFILE') || 'Gemfile'
     end
 
     def local_repository
       # use maven default local repo as default
-      @local_maven_repository ||= (ENV['JBUNDLE_LOCAL_REPOSITORY'] || 
-                                   @config['local_repository']|| 
+      @local_maven_repository ||= (jbundler_env('JBUNDLE_LOCAL_REPOSITORY') ||
                                    File.join( ENV['HOME'], ".m2", "repository"))
     end
   end
@@ -45,6 +60,8 @@ module JBundler
   class AetherRuby
 
     def self.setup_classloader
+      require 'java'
+
       maven_home = File.dirname(File.dirname(Gem.bin_path('ruby-maven', 
                                                            'rmvn')))
       # TODO reduce to the libs which are really needed

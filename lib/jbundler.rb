@@ -6,32 +6,32 @@ require 'jbundler/aether'
 config = JBundler::AetherConfig.new
 
 jarfile = Maven::Tools::Jarfile.new(config.jarfile)
-if jarfile.exists?
-classpath_file = JBundler::ClasspathFile.new('.jbundler/classpath.rb')
-gemfile_lock = JBundler::GemfileLock.new(jarfile, config.gemfile + '.lock')
+if jarfile.exists? && !config.skip
+  classpath_file = JBundler::ClasspathFile.new('.jbundler/classpath.rb')
+  gemfile_lock = JBundler::GemfileLock.new(jarfile, config.gemfile + '.lock')
 
-if classpath_file.needs_update?(jarfile, gemfile_lock)
-  aether = JBundler::AetherRuby.new(config)
+  if classpath_file.needs_update?(jarfile, gemfile_lock)
+    aether = JBundler::AetherRuby.new(config)
 
-  jarfile.populate_unlocked(aether)
-  gemfile_lock.populate_depedencies(aether)
-  jarfile.populate_locked(aether)
+    jarfile.populate_unlocked(aether)
+    gemfile_lock.populate_depedencies(aether)
+    jarfile.populate_locked(aether)
 
-  aether.resolve
+    aether.resolve
 
-  classpath_file.generate(aether.classpath)
-  jarfile.generate_lockfile(aether.resolved_coordinates)
-end
+    classpath_file.generate(aether.classpath)
+    jarfile.generate_lockfile(aether.resolved_coordinates)
+  end
 
-if classpath_file.exists?
-  require 'java'
-  classpath_file.require_classpath
-  if config.verbose
-    warn "jbundler classpath:"
-    JBUNDLER_CLASSPATH.each do |path|
-      warn "\t#{path}"
+  if classpath_file.exists?
+    require 'java'
+    classpath_file.require_classpath
+    if config.verbose
+      warn "jbundler classpath:"
+      JBUNDLER_CLASSPATH.each do |path|
+        warn "\t#{path}"
+      end
     end
   end
-end
 
 end
