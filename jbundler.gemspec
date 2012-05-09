@@ -13,7 +13,10 @@ END
   s.files += Dir['lib/**/*']
   s.files += Dir['spec/**/*']
   s.files += Dir['MIT-LICENSE'] + Dir['*.md']
+  s.files += Dir['Gemfile*']
   s.test_files += Dir['spec/**/*_spec.rb']
 
   s.add_runtime_dependency "ruby-maven", "= 3.0.3.0.29.0.pre"
+  # TODO maybe put this as dep to ruby-maven to bind the versions better
+ # s.add_runtime_dependency "maven-tools", "= 0.29.0"
 end

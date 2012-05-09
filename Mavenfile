@@ -15,19 +15,20 @@ jar 'org.apache.maven.wagon:wagon-file', wagon_version
 #jar 'org.apache.maven.wagon:wagon-http', wagon_version
 jar 'org.apache.maven.wagon:wagon-http-lightweight', wagon_version
 
-JRUBY_VERSIONS = ['1.5.6','1.6.5.1','1.6.7'].join(',')
+# overwrite via cli -Djruby.versions=1.6.7
+properties['jruby.versions'] = ['1.5.6','1.6.5.1','1.6.7'].join(',')
+# overwrite via cli -Djruby.use18and19=false
+properties['jruby.use18and19'] = true
+
 plugin(:minitest) do |m|
-  m.gem(:bundler, '1.1.3')
-  m.gem(:minitest, '2.10.0')
   m.execute_goal(:spec)
-  m.with :use18and19 => true, :versions => JRUBY_VERSIONS
 end
 
 plugin(:cucumber) do |m|
-  m.gem(:cucumber, '1.1.9')
-  m.gem(:bundler, '1.1.3')
   m.execute_goal(:test)
-  m.with :use18and19 => true, :versions => JRUBY_VERSIONS
 end
+
+# hack until test profile deps are normal deps with scope 'test'
+profile(:test).activation.by_default
 
 # vim: syntax=Ruby
