@@ -7,8 +7,6 @@ module JBundler
     end
 
     def require_classpath
-p File.exists? @classpathfile
-p @classpathfile
       load File.expand_path @classpathfile
     end
 
