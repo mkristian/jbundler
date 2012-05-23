@@ -75,7 +75,7 @@ public class Aether {
     }
     
     public void addRepository(String id, String url){
-        repos.add(new RemoteRepository(id, null, url));
+        repos.add(new RemoteRepository(id, "default", url));
     }
     
     public void resolve() throws DependencyCollectionException, DependencyResolutionException {
