@@ -45,14 +45,16 @@ EOF
       f.write <<-EOF
 repository :first, "http://example.com/repo"
 source 'second', "http://example.org/repo"
+source "http://example.org/repo/3"
 EOF
     end
     subject.populate_unlocked aether
-    aether.repositories.size.must_equal 3
+    aether.repositories.size.must_equal 4
     aether.artifacts.size.must_equal 0
     aether.repositories[0].id.must_equal "central"
     aether.repositories[1].id.must_equal "first"
     aether.repositories[2].id.must_equal "second"
+    aether.repositories[3].id.must_equal "http://example.org/repo/3"
   end
 
   it 'populate artifacts without locked' do

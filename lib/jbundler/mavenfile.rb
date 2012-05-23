@@ -54,8 +54,16 @@ module JBundler
             aether.add_artifact(coord)
           end
         elsif line =~ /^\s*(repository|source)\s/
-          name, url = line.sub(/.*(repository|source)\s+/, '').gsub(/['":]/,'').split(/,/)
+          # allow source :name, "http://url"
+          # allow source name, "http://url"
+          # allow source "http://url"
+          # also allow repository instead of source
+          name, url = line.sub(/.*(repository|source)\s+/, '').gsub(/^:/, '').split(/,/)
           url = name unless url
+          name.strip!
+          name.gsub!(/^['"]|['"]$/,'')
+          url.strip!
+          url.gsub!(/^['"]|['"]$/,'')
           aether.add_repository(name, url)
         end
       end
