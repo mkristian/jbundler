@@ -12,7 +12,7 @@ to build the (extension) jar for the lib directory (prepare the jar before packa
 
 this also runs all the test over a couple of jruy version each in 1.8 and 1.9 mode. so these tests take some time. in skip the tests when building the gem use:
 
-```rmvn prepare-package --Dmaven.test.skip```
+```rmvn prepare-package -DskipTests```
 
 to build the gem in **target/jbundler-0.0.1.gem**
 
