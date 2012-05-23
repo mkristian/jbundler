@@ -13,7 +13,7 @@ if classpath_file.needs_update?(mavenfile, gemfile_lock)
   aether = JBundler::AetherRuby.new(config)
 
   mavenfile.populate_unlocked(aether)
-  gemfile_lock.populate_depedencies(aether)
+  gemfile_lock.populate_dependencies(aether)
   mavenfile.populate_locked(aether)
 
   aether.resolve

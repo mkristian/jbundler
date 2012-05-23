@@ -14,7 +14,7 @@ module JBundler
       File.mtime(@lockfile) if @lockfile
     end
 
-    def populate_depedencies(aether)
+    def populate_dependencies(aether)
       if @lockfile
         # assuming we run in Bundler context here 
         # at we have a Gemfile.lock :)
