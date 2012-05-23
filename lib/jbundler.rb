@@ -9,7 +9,7 @@ mavenfile = JBundler::Mavenfile.new(config.mavenfile)
 classpath_file = JBundler::ClasspathFile.new('.jbundler/classpath.rb')
 gemfile_lock = JBundler::GemfileLock.new(mavenfile, config.gemfile + '.lock')
 
-if classpath_file.needs_update?(mavenfile, gemfile_lock)
+if mavenfile.exists? && classpath_file.needs_update?(mavenfile, gemfile_lock)
   aether = JBundler::AetherRuby.new(config)
 
   mavenfile.populate_unlocked(aether)
