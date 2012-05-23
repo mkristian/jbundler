@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.maven.repository.internal.DefaultServiceLocator;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
+import org.apache.maven.repository.internal.MavenServiceLocator;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
@@ -52,7 +52,7 @@ public class Aether {
     }
     
     private ServiceLocator newServiceLocator() {
-        DefaultServiceLocator locator = new DefaultServiceLocator();//MavenServiceLocator() when using maven 3.0.4   
+        MavenServiceLocator locator = new MavenServiceLocator();// when using maven 3.0.4   
         //locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
         locator.addService( RepositoryConnectorFactory.class, WagonRepositoryConnectorFactory.class );
         

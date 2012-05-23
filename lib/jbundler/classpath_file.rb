@@ -18,8 +18,8 @@ module JBundler
       File.exists?(@classpathfile)
     end
 
-    def needs_update?(mavenfile, gemfile_lock)
-      !mavenfile.exists? || !exists? || !mavenfile.exists_lock? || (mavenfile.mtime > mtime) || (mavenfile.mtime_lock > mtime) || (gemfile_lock.mtime > mtime)
+    def needs_update?(jarfile, gemfile_lock)
+      !exists? || !jarfile.exists_lock? || (jarfile.exists? && (jarfile.mtime > mtime)) || (jarfile.exists_lock? && (jarfile.mtime_lock > mtime)) || (gemfile_lock.mtime > mtime)
     end
 
     def generate(classpath)

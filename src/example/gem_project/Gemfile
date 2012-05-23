@@ -1,0 +1,8 @@
+source :rubygems
+
+gemspec
+
+gem 'jbundler', :path => '../../..'
+
+#needed for local setup
+gem 'maven-tools', :path => '../../../../jruby-maven-plugins/ruby-tools/src/main/gem/maven-tools'

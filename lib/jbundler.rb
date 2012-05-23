@@ -6,7 +6,9 @@ require 'jbundler/aether'
 config = JBundler::AetherConfig.new
 
 jarfile = Maven::Tools::Jarfile.new(config.jarfile)
-if jarfile.exists? && !config.skip
+if config.skip
+  warn "skip jbundler setup"
+else
   classpath_file = JBundler::ClasspathFile.new('.jbundler/classpath.rb')
   gemfile_lock = JBundler::GemfileLock.new(jarfile, config.gemfile + '.lock')
 

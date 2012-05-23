@@ -102,11 +102,15 @@ module JBundler
     end
 
     def resolve
-      @aether.resolve
+      @aether.resolve unless artifacts.empty?
     end
 
-    def classpath
-      @aether.classpath
+    def classpath 
+      if artifacts.empty?
+        ''
+      else
+        @aether.classpath
+      end
     end
    
     def repositories
@@ -118,7 +122,11 @@ module JBundler
     end
 
     def resolved_coordinates
-      @aether.resolved_coordinates
+      if artifacts.empty?
+        []
+      else
+        @aether.resolved_coordinates
+      end
     end
 
     def install(coordinate, file)

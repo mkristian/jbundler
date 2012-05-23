@@ -23,7 +23,18 @@ module JBundler
     def logfile
       @logfile
     end
-    
+
+    def execute_java(args, dir)
+      @index ||= 0
+      @index += 1
+      path = File.join(@dir, dir)
+      @logfile = File.join(path, "output-#{@index}.log")
+
+      FileUtils.cd(path) do
+        system("java #{args} > #{File.basename(@logfile)}")
+      end
+    end
+
     def execute(args, dir)
       @index ||= 0
       @index += 1
@@ -60,6 +71,15 @@ end
 
 And /^execute "(.*)" in "(.*)"$/ do |args, dir|
   steps.execute(args, dir)
+end
+
+And /^execute java with "(.*)" in "(.*)"$/ do |args, dir|
+  steps.execute_java(args, dir)
+end
+
+Then /^the output should contain "(.*)"$/ do |text|
+  log = File.read(steps.logfile)
+  raise "not found '#{text}'" unless log =~ /#{text}/
 end
 
 Then /^the output should contain the list "(.*)"$/ do |list|
