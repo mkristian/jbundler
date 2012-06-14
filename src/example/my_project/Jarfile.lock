@@ -1,7 +1,5 @@
 org.slf4j:slf4j-simple:jar:1.6.4
 org.slf4j:slf4j-api:jar:1.6.4
-ruby.bundler:gem_with_jar:pom:0.0.0
-ruby.bundler:nokogiri-maven:pom:1.5.0
 msv:isorelax:jar:20050913
 thaiopensource:jing:jar:20030619
 nekohtml:nekodtd:jar:0.1.11
