@@ -5,11 +5,6 @@ PATH
       ruby-maven (= 3.0.4.0.29.0)
 
 PATH
-  remote: ../../../../jruby-maven-plugins/ruby-tools/src/main/gem/maven-tools
-  specs:
-    maven-tools (0.29.0)
-
-PATH
   remote: ../gem_with_jar
   specs:
     gem_with_jar (0.0.0)
@@ -17,8 +12,8 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    nokogiri-maven (1.5.0-java)
     maven-tools (0.29.1)
+    nokogiri-maven (1.5.0-java)
     ruby-maven (3.0.4.0.29.0)
       thor (~> 0.14.6)
       maven-tools (~> 0.29.1)
