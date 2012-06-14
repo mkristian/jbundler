@@ -49,16 +49,11 @@ module JBundler
       rmvn.options['-Djruby.verbose'] = true
       rmvn.options['-Dgem.home'] = ENV['GEM_HOME']
       rmvn.options['-Dgem.path'] = ENV['GEM_PATH']
-      if args =~ /bundle install/
-        # maven does manage Gemfile and install all gems
-        # bundler will create the Gemfile.lock as needed
-        rmvn.exec_in(path, args.split(' '))
-      else
+      if args =~ /rmvn gem exec/
         # run without pom, i.e. maven does not manage Gemfile
         rmvn.options['--no-pom'] = true
-#        script = File.join(ENV['GEM_HOME'], 'bin', args.sub(/\s+.*$/, ''))
-        rmvn.exec_in(path, 'gem', 'exec', args)
       end
+      rmvn.exec_in(path, args.sub(/rmvn\s+/, '').split(' '))
     end
   end
 end
@@ -87,7 +82,7 @@ end
 
 Then /^the output should contain the list "(.*)"$/ do |list|
   log = File.read(steps.logfile)
-puts log
+  puts log
   list.split(/,/).each do |item|
     raise "not found '#{item}'" unless log =~ /#{item}/
   end
