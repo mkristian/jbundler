@@ -88,12 +88,15 @@ module JBundler
     end
 
     def add_artifact(coordinate, extension = nil)
-      if extension
-        coord = coordinate.split(/:/)
-        coord.insert(2, extension)
-        @aether.add_artifact(coord.join(":"))
-      else
-        @aether.add_artifact(coordinate)
+      #TODO ruby.bundler:....  artifacts are redundant with their gem counter parts. maybe leave them out of Jarfile.lock
+      unless coordnate =~ /^ruby.bundler:/
+        if extension
+          coord = coordinate.split(/:/)
+          coord.insert(2, extension)
+          @aether.add_artifact(coord.join(":"))
+        else
+          @aether.add_artifact(coordinate)
+        end
       end
     end
 
