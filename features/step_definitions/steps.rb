@@ -54,6 +54,7 @@ module JBundler
         rmvn.options['--no-pom'] = true
       end
       unless rmvn.exec_in(path, args.sub(/rmvn\s+/, '').split(' '))
+        puts File.read(steps.logfile)
         raise "failure executing #{args}"
       end
     end
