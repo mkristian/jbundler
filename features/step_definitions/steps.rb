@@ -40,7 +40,7 @@ module JBundler
       @index += 1
       path = File.join(@dir, dir)
       @logfile = File.join(path, "output-#{@index}.log")
-      rmvn.options['-l'] = File.basename(@logfile)
+      #rmvn.options['-l'] = File.basename(@logfile)
       rmvn.options['-o'] = nil
       #rmvn.options['-X'] = nil
       rmvn.options['-Djruby.verbose'] = true
