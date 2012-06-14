@@ -53,7 +53,9 @@ module JBundler
         # run without pom, i.e. maven does not manage Gemfile
         rmvn.options['--no-pom'] = true
       end
-      rmvn.exec_in(path, args.sub(/rmvn\s+/, '').split(' '))
+      unless rmvn.exec_in(path, args.sub(/rmvn\s+/, '').split(' '))
+        raise "failure executing #{args}"
+      end
     end
   end
 end
