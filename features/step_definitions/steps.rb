@@ -49,12 +49,12 @@ module JBundler
       if args =~ /bundle install/
         # maven does manage Gemfile and install all gems
         # bundler will create the Gemfile.lock as needed
-        rmvn.exec_in(path,  args.split(' '))
+        rmvn.exec_in(path, args.split(' '))
       else
         # run without pom, i.e. maven does not manage Gemfile
         rmvn.options['--no-pom'] = true
-        script = File.join(ENV['GEM_HOME'], 'bin', args.sub(/\s+.*$/, ''))
-        rmvn.exec_in(path, ['jruby', script] + args.sub(/^[^\s]+\s+/, '').split(' '))
+#        script = File.join(ENV['GEM_HOME'], 'bin', args.sub(/\s+.*$/, ''))
+        rmvn.exec_in(path, 'jruby', args)
       end
     end
   end
