@@ -18,6 +18,5 @@ END
 
   s.add_runtime_dependency "ruby-maven", "= 3.0.4.0.29.0"
   s.add_development_dependency "rake", "0.9.2.2"
-  s.add_development_dependency 'minitest', '2.10.0'
 
 end
