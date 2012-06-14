@@ -42,7 +42,7 @@ module JBundler
       @logfile = File.join(path, "output-#{@index}.log")
       #rmvn.options['-l'] = File.basename(@logfile)
       #rmvn.options['-o'] = nil
-      rmvn.options['-X'] = nil
+      #rmvn.options['-X'] = nil
       rmvn.options['-Djruby.verbose'] = true
       rmvn.options['-Dgem.home'] = ENV['GEM_HOME']
       rmvn.options['-Dgem.path'] = ENV['GEM_PATH']
