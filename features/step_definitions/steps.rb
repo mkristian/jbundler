@@ -41,8 +41,8 @@ module JBundler
       path = File.join(@dir, dir)
       @logfile = File.join(path, "output-#{@index}.log")
       #rmvn.options['-l'] = File.basename(@logfile)
-      rmvn.options['-o'] = nil
-      #rmvn.options['-X'] = nil
+      #rmvn.options['-o'] = nil
+      rmvn.options['-X'] = nil
       rmvn.options['-Djruby.verbose'] = true
       rmvn.options['-Dgem.home'] = ENV['GEM_HOME']
       rmvn.options['-Dgem.path'] = ENV['GEM_PATH']
@@ -54,7 +54,7 @@ module JBundler
         # run without pom, i.e. maven does not manage Gemfile
         rmvn.options['--no-pom'] = true
 #        script = File.join(ENV['GEM_HOME'], 'bin', args.sub(/\s+.*$/, ''))
-        rmvn.exec_in(path, 'jruby', args)
+        rmvn.exec_in(path, 'gem', 'exec', args)
       end
     end
   end
