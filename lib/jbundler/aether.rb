@@ -74,7 +74,7 @@ module JBundler
           java_import 'jbundler.Aether'
         rescue NameError
           # assume this happens only when working on the git clone
-          raise "jbundler.jar is missing - maybe you need to build it first ?"
+          raise "jbundler.jar is missing - maybe you need to build it first ? try\n$ rmvn prepare-package -Dmaven.test.skip\n"
         end
       end
       java_import 'jbundler.Aether'
