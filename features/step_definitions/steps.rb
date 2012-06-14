@@ -40,9 +40,12 @@ module JBundler
       @index += 1
       path = File.join(@dir, dir)
       @logfile = File.join(path, "output-#{@index}.log")
-      #rmvn.options['-l'] = File.basename(@logfile)
+      rmvn.options['-l'] = File.basename(@logfile)
+      # maven offline
       #rmvn.options['-o'] = nil
+      # lots of maven log
       #rmvn.options['-X'] = nil
+      # jruby related maven log
       rmvn.options['-Djruby.verbose'] = true
       rmvn.options['-Dgem.home'] = ENV['GEM_HOME']
       rmvn.options['-Dgem.path'] = ENV['GEM_PATH']
