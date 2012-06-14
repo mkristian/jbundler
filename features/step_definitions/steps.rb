@@ -87,6 +87,7 @@ end
 
 Then /^the output should contain the list "(.*)"$/ do |list|
   log = File.read(steps.logfile)
+puts log
   list.split(/,/).each do |item|
     raise "not found '#{item}'" unless log =~ /#{item}/
   end
