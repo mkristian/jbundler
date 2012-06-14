@@ -69,6 +69,7 @@ end
 
 And /^execute "(.*)" in "(.*)"$/ do |args, dir|
   steps.execute(args, dir)
+  puts File.read(steps.logfile) if args =~ /^bundle/
 end
 
 And /^execute java with "(.*)" in "(.*)"$/ do |args, dir|
@@ -82,8 +83,10 @@ end
 
 Then /^the output should contain the list "(.*)"$/ do |list|
   log = File.read(steps.logfile)
-  puts log
   list.split(/,/).each do |item|
-    raise "not found '#{item}'" unless log =~ /#{item}/
+    unless log =~ /#{item}/
+      puts log
+      raise "not found '#{item}'" 
+    end
   end
 end
