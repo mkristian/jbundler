@@ -16,7 +16,7 @@ else
     aether = JBundler::AetherRuby.new(config)
 
     jarfile.populate_unlocked(aether)
-    gemfile_lock.populate_depedencies(aether)
+    gemfile_lock.populate_dependencies(aether)
     jarfile.populate_locked(aether)
 
     aether.resolve

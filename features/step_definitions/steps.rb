@@ -43,7 +43,7 @@ module JBundler
       rmvn.options['-l'] = File.basename(@logfile)
       rmvn.options['-o'] = nil
       #rmvn.options['-X'] = nil
-      #rmvn.options['-Djruby.verbose'] = true
+      rmvn.options['-Djruby.verbose'] = true
       rmvn.options['-Dgem.home'] = ENV['GEM_HOME']
       rmvn.options['-Dgem.path'] = ENV['GEM_PATH']
       if args =~ /bundle install/
@@ -65,7 +65,7 @@ steps = nil
 Given /^a fresh copy of "(.*)"$/ do |path|
   basedir = File.join('target', File.basename(path))
   steps = JBundler::Steps.new(basedir)
-  FileUtils.rm_rf(basedir)
+#  FileUtils.rm_rf(basedir)
   FileUtils.cp_r(path, 'target')
 end
 

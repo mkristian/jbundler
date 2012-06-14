@@ -1,3 +1,5 @@
+#TODO get 'spec' into $LOAD by minispec-maven-plugin
+load File.expand_path(File.join('spec', 'setup.rb'))
 require 'jbundler/classpath_file'
 require 'maven/tools/jarfile'
 require 'jbundler/gemfile_lock'

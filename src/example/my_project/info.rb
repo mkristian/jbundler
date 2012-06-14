@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler'
 Bundler.require
 
 org.slf4j.LoggerFactory.getLogger("hello").info <<-INFO
