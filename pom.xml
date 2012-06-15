@@ -133,7 +133,7 @@
       <dependency>
         <groupId>rubygems</groupId>
         <artifactId>maven-tools</artifactId>
-        <version>0.29.2</version>
+        <version>0.29.3</version>
         <type>gem</type>
       </dependency>
       <dependency>
