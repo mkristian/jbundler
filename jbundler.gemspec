@@ -9,6 +9,7 @@ END
 
   s.authors = ['Kristian Meier']
   s.email = ['m.kristian@web.de']
+  s.homepage = 'https://github.com/mkristian/jbundler'
 
   s.files += Dir['lib/**/*']
   s.files += Dir['spec/**/*']

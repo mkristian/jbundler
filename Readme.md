@@ -1,4 +1,4 @@
-# jbundler #
+# jbundler [![Build Status](https://secure.travis-ci.org/mkristian/jbundler.png)](http://travis-ci.org/mkristian/jbundler) #
 
 * the DSL mimics the one from bundler
 * you can use maven like version declaration or rubygems/bundler like version ranges
