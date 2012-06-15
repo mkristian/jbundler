@@ -46,7 +46,7 @@ module JBundler
       # lots of maven log
       #rmvn.options['-X'] = nil
       # jruby related maven log
-      rmvn.options['-Djruby.verbose'] = true
+      #rmvn.options['-Djruby.verbose'] = true
       rmvn.options['-Dgem.home'] = ENV['GEM_HOME']
       rmvn.options['-Dgem.path'] = ENV['GEM_PATH']
       if args =~ /rmvn gem exec/
@@ -72,7 +72,6 @@ end
 
 And /^execute "(.*)" in "(.*)"$/ do |args, dir|
   steps.execute(args, dir)
-  puts File.read(steps.logfile) if args =~ /^bundle/
 end
 
 And /^execute java with "(.*)" in "(.*)"$/ do |args, dir|
