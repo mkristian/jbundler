@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jbundler (0.2.1)
+    jbundler (0.2.2)
       ruby-maven (= 3.0.4.0.29.0)
 
 GEM

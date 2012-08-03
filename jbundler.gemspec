@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'jbundler'
-  s.version = '0.2.1'
+  s.version = '0.2.2'
 
   s.summary = 'bundler support for maven or/and maven support for bundler'
   s.description = <<-END
@@ -12,7 +12,7 @@ END
   s.homepage = 'https://github.com/mkristian/jbundler'
 
   s.bindir = "bin"
-  s.executables = ['jbundler']
+  s.executables = ['jbundle']
 
   s.files += Dir['lib/**/*']
   s.files += Dir['spec/**/*']
