@@ -1,11 +1,13 @@
 # jbundler [![Build Status](https://secure.travis-ci.org/mkristian/jbundler.png)](http://travis-ci.org/mkristian/jbundler) #
 
+manage jar dependencies similar than **bundler** manages gem dependencies.
+
 * the DSL mimics the one from bundler
 * you can use maven like version declaration or rubygems/bundler like version ranges
-* it locks down the versions like bundler inside "Jarfile.lock"
+* it locks down the jar versions inside "Jarfile.lock"
 * you can declare jar dependency within a rubygems using the requirements directive of the gem specification. jbundler will include those jar dependencies into its classpath
 * on the first run everything get resolved, any further run just the setup of classpath is done (without any maven involved)
-* it integrates nicely with bundler when Bundler.require is used
+* it integrates nicely with bundler when Bundler.require is used (like Rails does it)
 
 ## get started
 
@@ -21,13 +23,13 @@ if you use only **rubygems** or **isolate** then following require will trigger 
 
 ## example ##
 
-**please first build the jar file for the jbundler gem, see [Build.md](Build.md).** 
+**please first build the jar file for the jbundler gem, see [https://github.com/mkristian/jbundler/wiki/Build](Build).** 
 
-*example/my_project* has a Gemfile which uses a gem which depends on jar dependency. see *example/gem_with_jar/gem_with_jar.gemspec* how the jar gets declared.
+*src/example/my_project* has a Gemfile which uses a gem which depends on jar dependency. see *src/example/gem_with_jar/gem_with_jar.gemspec* how the jar gets declared.
 
-execute *example/my_project/info.rb* to see it in action:
+execute *src/example/my_project/info.rb* to see it in action:
 
-      cd example/my_project
+      cd src/example/my_project
       jruby -S bundle install
       jruby -S bundle exec info.rb
 
