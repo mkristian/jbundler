@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'jbundler'
-  s.version = '0.2.0'
+  s.version = '0.2.1'
 
   s.summary = 'bundler support for maven or/and maven support for bundler'
   s.description = <<-END
@@ -11,6 +11,9 @@ END
   s.email = ['m.kristian@web.de']
   s.homepage = 'https://github.com/mkristian/jbundler'
 
+  s.bindir = "bin"
+  s.executables = ['jbundler']
+
   s.files += Dir['lib/**/*']
   s.files += Dir['spec/**/*']
   s.files += Dir['MIT-LICENSE'] + Dir['*.md']
@@ -19,5 +22,6 @@ END
 
   s.add_runtime_dependency "ruby-maven", "= 3.0.4.0.29.0"
   s.add_development_dependency "rake", "0.9.2.2"
+  s.add_development_dependency "thor", "< 0.16.0", "> 0.14.0"
 
 end

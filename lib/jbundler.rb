@@ -9,7 +9,7 @@ jarfile = Maven::Tools::Jarfile.new(config.jarfile)
 if config.skip
   warn "skip jbundler setup"
 else
-  classpath_file = JBundler::ClasspathFile.new('.jbundler/classpath.rb')
+  classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
   gemfile_lock = JBundler::GemfileLock.new(jarfile, config.gemfile + '.lock')
 
   if classpath_file.needs_update?(jarfile, gemfile_lock)

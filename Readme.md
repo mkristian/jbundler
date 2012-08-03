@@ -39,6 +39,8 @@ since the version resolution happens in two steps - first the gems then the jars
 
 **Jarfile** is **not** a DSL, i.e. it is not ruby though it could use a ruby DSL to read the data (any contribution welcome).
 
+jbundler does not obey the **$HOME/.m2/settings.xml** from maven where you usually declare proxies, mirrors, etc.
+
 ## adding a maven repository ##
 
 the maven central is default repostory and is always there. adding another repository use following decalration

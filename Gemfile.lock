@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jbundler (0.2.0)
+    jbundler (0.2.1)
       ruby-maven (= 3.0.4.0.29.0)
 
 GEM
@@ -35,3 +35,4 @@ DEPENDENCIES
   jbundler!
   minitest (~> 2.10.0)
   rake (= 0.9.2.2)
+  thor (> 0.14.0, < 0.16.0)

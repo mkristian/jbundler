@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+
+if ARGV[0] == 'help'
+
+  require 'jbundler/cli'
+
+  JBundler::Cli.start
+
+else
+
+  load Gem.bin_path('bundler', 'bundle')
+
+  ARGV << 'install' if ARGV.size == 0
+  require 'jbundler/cli'
+
+  JBundler::Cli.start
+
+end

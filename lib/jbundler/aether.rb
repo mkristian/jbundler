@@ -50,6 +50,10 @@ module JBundler
       @gemfile ||= jbundler_env('BUNDLE_GEMFILE') || 'Gemfile'
     end
 
+    def classpath_file
+      '.jbundler/classpath.rb'
+    end
+
     def local_repository
       # use maven default local repo as default
       @local_maven_repository ||= (jbundler_env('JBUNDLE_LOCAL_REPOSITORY') ||
