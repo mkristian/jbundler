@@ -2,7 +2,7 @@
 
 * the DSL mimics the one from bundler
 * you can use maven like version declaration or rubygems/bundler like version ranges
-* it locks down the versions like bundler inside "Mvnfile.lock"
+* it locks down the versions like bundler inside "Jarfile.lock"
 * you can declare jar dependency within a rubygems using the requirements directive of the gem specification. jbundler will include those jar dependencies into its classpath
 * on the first run everything get resolved, any further run just the setup of classpath is done (without any maven involved)
 * it integrates nicely with bundler when Bundler.require is used
@@ -37,13 +37,22 @@ update of single artifacts is not possible.
 
 since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of failure of the second one there could be another set of versions for the gems which would then succeed the jars/poms resolution. but there is plenty of possible ways to improve this (maven could resolve the gems as well, etc)
 
-**Mvnfile** is **not** a DSL, i.e. it is not ruby though it could use a ruby DSL to read the data (any contribution welcome).
+**Jarfile** is **not** a DSL, i.e. it is not ruby though it could use a ruby DSL to read the data (any contribution welcome).
 
+## adding a maven repository ##
+
+the maven central is default repostory and is always there. adding another repository use following decalration
+
+    repository :first, "http://example.com/repo"
+    source 'second', "http://example.org/repo"
+    source "http://example.org/repo/3"
+	
+	
 ## jar/pom dependencies ##
 
 a pom dependency is not associated with a jar file but has dependencies to other poms or jars. 
 
-dependencies can be declared either in **Mvnfile**
+dependencies can be declared either in **Jarfile**
 
     jar 'org.slf4j:slf4j-simple', '> 1.6.2', '< 1.7.0'
     jar 'org.sonatype.aether:aether-api', '1.13'
@@ -79,9 +88,9 @@ the *not* version **!3.4.5** can not be mapped properly to a maven version range
 
 ## update ##
 
-update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Mvnfile.lock*
+update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Jarfile.lock*
 
-if jbundler sees that **Gemfile.lock** or **Mvnfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes. the is a maven-like behaviour and once there are command line tools for jbundler they can behave like bundler.
+if jbundler sees that **Gemfile.lock** or **Jarfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes. the is a maven-like behaviour and once there are command line tools for jbundler they can behave like bundler.
 
 ## meta-fu ##
 
