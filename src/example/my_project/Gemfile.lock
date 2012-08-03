@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    jbundler (0.2.0)
+    jbundler (0.2.1)
       ruby-maven (= 3.0.4.0.29.0)
 
 PATH
@@ -15,8 +15,8 @@ GEM
     maven-tools (0.29.3)
     nokogiri-maven (1.5.0-java)
     ruby-maven (3.0.4.0.29.0)
-      thor (~> 0.14.6)
       maven-tools (~> 0.29.1)
+      thor (~> 0.14.6)
     thor (0.14.6)
 
 PLATFORMS
@@ -25,6 +25,5 @@ PLATFORMS
 DEPENDENCIES
   gem_with_jar!
   jbundler!
-  maven-tools!
   nokogiri-maven
   ruby-maven (= 3.0.4.0.29.0)
