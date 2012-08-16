@@ -16,6 +16,7 @@ describe JBundler::ClasspathFile do
   subject { JBundler::ClasspathFile.new(cpfile) }
 
   before do
+    FileUtils.mkdir_p(workdir)
     Dir[File.join(workdir, '*')].each { |f| FileUtils.rm_f f }
   end
 
