@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name = 'jbundler'
-  s.version = '0.2.2'
+  s.version = '0.3.0'
 
-  s.summary = 'bundler support for maven or/and maven support for bundler'
+  s.summary = 'managing jar dependencies'
   s.description = <<-END
-using embedded maven to add jar support to bundler and add bundler like handling of version ranges to maven
+managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
 END
 
   s.authors = ['Kristian Meier']
