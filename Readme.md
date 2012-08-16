@@ -11,27 +11,69 @@ manage jar dependencies similar than **bundler** manages gem dependencies.
 
 ## get started
 
-just add it as **first** entry in your *Gemfile* (pending since no gem is released)
+install JBundler with
+
+    jruby -S gem install jbundler
+	
+first create a **Jarfile**, something like
+    
+	jar 'org.yaml:snakeyaml'
+	jar 'org.slf4j:slf4j-simple', '>1.1'
+
+### together with Bundler
+
+just add it as **first** entry in your *Gemfile* 
 
 ```gem 'jbundler'```
 
-such bundler config will trigger the classpath resolution on the first call of ```Bundler.require```, any successive runs will reuse the classpath from *.jbundler/classpath.rb* without any more action with maven.
+and now install the bundle both **gems and jars**
 
-if you use only **rubygems** or **isolate** then requiring **jbundler** will trigger the classpath setup
+    jbundle install
+
+#### Gemfile only
+
+if there is only a **Gemfile** and no Jarfile **jbundler** just handles all the declared [jar dependencies of gems](https://github.com/mkristian/jbundler/wiki/Build). it will only look into gems which bundler loaded.
+
+#### Gemfile and Jarfile
+
+if there is only a **Gemfile** and no Jarfile **jbundler** handles all the declared [jar dependencies of gems](https://github.com/mkristian/jbundler/wiki/Build) as well all the jars from the Jarfile. it will only look into gems which bundler loaded.
+
+### without Bundler - Jarfile only
+
+requiring **jbundler** will trigger the classpath setup
 
 ```require 'jbundler'```
 
-## Jar dependencies ##
+this you can use with **rubygems** or **isolate** or . . .
 
-the jar dependencies can either declared in the **Jarfile** or inside the gemspec through the requirements (see also the example directory of this project):
+### Jarfile
 
-    Gem::Specification.new do |s|
-      s.name = 'gem_with_jar'
-      s.version = '0.0.0'
-      s.requirements << "jar 'org.slf4j:slf4j-api', '1.5.10'"
-    end
+more info about the **[Jarfile](https://github.com/torquebox/maven-tools/wiki/Jarfile)** and about [versions](https://github.com/torquebox/maven-tools/wiki/Versions).
+
+for adding a maven repository see [Jarfile](https://github.com/torquebox/maven-tools/wiki/Jarfile).
     
-more info about the **[Jarfile](https://github.com/torquebox/maven-tools/wiki/Jarfile)** or the how to declare [versions](https://github.com/torquebox/maven-tools/wiki/Versions).
+## console ##
+
+like bundler there is a console which sets up the gems (if there is Gemfile otherwise that part get skipped) and sets up the classloader:
+
+    jbundler console
+
+further it adds two methods to the root level:
+
+    > jars
+
+to list the loaded jars and
+
+    > jar 'org.yaml:snakeyaml'
+
+using the same syntax as use in the **Jarfile**. there are limitations with such a lazy jar loading but it is very convenient when trying out things.
+
+## lazy jar loading ##
+
+    require 'jbundler/lazy'
+	include JBundler::Lazy
+	
+will offer the same `jar`/`jars` method than you have inside the console.
 
 ## example ##
 
@@ -42,28 +84,24 @@ more info about the **[Jarfile](https://github.com/torquebox/maven-tools/wiki/Ja
 execute *src/example/my_project/info.rb* to see it in action:
 
       cd src/example/my_project
-      jruby -S jbundle install
-      jruby -S bundle exec info.rb
+      jbundle install
+      bundle exec info.rb
 
 ## limitations ##
 
 update of single artifacts is not possible.
 
-since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of failure of the second one there could be another set of versions for the gems which would then succeed the jars/poms resolution. but there is plenty of possible ways to improve this (maven could resolve the gems as well, etc)
+since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of a failure that there is a valid gems/jars version resolution which satisfies all version contraints. so there is plenty of space for improvements (like maven could resolve the gems as well, etc)
 
-**Jarfile** is **not** a DSL, i.e. it is not ruby though it could use a ruby DSL to read the data (any contribution welcome).
+**Jarfile** is **not** a DSL but it could use a ruby DSL to read the data (any contribution welcome).
 
-jbundler does not obey the **$HOME/.m2/settings.xml** from maven where you usually declare proxies, mirrors, etc.
-
-## adding a maven repository ##
-
-see	[Jarfile](https://github.com/torquebox/maven-tools/wiki/Jarfile)
+jbundler does not yet obey the **$HOME/.m2/settings.xml** from maven where you usually declare proxies, mirrors, etc.
 	
 ## update ##
 
 update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Jarfile.lock*
 
-if jbundler sees that **Gemfile.lock** or **Jarfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes. the is a maven-like behaviour and once there are command line tools for jbundler they can behave like bundler.
+if jbundler sees that **Gemfile.lock** or **Jarfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes.
 
 ## meta-fu ##
 

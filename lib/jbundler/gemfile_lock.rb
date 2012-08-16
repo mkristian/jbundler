@@ -10,6 +10,10 @@ module JBundler
       @lockfile = lockfile if File.exists?(lockfile)
     end
 
+    def exists?
+      !@lockfile.nil?
+    end
+
     def mtime
       File.mtime(@lockfile) if @lockfile
     end

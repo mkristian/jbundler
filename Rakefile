@@ -10,7 +10,7 @@ require 'fileutils'
 #  t.cucumber_opts = "features --format pretty"
 #end
 
-task :default => [ :clean, :minispec]
+task :default => [ :minispec]
 
 task :build do
   rmvn = Maven::RubyMaven.new

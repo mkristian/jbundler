@@ -6,21 +6,25 @@ require 'jbundler/gemfile_lock'
 
 describe JBundler::ClasspathFile do
 
-  let(:workdir) { 'target' }
-  let(:jfile) { File.join(workdir, 'tmp-jarfile') }
-  let(:gfile_lock) { File.join(workdir, 'tmp-gemfile.lock') }
+  let(:workdir) { File.join('target', 'tmp') }
+  let(:jfile) { File.join(workdir, 'jarfile') }
+  let(:gfile_lock) { File.join(workdir, 'gemfile.lock') }
   let(:jfile_lock) { jfile + ".lock"}
-  let(:cpfile) { File.join(workdir, 'tmp-cp.rb') }
+  let(:cpfile) { File.join(workdir, 'cp.rb') }
   let(:jarfile) { Maven::Tools::Jarfile.new(jfile) }
   let(:gemfile_lock) { JBundler::GemfileLock.new(jarfile, gfile_lock) }
   subject { JBundler::ClasspathFile.new(cpfile) }
 
   before do
-    Dir[File.join(workdir, "tmp*")].each { |f| FileUtils.rm_f f }
-    FileUtils.touch gfile_lock #assume there is always a Gemfile.lock
+    Dir[File.join(workdir, '*')].each { |f| FileUtils.rm_f f }
   end
 
-  it 'needs update when all files are missing' do
+  it 'needs no update when all files are missing' do
+    subject.needs_update?(jarfile, gemfile_lock).must_equal false
+  end
+
+  it 'needs update when only gemfile' do
+    FileUtils.touch gfile_lock
     subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
@@ -30,6 +34,7 @@ describe JBundler::ClasspathFile do
   end
 
   it 'needs update when jarfilelock is missing' do
+    FileUtils.touch gfile_lock
     FileUtils.touch jfile
     FileUtils.touch cpfile
     subject.needs_update?(jarfile, gemfile_lock).must_equal true
@@ -42,7 +47,8 @@ describe JBundler::ClasspathFile do
     subject.needs_update?(jarfile, gemfile_lock).must_equal false
   end
 
-  it 'needs update when maven file is the youngest' do
+  it 'needs update when jar file is the youngest' do
+    FileUtils.touch gfile_lock
     FileUtils.touch jfile_lock
     FileUtils.touch cpfile
     sleep 1
@@ -50,7 +56,8 @@ describe JBundler::ClasspathFile do
     subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
-  it 'needs update when maven lockfile is the youngest' do
+  it 'needs update when jar lockfile is the youngest' do
+    FileUtils.touch gfile_lock
     FileUtils.touch jfile
     FileUtils.touch cpfile
     sleep 1
@@ -68,7 +75,7 @@ describe JBundler::ClasspathFile do
   end
 
   it 'generates a classpath ruby file' do
-    subject.generate("a:b:c:d:f:".gsub(/:/, File::PATH_SEPARATOR))
+    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR))
     File.read(cpfile).must_equal <<-EOF
 JBUNDLER_CLASSPATH = []
 JBUNDLER_CLASSPATH << 'a'

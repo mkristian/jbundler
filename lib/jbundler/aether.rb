@@ -1,4 +1,5 @@
 require 'yaml'
+require 'jbundler/config'
 
 module JBundler
 
@@ -84,7 +85,7 @@ module JBundler
       java_import 'jbundler.Aether'
     end
 
-    def initialize(config = AetherConfig.new)
+    def initialize(config = Config.new)
       unless defined? Aether
         self.class.setup_classloader
       end
@@ -115,6 +116,10 @@ module JBundler
       else
         @aether.classpath
       end
+    end
+   
+    def classpath_array
+      classpath.split(/#{File::PATH_SEPARATOR}/)
     end
    
     def repositories

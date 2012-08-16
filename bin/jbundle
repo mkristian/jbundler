@@ -9,11 +9,34 @@ if ARGV[0] == 'help'
 
 else
 
-  load Gem.bin_path('bundler', 'bundle')
-
   ARGV << 'install' if ARGV.size == 0
-  require 'jbundler/cli'
 
-  JBundler::Cli.start
+  if ARGV[0] == 'console'
+    require 'irb'
+    require 'jbundler/lazy'
+    include JBundler::Lazy
+  end
+
+  begin
+    load Gem.bin_path('bundler', 'bundle') 
+  rescue Exception
+    if ARGV[0] == 'console'
+      ARGV.shift
+      require 'jbundler'
+      if defined? JBUNDLER_CLASSPATH
+        warn 'Jarfile dependencies loaded'
+      else
+        warn 'Could not locate Jarfile'
+        
+      end
+      IRB.start
+    end
+  end
+
+  if ARGV[0] && ['install', 'update', 'show'].member?(ARGV[0])
+    require 'jbundler/cli'
+
+    JBundler::Cli.start
+  end
 
 end
