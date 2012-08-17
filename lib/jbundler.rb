@@ -25,7 +25,7 @@ else
     jarfile.generate_lockfile(aether.resolved_coordinates)
   end
 
-  if classpath_file.exists? && jarfile.exists?
+  if classpath_file.exists? && jarfile.exists_lock?
     require 'java'
     classpath_file.require_classpath
     if config.verbose
