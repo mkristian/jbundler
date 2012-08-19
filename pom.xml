@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jbundler</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
   <name><![CDATA[bundler support for maven or/and maven support for bundler]]></name>
   <packaging>gem</packaging>
   <description><![CDATA[using embedded maven to add jar support to bundler and add bundler like handling of version ranges to maven
