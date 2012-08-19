@@ -2,3 +2,5 @@
 *pom
 .pom.xml
 target
+# no Gemfile.lock
+Gemfile.lock
