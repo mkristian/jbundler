@@ -6,10 +6,9 @@ describe "Jars", "#require" do
   
   it "should start with an empty classpath" do
     # this should be nil!!
-    $CLASSPATH.should eql nil
+    $CLASSPATH.size.should == 0
+    require 'solr_sail'
   end
-  
-  require 'solr_sail'
   
   it "should set jars" do
     jars.is_a?( Jars ).should be_true

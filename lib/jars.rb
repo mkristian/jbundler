@@ -15,7 +15,7 @@ class Jars
   def load_jars( specs )
     puts "DO LOAD JARS FOR #{specs.collect { |k| k }.join(',')}"
     specs.each do |spec|
-      gem_dir = spec.gem_dir
+      gem_dir = spec.gem_dir rescue spec.full_gem_path # fallback for --1.8 mode
       lockfile = File.join( gem_dir, "Jarfile.lock" )
       if File.exists? lockfile
         puts "#{spec.name} has Jarfile.lock, loading jars"
@@ -38,6 +38,7 @@ module Kernel
       
       if require_without_jars fn
         @@gems_size ||= 0
+        Gem.loaded_specs if @@gems_size == 0
         if @@gems_size < Gem.loaded_specs.size
           @@gems_size = Gem.loaded_specs.size
           jars.maybe_load_jars( Gem.loaded_specs )
