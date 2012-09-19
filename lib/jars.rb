@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'lock_jar'
+
 class Jars
 
   def loaded
@@ -11,6 +14,14 @@ class Jars
 
   def load_jars( specs )
     puts "DO LOAD JARS FOR #{specs.collect { |k| k }.join(',')}"
+    specs.each do |spec|
+      gem_dir = spec.gem_dir
+      lockfile = File.join( gem_dir, "Jarfile.lock" )
+      if File.exists? lockfile
+        puts "#{spec.name} has Jarfile.lock, loading jars"
+        LockJar.load( lockfile )
+      end  
+    end
   end
 
 end
@@ -22,6 +33,9 @@ module Kernel
     end
     alias :require_without_jars :require
     def require fn
+      
+      #puts fn.inspect
+      
       if require_without_jars fn
         @@gems_size ||= 0
         if @@gems_size < Gem.loaded_specs.size

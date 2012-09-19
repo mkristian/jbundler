@@ -14,6 +14,8 @@ Gem::Specification.new do |s|
 
   s.require_paths = ["lib"]
 
-  s.add_development_dependency('rake', '0.9.2.2')
+  s.add_dependency('lock_jar', '~> 0.6.0')
+  s.add_development_dependency('solr_sail', '~>0.0.6')
+  s.add_development_dependency('rspec', ["~> 2.9.0"])
 end
 

@@ -1,4 +1,6 @@
 require 'rubygems/commands/install_command'
+require 'lock_jar'
+
 class Gem::Commands::InstallCommand
 
   unless respond_to? :execute_without_jars
