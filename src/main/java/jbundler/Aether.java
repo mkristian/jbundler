@@ -39,13 +39,13 @@ public class Aether {
     private List<Artifact> artifacts = new LinkedList<Artifact>();
     private List<RemoteRepository> repos = new LinkedList<RemoteRepository>();
     private Installer installer;
-    
-    public Aether(String localRepo, boolean verbose){
+
+    public Aether(String localRepo, boolean verbose, boolean offline){
         ServiceLocator locator = newServiceLocator();
         repoSystem = locator.getService( RepositorySystem.class );
         installer = locator.getService( Installer.class );
         
-        session = newSession( repoSystem, localRepo, verbose );
+        session = newSession( repoSystem, localRepo, verbose, offline );
 
         RemoteRepository central = new RemoteRepository( "central", "default", "http://repo1.maven.org/maven2/" );
         repos.add(central);
@@ -61,12 +61,14 @@ public class Aether {
         return locator;
     }
     
-    private RepositorySystemSession newSession( RepositorySystem system, String localRepoPath, boolean verbose ) {
+    private RepositorySystemSession newSession( RepositorySystem system, String localRepoPath, boolean verbose, 
+            boolean offline ) {
         MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
         LocalRepository localRepo = new LocalRepository( localRepoPath );
         session.setLocalRepositoryManager( system.newLocalRepositoryManager( localRepo ) );
         session.setRepositoryListener( new SimpleRepositoryListener(verbose, session.getLocalRepositoryManager()) );
+        session.setOffline(offline);
         return session;
     }
     
@@ -77,7 +79,7 @@ public class Aether {
     public void addRepository(String id, String url){
         repos.add(new RemoteRepository(id, "default", url));
     }
-    
+
     public void resolve() throws DependencyCollectionException, DependencyResolutionException {
         if (artifacts.size() == 0){
             throw new IllegalArgumentException("no artifacts given");
@@ -87,7 +89,7 @@ public class Aether {
         for( Artifact a: artifacts ){
             collectRequest.addDependency( new Dependency( a, "compile" ) );
         }
-        
+
         for( RemoteRepository r: repos ){
             collectRequest.addRepository( r );            
         }
@@ -95,7 +97,7 @@ public class Aether {
         node = repoSystem.collectDependencies( session, collectRequest ).getRoot();
 
         DependencyRequest dependencyRequest = new DependencyRequest( node, null );
-
+        
         repoSystem.resolveDependencies( session, dependencyRequest  );
     }
 

@@ -85,11 +85,11 @@ module JBundler
       java_import 'jbundler.Aether'
     end
 
-    def initialize(config = Config.new)
+    def initialize(config = Config.new, offline = false)
       unless defined? Aether
         self.class.setup_classloader
       end
-      @aether = Aether.new(config.local_repository, config.verbose)
+      @aether = Aether.new(config.local_repository, config.verbose, offline)
     end
 
     def add_artifact(coordinate, extension = nil)
