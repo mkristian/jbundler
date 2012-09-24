@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = 'jars'
+  s.name = 'rubyjams'
   s.version = "0.1.0"
   
   s.summary = 'jar dependency support for rubygems'
@@ -14,8 +14,6 @@ Gem::Specification.new do |s|
 
   s.require_paths = ["lib"]
 
-  s.add_dependency('lock_jar', '~> 0.6.0')
-  s.add_development_dependency('solr_sail', '~>0.0.6')
-  s.add_development_dependency('rspec', ["~> 2.9.0"])
+#  s.add_dependency('jbundler', '~> 0.3')
 end
 
