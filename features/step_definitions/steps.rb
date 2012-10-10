@@ -9,7 +9,7 @@ module JBundler
 
     def rmvn
       @rmvn ||= begin
-                  rmvn = Maven::RubyMaven.new
+                  rmvn = Maven::Ruby::Maven.new
                   # copy the jruby version and the ruby version (1.8 or 1.9)
                   # to be used by maven process
                   rmvn.options['-Djruby.version'] = JRUBY_VERSION if defined? JRUBY_VERSION
