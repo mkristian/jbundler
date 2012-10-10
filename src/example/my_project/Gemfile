@@ -9,4 +9,4 @@ gem 'nokogiri-maven'
 
 # needed for cucumber since the used "rmvn" can not 
 # resolve deps from local jbundler
-gem 'ruby-maven', '3.0.4.0.29.0', :require => false
+gem 'ruby-maven', '3.0.4.1', :require => false
