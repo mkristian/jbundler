@@ -1,5 +1,5 @@
 language: java
-install: mvn prepare-package -Dmaven.test.skip
+install: mvn prepare-package -Dmaven.test.skip -quiet
 #script: mvn cucumber:test -Djruby.versions=1.5.6
 jdk:
   - openjdk6
