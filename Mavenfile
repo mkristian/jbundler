@@ -16,7 +16,7 @@ jar 'org.apache.maven.wagon:wagon-http', wagon_version
 #jar 'org.apache.maven.wagon:wagon-http-lightweight', wagon_version
 
 # overwrite via cli -Djruby.versions=1.6.7
-properties['jruby.versions'] = ['1.5.6','1.6.7.2','1.7.0.preview1'].join(',')
+properties['jruby.versions'] = ['1.5.6','1.6.7.2','1.7.0.RC2'].join(',')
 # overwrite via cli -Djruby.use18and19=false
 properties['jruby.18and19'] = true
 
