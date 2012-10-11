@@ -1,5 +1,5 @@
 require 'fileutils'
-require 'ruby-maven'
+require 'maven/ruby/cli'
 module JBundler
   class Steps
 
@@ -9,7 +9,7 @@ module JBundler
 
     def rmvn
       @rmvn ||= begin
-                  rmvn = Maven::Ruby::Maven.new
+                  rmvn = Maven::Ruby::Cli.new
                   # copy the jruby version and the ruby version (1.8 or 1.9)
                   # to be used by maven process
                   rmvn.options['-Djruby.version'] = JRUBY_VERSION if defined? JRUBY_VERSION
@@ -30,7 +30,7 @@ module JBundler
       path = File.join(@dir, dir)
       @logfile = File.join(path, "output-#{@index}.log")
 
-      FileUtils.cd(path) do
+      Dir.chdir(path) do
         system("java #{args} > #{File.basename(@logfile)}")
       end
     end
@@ -40,19 +40,19 @@ module JBundler
       @index += 1
       path = File.join(@dir, dir)
       @logfile = File.join(path, "output-#{@index}.log")
-      rmvn.options['-l'] = File.basename(@logfile)
+      rmvn.options['-l'] = @logfile
       # maven offline
       #rmvn.options['-o'] = nil
       # lots of maven log
       #rmvn.options['-X'] = nil
+      # error stacktrace
+      #rmvn.options['-e'] = nil
       # jruby related maven log
       #rmvn.options['-Djruby.verbose'] = true
+      # ruby-maven debug
+      #rmvn.options['-Dverbose'] = true
       rmvn.options['-Dgem.home'] = ENV['GEM_HOME']
       rmvn.options['-Dgem.path'] = ENV['GEM_PATH']
-      if args =~ /rmvn gem exec/
-        # run without pom, i.e. maven does not manage Gemfile
-        rmvn.options['--no-pom'] = true
-      end
       unless rmvn.exec_in(path, args.sub(/rmvn\s+/, '').split(' '))
         puts File.read(@logfile)
         raise "failure executing #{args}"
