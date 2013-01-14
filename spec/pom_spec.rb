@@ -22,4 +22,10 @@ describe JBundler::Pom do
     pom.coordinate.must_equal "ruby.bundler:second:jar:1"
   end
 
+  it 'should respect classifiers' do
+    pom = JBundler::Pom.new("third", "1", ["jar \"org.jruby:jruby-core\", '~>1.7.0'", "pom \"f:g:jdk15\", \">1.2\", \"<=2.0\""])
+    File.read(pom.file).must_equal "<?xml version=\"1.0\" ?><project><modelVersion>4.0.0</modelVersion><groupId>ruby.bundler</groupId><artifactId>third</artifactId><version>1</version><dependencies><dependency><groupId>org.jruby</groupId><artifactId>jruby-core</artifactId><version>[1.7.0,1.7.99999]</version></dependency><dependency><groupId>f</groupId><artifactId>g</artifactId><version>(1.2,2.0]</version><type>pom</type><classifier>jdk15</classifier></dependency></dependencies></project>"
+    pom.coordinate.must_equal "ruby.bundler:third:jar:1"
+  end
+
 end
