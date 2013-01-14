@@ -4,3 +4,6 @@
 target
 # no Gemfile.lock
 Gemfile.lock
+.idea
+*.iml
+*.log
