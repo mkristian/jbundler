@@ -73,7 +73,17 @@ module JBundler
       
       deps.each do |line|
         if coord = to_coordinate(line)
-          group_id, artifact_id, extension, version = coord.split(/:/)
+          coords = coord.split(/:/)
+          group_id = coords[0]
+          artifact_id = coords[1]
+          extension = coords[2]
+          classifier = nil
+          if coords.size == 4
+            version = coords[3]
+          else
+            classifier = coords[3]
+            version = coords[4]
+          end
 
           xmlStreamWriter.writeStartElement("dependency".to_java)
           writeElement(xmlStreamWriter,"groupId", group_id)
@@ -81,6 +91,7 @@ module JBundler
           writeElement(xmlStreamWriter,"version", version)
           
           writeElement(xmlStreamWriter,"type", extension) if extension != 'jar'
+          writeElement(xmlStreamWriter,"classifier", classifier) if classifier
           xmlStreamWriter.writeEndElement #dependency
         end
       end

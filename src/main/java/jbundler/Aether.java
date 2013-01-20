@@ -137,20 +137,30 @@ public class Aether {
     }
     
     public List<String> getResolvedCoordinates() {
-        List<String> result = new ArrayList<String>();
-        
         PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
         node.accept( nlg );
-        
-        for ( DependencyNode node: nlg.getNodes() )
-        {
-            if ( node.getDependency() != null )
-            {
-                Artifact artifact = node.getDependency().getArtifact();
-                if ( artifact.getFile() != null)
-                {
-                    StringBuilder coord = new StringBuilder(artifact.getGroupId()).append(":").append(artifact.getArtifactId())
-                            .append(":").append(artifact.getExtension()).append(":").append(artifact.getVersion());
+
+        return generateCoordinatesForNodes(nlg.getNodes());
+    }
+
+    //@VisibleForTesting
+    static List<String> generateCoordinatesForNodes(final List<DependencyNode> nodes) {
+        final List<String> result = new ArrayList<String>();
+        for (final DependencyNode node : nodes) {
+            if (node.getDependency() != null) {
+                final Artifact artifact = node.getDependency().getArtifact();
+                if (artifact.getFile() != null) {
+                    final StringBuilder coord = new StringBuilder(artifact.getGroupId()).append(":")
+                                                                                        .append(artifact.getArtifactId())
+                                                                                        .append(":")
+                                                                                        .append(artifact.getExtension())
+                                                                                        .append(":");
+                    // The classifier should never be null
+                    if (!artifact.getClassifier().isEmpty()) {
+                        coord.append(artifact.getClassifier()).append(":");
+                    }
+
+                    coord.append(artifact.getVersion());
                     result.add(coord.toString());
                 }
             }
@@ -158,7 +168,7 @@ public class Aether {
 
         return result;
     }
-    
+
     public void install(String coordinate, String file) throws InstallationException{
         LocalRepositoryManager lrm = session.getLocalRepositoryManager();
 

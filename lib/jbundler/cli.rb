@@ -3,7 +3,7 @@ module JBundler
   class Cli < Thor
     no_tasks do
       def mvn
-        @mvn ||= Maven::RubyMaven.new
+        @mvn ||= Maven::Ruby::Maven.new
       end
 
       def do_show
