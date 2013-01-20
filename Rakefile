@@ -13,7 +13,7 @@ require 'fileutils'
 task :default => [ :minispec]
 
 task :build do
-  rmvn = Maven::RubyMaven.new
+  rmvn = Maven::Ruby::Maven.new
   rmvn.options['-Dmaven.test.skip'] = true
   if rmvn.exec('package')
     puts 'you find the gem inside "target"'
@@ -23,7 +23,7 @@ task :build do
 end
 
 task :compile do
-  rmvn = Maven::RubyMaven.new
+  rmvn = Maven::Ruby::Maven.new
   rmvn.options['-Dmaven.test.skip'] = true
   unless rmvn.exec('prepare-package')
     raise 'failed'
@@ -31,7 +31,7 @@ task :compile do
 end
 
 task :features => [:compile] do
-  rmvn = Maven::RubyMaven.new
+  rmvn = Maven::Ruby::Maven.new
   rversion = RUBY_VERSION  =~ /^1.8./ ? '--1.8': '--1.9'
   rmvn.options['-Djruby.versions'] = '1.6.7.2'#JRUBY_VERSION
   rmvn.options['-Djruby.switches'] = rversion
