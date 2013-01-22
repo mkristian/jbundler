@@ -1,14 +1,7 @@
 #-*- mode: ruby -*-
 
-require 'rubygems'
-#require 'cucumber'
-#require 'cucumber/rake/task'
 require 'ruby-maven'
 require 'fileutils'
-
-#Cucumber::Rake::Task.new(:features) do |t|
-#  t.cucumber_opts = "features --format pretty"
-#end
 
 task :default => [ :minispec]
 
@@ -33,7 +26,7 @@ end
 task :features => [:compile] do
   rmvn = Maven::Ruby::Maven.new
   rversion = RUBY_VERSION  =~ /^1.8./ ? '--1.8': '--1.9'
-  rmvn.options['-Djruby.versions'] = '1.6.7.2'#JRUBY_VERSION
+  rmvn.options['-Djruby.versions'] = '1.7.2'#JRUBY_VERSION
   rmvn.options['-Djruby.switches'] = rversion
   rmvn.options['-Djruby.18and19'] = false
   # jruby related debug log
@@ -46,7 +39,6 @@ task :features => [:compile] do
 end
 
 task :minispec => [:compile] do
-  require 'bundler/setup'
   require 'minitest/autorun'
 
   $LOAD_PATH << "spec"
