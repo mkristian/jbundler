@@ -3,10 +3,11 @@
 require 'ruby-maven'
 require 'fileutils'
 
-task :default => [ :minispec ]
+task :default => [ :test ]
 
 task :common do
   FileUtils.rm_f( '.pom.xml' )
+  raise "you need jruby to run this" unless defined? JRUBY_VERSION
 end
 
 task :build => [ :common ] do
@@ -44,6 +45,20 @@ task :features => [ :compile ] do
   unless rmvn.exec('cucumber')
     raise 'failed'
   end
+end
+
+task :test => [ :common ] do
+  puts '-----------------------------------------------------'
+  puts
+  puts 'to compile the jar and run test use the minitest task'
+  puts
+  puts '-----------------------------------------------------'
+  puts
+  require 'minitest/autorun'
+
+  $LOAD_PATH << "spec"
+
+  Dir['spec/*_spec.rb'].each { |f| require File.basename(f.sub(/.rb$/, '')) }
 end
 
 task :minispec => [ :compile ] do
