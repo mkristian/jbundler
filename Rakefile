@@ -18,6 +18,7 @@ end
 task :compile do
   rmvn = Maven::Ruby::Maven.new
   rmvn.options['-Dmaven.test.skip'] = true
+  # compiles java sources and build the jar
   unless rmvn.exec('prepare-package')
     raise 'failed'
   end
