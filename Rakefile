@@ -3,9 +3,13 @@
 require 'ruby-maven'
 require 'fileutils'
 
-task :default => [ :minispec]
+task :default => [ :minispec ]
 
-task :build do
+task :common do
+  FileUtils.rm_f( '.pom.xml' )
+end
+
+task :build => [ :common ] do
   rmvn = Maven::Ruby::Maven.new
   rmvn.options['-Dmaven.test.skip'] = true
   if rmvn.exec('package')
@@ -15,16 +19,19 @@ task :build do
   end
 end
 
-task :compile do
+task :compile => [ :common ] do
   rmvn = Maven::Ruby::Maven.new
   rmvn.options['-Dmaven.test.skip'] = true
+  # jruby related debug log
+  rmvn.options['-Djruby.verbose'] = true
   # compiles java sources and build the jar
+
   unless rmvn.exec('prepare-package')
     raise 'failed'
   end
 end
 
-task :features => [:compile] do
+task :features => [ :compile ] do
   rmvn = Maven::Ruby::Maven.new
   rversion = RUBY_VERSION  =~ /^1.8./ ? '--1.8': '--1.9'
   rmvn.options['-Djruby.versions'] = '1.7.2'#JRUBY_VERSION
@@ -39,7 +46,7 @@ task :features => [:compile] do
   end
 end
 
-task :minispec => [:compile] do
+task :minispec => [ :compile ] do
   require 'minitest/autorun'
 
   $LOAD_PATH << "spec"
@@ -48,8 +55,7 @@ task :minispec => [:compile] do
 end
 
 task :clean do
-  FileUtils.rm_rf('target')
-  FileUtils.rm_f(File.join('lib','jbundler.jar'))
+  Maven::Ruby::Maven.new.exec 'clean'
 end
 
 # vim: syntax=Ruby

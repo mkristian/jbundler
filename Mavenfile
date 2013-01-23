@@ -34,6 +34,12 @@ profile 'run-its' do |r|
   end
 end
 
+plugin( :jar ).in_phase( 'prepare-package' ).execute_goal( :jar ).with :finalName => "${project.artifactId}", :outputDirectory => "${project.basedir}/lib"
+
+plugin(:clean, '2.5' ).with :filesets => [ { :directory => './',
+                                             :includes => [ 'Gemfile.lock', 
+                                                            'lib/${project.artifactId}.jar' ] } ]
+
 execute_in_phase( :initialize ) do
   pom = File.read( 'pom.xml' )
   if File.exists? '.pom.xml'
