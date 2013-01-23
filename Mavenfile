@@ -22,6 +22,8 @@ properties['jruby.versions'] = ['1.5.6','1.6.8','1.7.2'].join(',')
 # overwrite via cli -Djruby.use18and19=false
 properties['jruby.18and19'] = true
 
+properties['jruby.plugins.version'] = '0.29.2'
+
 plugin(:minitest) do |m|
   m.execute_goal(:spec)
 end
@@ -34,9 +36,11 @@ end
 
 execute_in_phase( :initialize ) do
   pom = File.read( 'pom.xml' )
-  dot_pom = File.read( '.pom.xml' )
-  if pom != dot_pom
-    File.open( 'pom.xml', 'w' ) { |f| f.puts dot_pom }
+  if File.exists? '.pom.xml'
+    dot_pom = File.read( '.pom.xml' )
+    if pom != dot_pom
+      File.open( 'pom.xml', 'w' ) { |f| f.puts dot_pom }
+    end
   end
 end
 
