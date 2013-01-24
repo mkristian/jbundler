@@ -13,7 +13,7 @@ module JBundler
         config = JBundler::Config.new
         classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
         if classpath_file.exists?
-          classpath_file.require_classpath
+          classpath_file.require_classpath unless defined? JBUNDLER_CLASSPATH
           puts "JBundler classpath:"
           JBUNDLER_CLASSPATH.each do |path|
             puts "  * #{path}"
@@ -46,6 +46,7 @@ module JBundler
         
         require 'jbundler'
         do_show
+        puts ''
         puts 'Your jbundle is updated! Use `jbundle show` to see where the bundled jars are installed.'
       end
     end
