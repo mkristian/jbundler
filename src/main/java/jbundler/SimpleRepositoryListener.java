@@ -54,11 +54,13 @@ public class SimpleRepositoryListener extends AbstractRepositoryListener {
         RemoteRepository repository = (RemoteRepository) event.getRepository();
         String path = lrm.getPathForRemoteArtifact(event.getArtifact(), repository, null);
         String url = repository.getUrl() + "/" + path;
+        if (repository.getProxy() != null )
+            url += " via proxy " + repository.getProxy();
         return url;
     }
 
     public void artifactDownloaded(RepositoryEvent event) {
-        out.println("artifact downloaded: " + event.getArtifact());
+        out.println("downloaded " + toUrl(event));
     }
 
     public void metadataInvalid(RepositoryEvent event) {
