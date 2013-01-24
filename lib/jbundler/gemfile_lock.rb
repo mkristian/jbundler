@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'jbundler/pom'
+require 'bundler'
 
 module JBundler
 
