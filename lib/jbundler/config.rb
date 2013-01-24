@@ -5,7 +5,7 @@ module JBundler
   # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
   class Config
 
-    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip
+    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline
 
     def initialize
       file = '.jbundlerrc'
@@ -17,11 +17,11 @@ module JBundler
 
     if defined? JRUBY_VERSION
       def jbundler_env(key)
-        ENV[key.upcase.gsub(/./, '_')] || java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) || @config[key.downcase.sub(/^j?bundler/, '').sub(/./, '_')]
+        ENV[key.upcase.gsub(/[.]/, '_')] || java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) || @config[key.downcase.sub(/^j?bundler/, '').sub(/[.]/, '_')]
       end
     else
       def jbundler_env(key)
-        ENV[key.upcase.gsub(/./, '_')] || @config[key.downcase.sub(/^j?bundler/, '').sub(/./, '_')]
+        ENV[key.upcase.gsub(/[.]/, '_')] || @config[key.downcase.sub(/^j?bundler/, '').sub(/[.]/, '_')]
       end
     end
     private :jbundler_env
@@ -64,8 +64,28 @@ module JBundler
 
     def local_repository
       # use maven default local repo as default
-      @local_maven_repository ||= (jbundler_env('JBUNDLE_LOCAL_REPOSITORY') ||
-                                   File.join( ENV['HOME'], ".m2", "repository"))
+      @local_maven_repository ||= jbundler_env('JBUNDLE_LOCAL_REPOSITORY')
+    end
+
+    def settings
+      @settings ||= jbundler_env('JBUNDLE_SETTINGS')
+    end
+
+    def offline
+      @offline ||= jbundler_env('JBUNDLE_OFFLINE')
+      @offline == 'true' || @offline == true
+    end
+
+    def proxy
+      @proxy ||= jbundler_env('JBUNDLE_PROXY')
+    end
+
+    def mirror
+      @mirror ||= jbundler_env('JBUNDLE_MIRROR')
+    end
+
+    def rubygems_mirror
+      @rubygems_mirror ||= jbundler_env('BUNDLE_RUBYGEMS_MIRROR')
     end
   end
 end

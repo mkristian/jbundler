@@ -3,65 +3,6 @@ require 'jbundler/config'
 
 module JBundler
 
-  # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
-  class AetherConfig
-
-    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip
-
-    def initialize
-      file = '.jbundlerrc'
-      homefile = File.join(ENV['HOME'], file)
-      home_config = YAML.load_file(homefile) if File.exists?(homefile)
-      pwd_config = YAML.load_file(file) if File.exists?(file)
-      @config = (home_config || {}).merge(pwd_config || {})
-    end
-
-    if defined? JRUBY_VERSION
-      def jbundler_env(key)
-        ENV[key.upcase.gsub(/./, '_')] || java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) || @config[key.downcase.sub(/^j?bundler/, '').sub(/./, '_')]
-      end
-    else
-      def jbundler_env(key)
-        ENV[key.upcase.gsub(/./, '_')] || @config[key.downcase.sub(/^j?bundler/, '').sub(/./, '_')]
-      end
-    end
-    private :jbundler_env
-
-    def skip
-      skip = jbundler_env('JBUNDLE_SKIP')
-      # defaults to false
-      @skip ||= skip && skip != 'false'
-    end
-
-    def verbose
-      verbose = jbundler_env('JBUNDLE_VERBOSE')
-      # defaults to false
-      @verbose ||= verbose && verbose != 'false'
-    end
-
-    def jarfile
-      if File.exists?('Mvnfile')
-        warn "'Mvnfile' name is deprecated, please use 'Jarfile' instead"
-        @jarfile = 'Mvnfile'
-      end
-      @jarfile ||= jbundler_env('JBUNDLE_JARFILE') || 'Jarfile'
-    end
-
-    def gemfile
-      @gemfile ||= jbundler_env('BUNDLE_GEMFILE') || 'Gemfile'
-    end
-
-    def classpath_file
-      '.jbundler/classpath.rb'
-    end
-
-    def local_repository
-      # use maven default local repo as default
-      @local_maven_repository ||= (jbundler_env('JBUNDLE_LOCAL_REPOSITORY') ||
-                                   File.join( ENV['HOME'], ".m2", "repository"))
-    end
-  end
-
   class AetherRuby
 
     def self.setup_classloader
@@ -79,17 +20,25 @@ module JBundler
           java_import 'jbundler.Aether'
         rescue NameError
           # assume this happens only when working on the git clone
-          raise "jbundler.jar is missing - maybe you need to build it first ? try\n$ rmvn prepare-package -Dmaven.test.skip\n"
+          raise "jbundler.jar is missing - maybe you need to build it first ? use\n$ rmvn prepare-package -Dmaven.test.skip\n"
         end
       end
       java_import 'jbundler.Aether'
     end
 
-    def initialize(config = Config.new, offline = false)
+    def initialize( config = Config.new )
       unless defined? Aether
         self.class.setup_classloader
       end
-      @aether = Aether.new(config.local_repository, config.verbose, offline)
+      @aether = Aether.new( config.verbose )
+      @aether.add_proxy( config.proxy ) if config.proxy
+      @aether.add_mirror( config.mirror ) if config.mirror
+      @aether.offline = config.offline
+      @aether.user_settings = config.settings if config.settings
+      @aether.local_repository = config.local_repository if config.local_repository
+    rescue NativeException => e
+      e.cause.print_stack_trace
+      raise e
     end
 
     def add_artifact(coordinate, extension = nil)
@@ -108,6 +57,9 @@ module JBundler
 
     def resolve
       @aether.resolve unless artifacts.empty?
+    rescue NativeException => e
+      e.cause.print_stack_trace
+      raise e
     end
 
     def classpath 
@@ -140,6 +92,9 @@ module JBundler
 
     def install(coordinate, file)
       @aether.install(coordinate, file)
+    rescue NativeException => e
+      e.cause.print_stack_trace
+      raise e
     end
     
   end
