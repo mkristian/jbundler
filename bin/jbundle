@@ -17,7 +17,23 @@ else
     include JBundler::Lazy
   end
 
+  require 'jbundler/config'
+  config = JBundler::Config.new
   begin
+    if config.rubygems_mirror
+      ENV['BUNDLE_MIRROR__HTTP://RUBYGEMS.ORG'] = config.rubygems_mirror
+      ENV['BUNDLE_MIRROR__HTTPS://RUBYGEMS.ORG'] = config.rubygems_mirror
+      
+      begin
+        load Gem.bin_path('nexuss', 'nbundle') 
+      rescue Gem::GemNotFoundException
+        warn ''
+        warn 'to use a rubygems mirror you need to install the nexus gem'
+        warn '    $ gem install nexus'
+        warn ''
+        warn 'rubygems mirror ignored !'
+      end
+    end
     load Gem.bin_path('bundler', 'bundle') 
   rescue Exception
     if ARGV[0] == 'console'
