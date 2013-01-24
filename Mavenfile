@@ -17,8 +17,13 @@ jar 'org.apache.maven.wagon:wagon-http', wagon_version
 jar 'org.apache.maven:maven-settings', maven_version
 jar 'org.apache.maven:maven-settings-builder', maven_version
 
+test_jar 'org.mockito:mockito-core', '1.9.5'
+test_jar 'org.testng:testng', '6.8'
+
 # overwrite via cli -Djruby.versions=1.6.7
-properties['jruby.versions'] = ['1.5.6','1.6.8','1.7.2'].join(',')
+# putting 1.5.6 at the end works around the problem of installing gems
+# with "bad" timestamps
+properties['jruby.versions'] = ['1.6.8','1.7.2','1.5.6'].join(',')
 # overwrite via cli -Djruby.use18and19=false
 properties['jruby.18and19'] = true
 
@@ -34,11 +39,13 @@ profile 'run-its' do |r|
   end
 end
 
-plugin( :jar ).in_phase( 'prepare-package' ).execute_goal( :jar ).with :finalName => "${project.artifactId}", :outputDirectory => "${project.basedir}/lib"
+plugin( :jar, '2.4' ).in_phase( 'prepare-package' ).execute_goal( :jar ).with :finalName => "${project.artifactId}", :outputDirectory => "${project.basedir}/lib"
 
 plugin(:clean, '2.5' ).with :filesets => [ { :directory => './',
                                              :includes => [ 'Gemfile.lock', 
                                                             'lib/${project.artifactId}.jar' ] } ]
+
+plugin( :compiler, '3.0' ).with( :target => '1.6', :source => '1.6' )
 
 execute_in_phase( :initialize ) do
   pom = File.read( 'pom.xml' )
