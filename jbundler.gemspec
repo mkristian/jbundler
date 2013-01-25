@@ -14,6 +14,8 @@ END
   s.bindir = "bin"
   s.executables = ['jbundle']
 
+  s.license = 'MIT'
+
   s.files += Dir['lib/**/*']
   s.files += Dir['spec/**/*']
   s.files += Dir['MIT-LICENSE'] + Dir['*.md']
