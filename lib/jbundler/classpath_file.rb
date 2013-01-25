@@ -19,7 +19,7 @@ module JBundler
     end
 
     def needs_update?(jarfile, gemfile_lock)
-      (jarfile.exists? || gemfile_lock.exists?) && (!exists? || !jarfile.exists_lock? || (jarfile.exists? && (jarfile.mtime > mtime)) || (jarfile.exists_lock? && (jarfile.mtime_lock > mtime)) || (gemfile_lock.exists? && (gemfile_lock.mtime > mtime)))
+      (jarfile.exists? || gemfile_lock.exists? || jarfile.exists_lock?) && (!exists? || !jarfile.exists_lock? || (jarfile.exists? && (jarfile.mtime > mtime)) || (jarfile.exists_lock? && (jarfile.mtime_lock > mtime)) || (gemfile_lock.exists? && (gemfile_lock.mtime > mtime)))
     end
 
     def generate(classpath_array)
