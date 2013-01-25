@@ -1,4 +1,6 @@
-# jbundler [![Build Status](https://secure.travis-ci.org/mkristian/jbundler.png)](http://travis-ci.org/mkristian/jbundler) #
+# jbundler 
+
+* [![Build Status](https://secure.travis-ci.org/mkristian/jbundler.png)](http://travis-ci.org/mkristian/jbundler) #
 
 manage jar dependencies similar than **bundler** manages gem dependencies.
 
@@ -77,8 +79,6 @@ will offer the same `jar`/`jars` method than you have inside the console.
 
 ## example ##
 
-**please first build the jar file for the jbundler gem, see [Build](https://github.com/mkristian/jbundler/wiki/Build).** 
-
 *src/example/my_project* has a Gemfile which uses a gem which depends on jar dependency. see *src/example/gem_with_jar/gem_with_jar.gemspec* how the jar gets declared.
 
 execute *src/example/my_project/info.rb* to see it in action:
@@ -103,6 +103,25 @@ update of a single artifact is not possible (yet). but to update the whole set o
 
 if jbundler sees that **Gemfile.lock** or **Jarfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes.
 
-## meta-fu ##
+# special thanks #
 
-bug-reports and pull request are most welcome.
+the whole project actually started with a controversial discussion on a [pull request on bundler](https://github.com/carlhuda/bundler/pull/1683). this very same pull request were the starting point of that project here. probably by now there is no much left of the original code but many thanks to [ANithian](https://github.com/ANithian) for given the seed of that project.
+
+License
+-------
+
+Almost all code is under the MIT license but the java class (AetherSettings.java)[https://github.com/mkristian/jbundler/blob/master/src/main/java/jbundler/AetherSettings.java] which was derived from EPL licensed code.
+
+Contributing
+------------
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Added some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+meta-fu
+-------
+
+enjoy :) 
