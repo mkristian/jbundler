@@ -82,10 +82,16 @@ module JBundler
 
     def mirror
       @mirror ||= jbundler_env('JBUNDLE_MIRROR')
+      # nce to have no leading slash
+      @mirror.sub!( /\/$/, '' ) if @mirror
+      @mirror
     end
 
     def rubygems_mirror
       @rubygems_mirror ||= jbundler_env('BUNDLE_RUBYGEMS_MIRROR')
+      # here a leading slash is needed !!
+      @rubygems_mirror.sub!( /([^\/])$/ , "\\1/" ) if @rubygems_mirror
+      @rubygems_mirror
     end
   end
 end
