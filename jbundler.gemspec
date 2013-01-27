@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'jbundler'
-  s.version = '0.3.2'
+  s.version = '0.4.0'
 
   s.summary = 'managing jar dependencies'
   s.description = <<-END
@@ -23,9 +23,10 @@ END
   s.test_files += Dir['spec/**/*_spec.rb']
 
   s.add_runtime_dependency "ruby-maven", "~> 3.0.4"
+  s.add_runtime_dependency "maven-tools", "~> 0.29.1"
   s.add_development_dependency "rake", "~> 10.0.3"
   s.add_development_dependency "thor", "< 0.16.0", "> 0.14.0"
   s.add_development_dependency "cucumber", "~> 1.1.9"
   s.add_development_dependency "minitest", "~> 4.3"
-
+  s.add_development_dependency "copyright-header", "~> 1.0.7"
 end
