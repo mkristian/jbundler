@@ -44,7 +44,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>maven-tools</artifactId>
-      <version>[0.29.1,0.29.99999]</version>
+      <version>[0.32.1,0.32.99999]</version>
       <type>gem</type>
       <scope>compile</scope>
     </dependency>
