@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jbundler</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
   <name><![CDATA[managing jar dependencies]]></name>
   <packaging>gem</packaging>
   <description><![CDATA[managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
@@ -37,83 +37,56 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>ruby-maven</artifactId>
+      <version>[3.0.4,3.0.99999]</version>
       <type>gem</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>maven-tools</artifactId>
+      <version>[0.29.1,0.29.99999]</version>
       <type>gem</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>thor</artifactId>
+      <artifactId>rake</artifactId>
+      <version>[10.0.3,10.0.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>rake</artifactId>
+      <artifactId>thor</artifactId>
+      <version>(0.14.0,0.16.0)</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>cucumber</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>builder</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>diff-lcs</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>gherkin</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>json</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>term-ansicolor</artifactId>
+      <version>[1.1.9,1.1.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>minitest</artifactId>
+      <version>[4.3,4.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>copyright-header</artifactId>
+      <version>[1.0.7,1.0.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>jruby-openssl</artifactId>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>bouncy-castle-java</artifactId>
+      <version>0.8.2</version>
       <type>gem</type>
     </dependency>
     <dependency>
@@ -191,96 +164,6 @@
   </dependencies>
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>jbundler</artifactId>
-        <version>0.4.0</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>ruby-maven</artifactId>
-        <version>3.0.4.1.2</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>maven-tools</artifactId>
-        <version>0.32.0</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>thor</artifactId>
-        <version>0.15.4</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>bouncy-castle-java</artifactId>
-        <version>1.5.0146.1</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>builder</artifactId>
-        <version>3.1.4</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>copyright-header</artifactId>
-        <version>1.0.7</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>cucumber</artifactId>
-        <version>1.1.9</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>diff-lcs</artifactId>
-        <version>1.2.0</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>gherkin</artifactId>
-        <version>2.9.3</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>json</artifactId>
-        <version>1.7.6</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>term-ansicolor</artifactId>
-        <version>1.0.7</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>jruby-openssl</artifactId>
-        <version>0.8.2</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>minitest</artifactId>
-        <version>4.5.0</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>rake</artifactId>
-        <version>10.0.3</version>
-        <type>gem</type>
-      </dependency>
       <dependency>
         <groupId>rubygems</groupId>
         <artifactId>bundler</artifactId>
@@ -361,7 +244,7 @@
         <configuration>
           <defaultExecutable>jbundle</defaultExecutable>
           <executables>jbundle</executables>
-          <files>bin/jbundle,lib/rubygems_plugin.rb~,lib/jbundler.rb,lib/jars.rb~,lib/jbundler,lib/jbundler.jar,lib/jbundler/pom.rb,lib/jbundler/cli.rb,lib/jbundler/config.rb,lib/jbundler/classpath_file.rb,lib/jbundler/aether.rb,lib/jbundler/gemfile_lock.rb,lib/jbundler/lazy.rb,spec/classpath_file_spec.rb,spec/setup.rb,spec/pom_spec.rb,spec/aether_spec.rb,MIT-LICENSE,Readme.md,Gemfile.lock~,Gemfile,Gemfile.lock</files>
+          <files>bin/jbundle,lib/jbundler.rb,lib/jbundler,lib/jbundler/pom.rb,lib/jbundler/cli.rb,lib/jbundler/config.rb,lib/jbundler/classpath_file.rb,lib/jbundler/aether.rb,lib/jbundler/gemfile_lock.rb,lib/jbundler/lazy.rb,lib/jbundler.jar,spec/classpath_file_spec.rb,spec/setup.rb,spec/pom_spec.rb,spec/aether_spec.rb,MIT-LICENSE,Readme.md,Gemfile.lock~,Gemfile</files>
           <gemspec>jbundler.gemspec</gemspec>
           <testFiles>spec/classpath_file_spec.rb,spec/pom_spec.rb,spec/aether_spec.rb</testFiles>
         </configuration>

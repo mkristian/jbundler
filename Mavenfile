@@ -1,25 +1,5 @@
 #-*- mode: ruby -*-
 
-# aether_version = '1.13'
-# maven_version = '3.0.4'
-# wagon_version = '2.2'
-
-# jar 'org.sonatype.aether:aether-api', aether_version
-# jar 'org.sonatype.aether:aether-util', aether_version
-# jar 'org.sonatype.aether:aether-impl', aether_version
-# jar 'org.sonatype.aether:aether-connector-file', aether_version
-# jar 'org.sonatype.aether:aether-connector-asynchttpclient', aether_version
-# jar 'org.sonatype.aether:aether-connector-wagon', aether_version
-# jar 'org.apache.maven:maven-aether-provider', maven_version
-# jar 'org.apache.maven.wagon:wagon-file', wagon_version
-# jar 'org.apache.maven.wagon:wagon-http', wagon_version
-# #jar 'org.apache.maven.wagon:wagon-http-lightweight', wagon_version
-# jar 'org.apache.maven:maven-settings', maven_version
-# jar 'org.apache.maven:maven-settings-builder', maven_version
-
-# test_jar 'org.mockito:mockito-core', '1.9.5'
-# test_jar 'org.testng:testng', '6.8'
-
 plugin(:minitest) do |m|
   m.execute_goal(:spec)
 end
