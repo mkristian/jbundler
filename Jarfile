@@ -15,7 +15,4 @@ jar 'org.apache.maven.wagon:wagon-http', '2.2'
 jar 'org.apache.maven:maven-settings', '3.0.4'
 jar 'org.apache.maven:maven-settings-builder', '3.0.4'
 
-test_jar 'org.mockito:mockito-core', '1.9.5'
-test_jar 'org.testng:testng', '6.8'
-
 # vim: syntax=Ruby

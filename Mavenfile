@@ -22,7 +22,7 @@ properties['jruby.versions'] = ['1.6.8','1.7.2','1.5.6'].join(',')
 properties['jruby.18and19'] = true
 
 # just lock the versions
-properties['jruby.plugins.version'] = '0.29.3'
+properties['jruby.plugins.version'] = '0.29.4'
 properties['jruby.version'] = '1.7.2'
 
 # TODO get them working again ;)
@@ -33,5 +33,8 @@ profile 'run-its' do |r|
     m.with( :skip => false )
   end
 end
+
+test_jar 'org.mockito:mockito-core', '1.9.5'
+test_jar 'org.testng:testng', '6.8'
 
 # vim: syntax=Ruby

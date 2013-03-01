@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
 managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
 END
 
-  s.authors = ['Kristian Meier']
+  s.authors = ['Christian Meier']
   s.email = ['m.kristian@web.de']
   s.homepage = 'https://github.com/mkristian/jbundler'
 
