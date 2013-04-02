@@ -28,7 +28,7 @@ module JBundler
     def self.setup_classloader
       require 'java'
 
-      maven_home = File.dirname(File.dirname(Gem.bin_path('ruby-maven', 
+      maven_home = File.dirname(File.dirname(Gem.bin_path('ruby-maven',
                                                            'rmvn')))
       # TODO reduce to the libs which are really needed
       Dir.glob(File.join(maven_home, 'lib', "*jar")).each {|path| require path }
@@ -55,7 +55,7 @@ module JBundler
       @aether.add_mirror( config.mirror ) if config.mirror
       @aether.offline = config.offline
       @aether.user_settings = config.settings if config.settings
-      @aether.local_repository = config.local_repository if config.local_repository
+      @aether.local_repository = java.io.File.new(config.local_repository) if config.local_repository
     rescue NativeException => e
       e.cause.print_stack_trace
       raise e
@@ -82,18 +82,18 @@ module JBundler
       raise e
     end
 
-    def classpath 
+    def classpath
       if artifacts.empty?
         ''
       else
         @aether.classpath
       end
     end
-   
+
     def classpath_array
       classpath.split(/#{File::PATH_SEPARATOR}/)
     end
-   
+
     def repositories
       @aether.repositories
     end
@@ -116,6 +116,6 @@ module JBundler
       e.cause.print_stack_trace
       raise e
     end
-    
+
   end
 end
