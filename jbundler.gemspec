@@ -28,5 +28,5 @@ END
   s.add_development_dependency "thor", "< 0.16.0", "> 0.14.0"
   s.add_development_dependency "cucumber", "~> 1.1.9"
   s.add_development_dependency "minitest", "~> 4.3"
-  s.add_development_dependency "copyright-header", "~> 1.0.7"
+  s.add_development_dependency "copyright-header", "1.0.8"
 end
