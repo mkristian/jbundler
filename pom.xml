@@ -436,6 +436,7 @@
                     <artifactId>gem-maven-plugin</artifactId>
                     <goals>
                       <goal>initialize</goal>
+                      <goal>pom</goal>
                     </goals>
                     <groupId>de.saumya.mojo</groupId>
                     <versionRange>[0,)</versionRange>
