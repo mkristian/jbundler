@@ -17,13 +17,13 @@ plugin( :gem ).in_phase( :validate ).execute_goal( :pom ).with( :tmpPom => '.pom
 # canbe overwritten via cli -Djruby.versions=1.6.7
 # putting 1.5.6 at the end works around the problem of installing gems
 # with "bad" timestamps
-properties['jruby.versions'] = ['1.6.8','1.7.2','1.5.6'].join(',')
+properties['jruby.versions'] = ['1.6.8','1.7.3','1.5.6'].join(',')
 # overwrite via cli -Djruby.use18and19=false
 properties['jruby.18and19'] = true
 
 # just lock the versions
-properties['jruby.plugins.version'] = '0.29.4'
-properties['jruby.version'] = '1.7.2'
+properties['jruby.plugins.version'] = '1.0.0-beta'
+properties['jruby.version'] = '1.7.3'
 
 # TODO get them working again ;)
 plugin( :cucumber ).with( :skip => true )
