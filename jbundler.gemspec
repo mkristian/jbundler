@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'jbundler'
-  s.version = '0.4.2'
+  s.version = '0.4.3'
 
   s.summary = 'managing jar dependencies'
   s.description = <<-END
