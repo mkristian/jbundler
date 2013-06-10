@@ -22,6 +22,7 @@
 package jbundler;
 
 import org.apache.maven.wagon.Wagon;
+import org.apache.maven.wagon.providers.file.FileWagon;
 import org.apache.maven.wagon.providers.http.HttpWagon;
 import org.sonatype.aether.connector.wagon.WagonProvider;
 
@@ -29,8 +30,11 @@ public class ManualWagonProvider implements WagonProvider {
 
     public Wagon lookup( String roleHint )
         throws Exception {
-        if ( "http".equals( roleHint ) ) {
+        if ( "http".equals( roleHint ) || "https".equals( roleHint ) ) {
             return new HttpWagon();
+        }
+        if ( "file".equals( roleHint ) ) {
+            return new FileWagon();
         }
         return null;
     }
