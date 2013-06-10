@@ -111,7 +111,7 @@ public class Aether {
     }
         
     private ServiceLocator newServiceLocator() {
-        MavenServiceLocator locator = new MavenServiceLocator();// when using maven 3.0.4   
+        MavenServiceLocator locator = new MavenServiceLocator();// when using maven 3.0.4
         //locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
         locator.addService( RepositoryConnectorFactory.class, WagonRepositoryConnectorFactory.class );
         
