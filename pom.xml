@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jbundler</artifactId>
-  <version>0.4.2</version>
+  <version>0.4.3</version>
   <name><![CDATA[managing jar dependencies]]></name>
   <packaging>gem</packaging>
   <description><![CDATA[managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
@@ -309,7 +309,7 @@
     <jruby.18and19>true</jruby.18and19>
     <jruby.plugins.version>1.0.0-beta</jruby.plugins.version>
     <jruby.version>1.7.3</jruby.version>
-    <jruby.versions>1.6.8,1.7.3,1.5.6</jruby.versions>
+    <jruby.versions>1.6.8,1.7.4,1.5.6</jruby.versions>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <build>
@@ -375,9 +375,9 @@
         <configuration>
           <defaultExecutable>jbundle</defaultExecutable>
           <executables>jbundle</executables>
-          <files>bin/jbundle,lib/jbundler.rb,lib/jbundler,lib/jbundler/pom.rb,lib/jbundler/cli.rb,lib/jbundler/config.rb,lib/jbundler/classpath_file.rb,lib/jbundler/aether.rb,lib/jbundler/gemfile_lock.rb,lib/jbundler/lazy.rb,lib/jbundler.jar,spec/classpath_file_spec.rb,spec/setup.rb,spec/pom_spec.rb,spec/aether_spec.rb,MIT-LICENSE,Readme.md,Gemfile.lock~,Gemfile,Gemfile.lock</files>
+          <files>bin/jbundle,lib/jbundler.jar,lib/jbundler.rb,lib/jbundler,lib/jbundler/lazy.rb,lib/jbundler/pom.rb,lib/jbundler/gemfile_lock.rb,lib/jbundler/config.rb,lib/jbundler/aether.rb,lib/jbundler/classpath_file.rb,lib/jbundler/cli.rb,spec/classpath_file_spec.rb,spec/setup.rb,spec/aether_spec.rb,spec/pom_spec.rb,MIT-LICENSE,Readme.md,Gemfile.lock~,Gemfile,Gemfile.lock</files>
           <gemspec>jbundler.gemspec</gemspec>
-          <testFiles>spec/classpath_file_spec.rb,spec/pom_spec.rb,spec/aether_spec.rb</testFiles>
+          <testFiles>spec/classpath_file_spec.rb,spec/aether_spec.rb,spec/pom_spec.rb</testFiles>
         </configuration>
         <executions>
           <execution>

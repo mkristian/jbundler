@@ -17,7 +17,7 @@ plugin( :gem ).in_phase( :validate ).execute_goal( :pom ).with( :tmpPom => '.pom
 # canbe overwritten via cli -Djruby.versions=1.6.7
 # putting 1.5.6 at the end works around the problem of installing gems
 # with "bad" timestamps
-properties['jruby.versions'] = ['1.6.8','1.7.3','1.5.6'].join(',')
+properties['jruby.versions'] = ['1.6.8','1.7.4','1.5.6'].join(',')
 # overwrite via cli -Djruby.use18and19=false
 properties['jruby.18and19'] = true
 
