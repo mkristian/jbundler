@@ -58,7 +58,7 @@ for adding a maven repository see [Jarfile](https://github.com/torquebox/maven-t
 
 like bundler there is a console which sets up the gems (if there is Gemfile otherwise that part get skipped) and sets up the classloader:
 
-    jbundler console
+    jbundle console
 
 further it adds two methods to the root level:
 
