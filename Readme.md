@@ -95,7 +95,7 @@ since the version resolution happens in two steps - first the gems then the jars
 
 **Jarfile** is **not** a DSL but it could use a ruby DSL to read the data (any contribution welcome).
 
-jbundler does not yet obey the **$HOME/.m2/settings.xml** from maven where you usually declare proxies, mirrors, etc.
+jbundler does not completely obey the **$HOME/.m2/settings.xml** from maven where you usually declare proxies, mirrors, etc. see [jbundler configuration](https://github.com/mkristian/jbundler/wiki/Configuration) for what is already possible.
 	
 ## update ##
 
