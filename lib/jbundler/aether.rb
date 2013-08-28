@@ -20,6 +20,7 @@
 #
 require 'yaml'
 require 'jbundler/config'
+require 'maven'
 
 module JBundler
 
@@ -28,10 +29,9 @@ module JBundler
     def self.setup_classloader
       require 'java'
 
-      maven_home = File.dirname(File.dirname(Gem.bin_path('ruby-maven',
-                                                           'rmvn')))
-      # TODO reduce to the libs which are really needed
-      Dir.glob(File.join(maven_home, 'lib', "*jar")).each {|path| require path }
+      Dir.glob( File.join( Maven.lib, '*.jar' ) ).each do |path|
+        require path
+      end
       begin
         require 'jbundler.jar'
       rescue LoadError
@@ -61,6 +61,14 @@ module JBundler
       raise e
     end
 
+    def local_jars
+      @local_jars ||= []
+    end
+
+    def add_local_jar( path )
+       local_jars << File.expand_path( path )
+    end
+
     def add_artifact(coordinate, extension = nil)
       if extension
         coord = coordinate.split(/:/)
@@ -74,6 +82,9 @@ module JBundler
     def add_repository(name, url)
       @aether.add_repository(name, url)
     end
+    def add_snapshot_repository(name, url)
+      @aether.add_snapshot_repository(name, url)
+    end
 
     def resolve
       @aether.resolve unless artifacts.empty?
@@ -83,10 +94,12 @@ module JBundler
     end
 
     def classpath
-      if artifacts.empty?
+      if artifacts.empty? and local_jars.empty?
         ''
       else
-        @aether.classpath
+        path = [ @aether.classpath ] 
+        path = path + @local_jars if @local_jars
+        path.join( File::PATH_SEPARATOR )
       end
     end
 
@@ -103,7 +116,7 @@ module JBundler
     end
 
     def resolved_coordinates
-      if artifacts.empty?
+      if @aether.artifacts.empty?
         []
       else
         @aether.resolved_coordinates

@@ -19,18 +19,19 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 require 'thor'
+require 'jbundler/config'
+require 'jbundler/executable'
+require 'jbundler/tree'
 module JBundler
   class Cli < Thor
     no_tasks do
-      def mvn
-        @mvn ||= Maven::Ruby::Maven.new
+      def config
+        @config ||= JBundler::Config.new
       end
 
       def do_show
         require 'java' 
-        require 'jbundler/config'
         require 'jbundler/classpath_file'
-        config = JBundler::Config.new
         classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
         if classpath_file.exists?
           classpath_file.require_classpath unless defined? JBUNDLER_CLASSPATH
@@ -43,7 +44,21 @@ module JBundler
         end
       end
     end
-    
+
+    desc 'tree', 'display a graphical representation of the dependency tree'
+    #method_option :details, :type => :boolean, :default => false
+    def tree
+      JBundler::Tree.new( config ).show_it
+    end
+
+    desc 'executable', 'create an executable jar with a given bootstrap.rb file'
+    method_option :bootstrap, :type => :string, :aliases => '-b', :required => true, :desc => 'file which will be executed when the jar gets executed'
+    method_option :groups, :type => :array, :aliases => '-g', :desc => 'bundler groups to use for determine the gems to include in the jar file'
+    def executable
+      ex = JBundler::Executable.new( options[ :bootstrap ], config )
+      ex.packit
+    end
+
     desc 'console', 'irb session with gems and/or jars and with lazy jar loading.'
     def console
       # dummy - never executed !!!

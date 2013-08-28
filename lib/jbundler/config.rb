@@ -25,7 +25,7 @@ module JBundler
   # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
   class Config
 
-    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline
+    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline, :work_dir
 
     def initialize
       file = '.jbundlerrc'
@@ -102,7 +102,7 @@ module JBundler
 
     def mirror
       @mirror ||= jbundler_env('JBUNDLE_MIRROR')
-      # nce to have no leading slash
+      # nice to have no leading slash
       @mirror.sub!( /\/$/, '' ) if @mirror
       @mirror
     end
@@ -113,5 +113,10 @@ module JBundler
       @rubygems_mirror.sub!( /([^\/])$/ , "\\1/" ) if @rubygems_mirror
       @rubygems_mirror
     end
+
+    def work_dir
+      @work_dir ||= jbundler_env('JBUNDLE_WORK_DIR') || 'target'
+    end
+
   end
 end

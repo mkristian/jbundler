@@ -42,12 +42,12 @@ module JBundler
     def populate_dependencies(aether)
       if @lockfile
         # assuming we run in Bundler context here 
-        # at we have a Gemfile.lock :)
+        # since we have a Gemfile.lock :)
         Bundler.load.specs.each do |spec|
           jars = []
           spec.requirements.each do |rr|
             rr.split(/\n/).each do |r|
-              jars << r if r =~ /^jar\s/
+              jars << r if r =~ /^\s*(jar|pom)\s/
             end
           end
           unless jars.empty?
