@@ -1,18 +1,19 @@
 #-*- mode: ruby -*-
-# but it is NOT interpreted as ruby code
-# IT IS just declarative
 
-jar 'org.sonatype.aether:aether-api', '1.13'
-jar 'org.sonatype.aether:aether-util', '1.13'
-jar 'org.sonatype.aether:aether-impl', '1.13'
-jar 'org.sonatype.aether:aether-connector-file', '1.13'
-jar 'org.sonatype.aether:aether-connector-asynchttpclient', '1.13'
-jar 'org.sonatype.aether:aether-connector-wagon', '1.13'
-jar 'org.apache.maven:maven-aether-provider', '3.0.4'
-jar 'org.apache.maven.wagon:wagon-file', '2.2'
-jar 'org.apache.maven.wagon:wagon-http', '2.2'
-#jar 'org.apache.maven.wagon:wagon-http-lightweight', '2.2'
-jar 'org.apache.maven:maven-settings', '3.0.4'
-jar 'org.apache.maven:maven-settings-builder', '3.0.4'
+AETHER_VERSION = '0.9.0.M2'
+MAVEN_VERSION = '3.1.0'
+WAGON_VERSION = '2.4'
+
+jar 'org.eclipse.aether:aether-api', AETHER_VERSION
+jar 'org.eclipse.aether:aether-util', AETHER_VERSION
+jar 'org.eclipse.aether:aether-impl', AETHER_VERSION
+jar 'org.eclipse.aether:aether-connector-file', AETHER_VERSION
+jar 'org.eclipse.aether:aether-connector-asynchttpclient', AETHER_VERSION
+jar 'org.eclipse.aether:aether-connector-wagon', AETHER_VERSION
+jar 'org.apache.maven:maven-aether-provider', MAVEN_VERSION
+jar 'org.apache.maven.wagon:wagon-file', WAGON_VERSION
+jar 'org.apache.maven.wagon:wagon-http', WAGON_VERSION
+jar 'org.apache.maven:maven-settings', MAVEN_VERSION
+jar 'org.apache.maven:maven-settings-builder', MAVEN_VERSION
 
 # vim: syntax=Ruby
