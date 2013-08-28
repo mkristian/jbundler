@@ -1,8 +1,6 @@
-#require 'fileutils'
+$LOAD_PATH.unshift File.join( File.dirname( File.expand_path( File.dirname( __FILE__ ) ) ),
+                              'lib' )
 
-#FileUtils.mkdir_p 'target'
-
-$LOAD_PATH.unshift './lib' unless $LOAD_PATH.member? './lib'
 begin
   require 'minitest'
 rescue LoadError

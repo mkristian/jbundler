@@ -1,17 +1,18 @@
-#TODO get 'spec' into $LOAD by minispec-maven-plugin
 load File.expand_path(File.join('spec', 'setup.rb'))
 require 'maven/tools/jarfile'
 require 'jbundler/aether'
+require 'fileutils'
 
 describe JBundler::AetherRuby do
 
-  let(:workdir) { 'target' }
+  let(:workdir) { 'pkg' }
   let(:jfile) { File.join(workdir, 'tmp-jarfile') }
   let(:jfile_lock) { jfile + ".lock"}
   let(:jarfile) { Maven::Tools::Jarfile.new(jfile) }
   subject { JBundler::AetherRuby.new }
 
   before do
+    FileUtils.mkdir_p( workdir )
     Dir[File.join(workdir, "tmp*")].each { |f| FileUtils.rm_f f }
   end
 
