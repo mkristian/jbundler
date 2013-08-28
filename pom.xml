@@ -1,397 +1,185 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jbundler</artifactId>
-  <version>0.4.4</version>
-  <name><![CDATA[managing jar dependencies]]></name>
+  <version>0.5.0</version>
   <packaging>gem</packaging>
-  <description><![CDATA[managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
-]]></description>
+  <name>managing jar dependencies</name>
+  <description>managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
+</description>
   <url>https://github.com/mkristian/jbundler</url>
-  <developers>
-    <developer>
-      <id>m_dot_kristian_at_web_dot_de</id>
-      <name>Christian Meier</name>
-      <email>m.kristian@web.de</email>
-    </developer>
-  </developers>
-  <licenses>
-    <license>
-      <name>MIT</name>
-      <url>./MIT</url>
-      <distribution>repo</distribution>
-    </license>
-    <license>
-      <name>MIT-LICENSE</name>
-      <url>./MIT-LICENSE</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <repositories>
-    <repository>
-      <id>rubygems-releases</id>
-      <url>http://rubygems-proxy.torquebox.org/releases</url>
-    </repository>
-  </repositories>
+  <properties>
+    <jruby.version>1.7.4</jruby.version>
+    <tesla.dump.readonly>true</tesla.dump.readonly>
+    <jruby.plugins.version>1.0.0-beta-1-SNAPSHOT</jruby.plugins.version>
+    <jruby.versions>1.6.8,1.7.4,1.5.6</jruby.versions>
+    <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+    <jruby.18and19>true</jruby.18and19>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>ruby-maven</artifactId>
+      <version>[3.1.0.0,3.1.0.99999]</version>
       <type>gem</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>maven-tools</artifactId>
+      <artifactId>bundler</artifactId>
+      <version>[1.2,1.99999]</version>
       <type>gem</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>rake</artifactId>
+      <version>[10.0,10.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>thor</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>cucumber</artifactId>
+      <version>(0.14.0,0.16.0)</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>minitest</artifactId>
+      <version>[5.0,5.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>copyright-header</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
+      <groupId>org.jruby</groupId>
+      <artifactId>jruby-core</artifactId>
+      <version>1.7.4</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>builder</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>diff-lcs</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>gherkin</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>json</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>term-ansicolor</artifactId>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>jruby-openssl</artifactId>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>bouncy-castle-java</artifactId>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-api</artifactId>
-      <version>1.13</version>
-      <type>jar</type>
+      <version>0.9.0.M2</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-util</artifactId>
-      <version>1.13</version>
-      <type>jar</type>
+      <version>0.9.0.M2</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-impl</artifactId>
-      <version>1.13</version>
-      <type>jar</type>
+      <version>0.9.0.M2</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-connector-file</artifactId>
-      <version>1.13</version>
-      <type>jar</type>
+      <version>0.9.0.M2</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-connector-asynchttpclient</artifactId>
-      <version>1.13</version>
-      <type>jar</type>
+      <version>0.9.0.M2</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-connector-wagon</artifactId>
-      <version>1.13</version>
-      <type>jar</type>
+      <version>0.9.0.M2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-aether-provider</artifactId>
-      <version>3.0.4</version>
-      <type>jar</type>
+      <version>3.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-file</artifactId>
-      <version>2.2</version>
-      <type>jar</type>
+      <version>2.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-http</artifactId>
-      <version>2.2</version>
-      <type>jar</type>
+      <version>2.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-settings</artifactId>
-      <version>3.0.4</version>
-      <type>jar</type>
+      <version>3.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-settings-builder</artifactId>
-      <version>3.0.4</version>
-      <type>jar</type>
+      <version>3.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>1.9.5</version>
-      <type>jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>6.8</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>bundler</artifactId>
-      <type>gem</type>
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>jbundler</artifactId>
-        <version>0.4.1</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>maven-tools</artifactId>
-        <version>0.32.1</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>ruby-maven</artifactId>
-        <version>3.0.4.1.3</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>thor</artifactId>
-        <version>0.15.4</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>bouncy-castle-java</artifactId>
-        <version>1.5.0146.1</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>builder</artifactId>
-        <version>3.1.4</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>copyright-header</artifactId>
-        <version>1.0.7</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>cucumber</artifactId>
-        <version>1.1.9</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>diff-lcs</artifactId>
-        <version>1.2.0</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>gherkin</artifactId>
-        <version>2.9.3</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>json</artifactId>
-        <version>1.7.6</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>term-ansicolor</artifactId>
-        <version>1.0.7</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>jruby-openssl</artifactId>
-        <version>0.8.2</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>minitest</artifactId>
-        <version>4.5.0</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>rake</artifactId>
-        <version>10.0.3</version>
-        <type>gem</type>
-      </dependency>
-      <dependency>
-        <groupId>rubygems</groupId>
-        <artifactId>bundler</artifactId>
-        <version>1.2.3</version>
-        <type>gem</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-  <properties>
-    <gem.home>${project.build.directory}/rubygems</gem.home>
-    <gem.path>${project.build.directory}/rubygems</gem.path>
-    <jruby.18and19>true</jruby.18and19>
-    <jruby.plugins.version>1.0.0-beta</jruby.plugins.version>
-    <jruby.version>1.7.3</jruby.version>
-    <jruby.versions>1.6.8,1.7.4,1.5.6</jruby.versions>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+  <repositories>
+    <repository>
+      <id>rubygems-releases</id>
+      <url>http://rubygems-proxy.torquebox.org/releases</url>
+    </repository>
+  </repositories>
   <build>
+    <extensions>
+      <extension>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-extension</artifactId>
+        <version>${jruby.plugins.version}</version>
+      </extension>
+    </extensions>
+    <directory>${basedir}/pkg</directory>
     <plugins>
       <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>lib</outputDirectory>
+          <finalName>jbundler</finalName>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>2.5</version>
+        <version>2.4</version>
         <configuration>
           <filesets>
             <fileset>
-              <directory>./</directory>
+              <directory>lib</directory>
               <includes>
-                <include>Gemfile.lock</include>
-                <include>lib/${project.artifactId}.jar</include>
+                <include>jbundler.jar</include>
               </includes>
             </fileset>
           </filesets>
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.0</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>in_phase_prepare_package</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <finalName>${project.artifactId}</finalName>
-              <outputDirectory>${project.basedir}/lib</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>bundler-maven-plugin</artifactId>
-        <version>${jruby.plugins.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>cucumber-maven-plugin</artifactId>
-        <version>${jruby.plugins.version}</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
         <version>${jruby.plugins.version}</version>
-        <extensions>true</extensions>
         <configuration>
-          <defaultExecutable>jbundle</defaultExecutable>
-          <executables>jbundle</executables>
-          <files>bin/jbundle,lib/jbundler.jar,lib/jbundler.rb,lib/jbundler,lib/jbundler/lazy.rb,lib/jbundler/pom.rb,lib/jbundler/gemfile_lock.rb,lib/jbundler/config.rb,lib/jbundler/aether.rb,lib/jbundler/classpath_file.rb,lib/jbundler/cli.rb,spec/classpath_file_spec.rb,spec/setup.rb,spec/aether_spec.rb,spec/pom_spec.rb,MIT-LICENSE,Readme.md,Gemfile.lock~,Gemfile,Gemfile.lock</files>
           <gemspec>jbundler.gemspec</gemspec>
-          <testFiles>spec/classpath_file_spec.rb,spec/aether_spec.rb,spec/pom_spec.rb</testFiles>
         </configuration>
-        <executions>
-          <execution>
-            <id>in_phase_validate</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>pom</goal>
-            </goals>
-            <configuration>
-              <skipGeneration>true</skipGeneration>
-              <tmpPom>.pom.xml</tmpPom>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
@@ -405,118 +193,14 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <target>1.6</target>
+          <source>1.6</source>
+        </configuration>
+      </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                  <pluginExecutionFilter>
-                    <artifactId>bundler-maven-plugin</artifactId>
-                    <goals>
-                      <goal>install</goal>
-                    </goals>
-                    <groupId>de.saumya.mojo</groupId>
-                    <versionRange>[0,)</versionRange>
-                  </pluginExecutionFilter>
-                </pluginExecution>
-                <pluginExecution>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                  <pluginExecutionFilter>
-                    <artifactId>gem-maven-plugin</artifactId>
-                    <goals>
-                      <goal>initialize</goal>
-                    </goals>
-                    <groupId>de.saumya.mojo</groupId>
-                    <versionRange>[0,)</versionRange>
-                  </pluginExecutionFilter>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
-  <profiles>
-    <profile>
-      <id>executable</id>
-      <dependencies>
-        <dependency>
-          <groupId>de.saumya.mojo</groupId>
-          <artifactId>gem-assembly-descriptors</artifactId>
-          <version>${jruby.plugins.version}</version>
-          <type>jar</type>
-          <scope>runtime</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.3</version>
-            <configuration>
-              <archive>
-                <manifest>
-                  <mainClass>de.saumya.mojo.assembly.Main</mainClass>
-                </manifest>
-              </archive>
-              <descriptorRefs>
-                <descriptorRef>jar-with-dependencies-and-gems</descriptorRef>
-              </descriptorRefs>
-            </configuration>
-            <executions>
-              <execution>
-                <id>in_phase_package</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>assembly</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <dependency>
-                <groupId>de.saumya.mojo</groupId>
-                <artifactId>gem-assembly-descriptors</artifactId>
-                <version>${jruby.plugins.version}</version>
-                <type>jar</type>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>run-its</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>de.saumya.mojo</groupId>
-            <artifactId>cucumber-maven-plugin</artifactId>
-            <version>${jruby.plugins.version}</version>
-            <configuration>
-              <skip>false</skip>
-            </configuration>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>test</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
