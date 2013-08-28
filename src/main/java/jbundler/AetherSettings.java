@@ -31,16 +31,16 @@ import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
-import org.sonatype.aether.repository.Authentication;
-import org.sonatype.aether.repository.AuthenticationSelector;
-import org.sonatype.aether.repository.LocalRepository;
-import org.sonatype.aether.repository.MirrorSelector;
-import org.sonatype.aether.repository.Proxy;
-import org.sonatype.aether.repository.ProxySelector;
-import org.sonatype.aether.util.repository.ConservativeAuthenticationSelector;
-import org.sonatype.aether.util.repository.DefaultAuthenticationSelector;
-import org.sonatype.aether.util.repository.DefaultMirrorSelector;
-import org.sonatype.aether.util.repository.DefaultProxySelector;
+import org.eclipse.aether.repository.AuthenticationSelector;
+import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.repository.MirrorSelector;
+import org.eclipse.aether.repository.Proxy;
+import org.eclipse.aether.repository.ProxySelector;
+import org.eclipse.aether.util.repository.AuthenticationBuilder;
+import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
+import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
+import org.eclipse.aether.util.repository.DefaultMirrorSelector;
+import org.eclipse.aether.util.repository.DefaultProxySelector;
 
 public class AetherSettings {
 
@@ -124,10 +124,12 @@ public class AetherSettings {
         Settings settings = getSettings();
         for ( org.apache.maven.settings.Proxy proxy : settings.getProxies() )
         {
-            Authentication auth = new Authentication( proxy.getUsername(),  proxy.getPassword() );
+            AuthenticationBuilder auth = new AuthenticationBuilder();
+            auth.addUsername( proxy.getUsername() );
+            auth.addPassword( proxy.getPassword() );
 
             selector.add( new Proxy( proxy.getProtocol(), proxy.getHost(),
-                                     proxy.getPort(), auth ),
+                                     proxy.getPort(), auth.build() ),
                           proxy.getNonProxyHosts() );
         }
         return selector;
@@ -157,9 +159,11 @@ public class AetherSettings {
         Settings settings = getSettings();
         for ( Server server : settings.getServers() )
         {
-            Authentication auth = new Authentication( server.getUsername(), server.getPassword(),
-                    server.getPrivateKey(), server.getPassphrase() );
-            selector.add( server.getId(), auth );
+            AuthenticationBuilder auth = new AuthenticationBuilder();
+            auth.addUsername( server.getUsername() );
+            auth.addPassword( server.getPassword() );
+            auth.addPrivateKey( server.getPrivateKey(), server.getPassphrase() );
+            selector.add( server.getId(), auth.build() );
         }
 
         return new ConservativeAuthenticationSelector( selector );

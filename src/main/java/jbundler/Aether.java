@@ -32,33 +32,38 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
-import org.apache.maven.repository.internal.MavenServiceLocator;
+import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.apache.maven.settings.Mirror;
-import org.sonatype.aether.ConfigurationProperties;
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.collection.DependencyCollectionException;
-import org.sonatype.aether.connector.wagon.WagonProvider;
-import org.sonatype.aether.connector.wagon.WagonRepositoryConnectorFactory;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.impl.Installer;
-import org.sonatype.aether.installation.InstallRequest;
-import org.sonatype.aether.installation.InstallationException;
-import org.sonatype.aether.repository.Authentication;
-import org.sonatype.aether.repository.LocalRepository;
-import org.sonatype.aether.repository.LocalRepositoryManager;
-import org.sonatype.aether.repository.Proxy;
-import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.resolution.DependencyRequest;
-import org.sonatype.aether.resolution.DependencyResolutionException;
-import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
-import org.sonatype.aether.spi.locator.ServiceLocator;
-import org.sonatype.aether.util.artifact.DefaultArtifact;
-import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
+import org.eclipse.aether.ConfigurationProperties;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.collection.CollectRequest;
+import org.eclipse.aether.collection.DependencyCollectionException;
+import org.eclipse.aether.connector.wagon.WagonProvider;
+import org.eclipse.aether.connector.wagon.WagonRepositoryConnectorFactory;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.impl.DefaultServiceLocator;
+import org.eclipse.aether.impl.Installer;
+import org.eclipse.aether.installation.InstallRequest;
+import org.eclipse.aether.installation.InstallationException;
+import org.eclipse.aether.internal.impl.DefaultRepositorySystem;
+import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.repository.LocalRepositoryManager;
+import org.eclipse.aether.repository.Proxy;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.repository.RemoteRepository.Builder;
+import org.eclipse.aether.repository.RepositoryPolicy;
+import org.eclipse.aether.resolution.DependencyRequest;
+import org.eclipse.aether.resolution.DependencyResolutionException;
+import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
+import org.eclipse.aether.spi.locator.ServiceLocator;
+import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
+import org.eclipse.aether.util.repository.AuthenticationBuilder;
+//import org.apache.maven.settings.Mirror;
 
 public class Aether {
 
@@ -74,47 +79,47 @@ public class Aether {
     private final boolean verbose;
 
     public Aether(boolean verbose){
-        this.verbose = verbose;
         ServiceLocator locator = newServiceLocator();
+
+        this.verbose = verbose;
         this.repoSystem = locator.getService( RepositorySystem.class );
         this.installer = locator.getService( Installer.class );
         
-        repos.add( new RemoteRepository( "central",
-                                          "default",
-                                          "http://repo.maven.apache.org/maven2" ) );
+        repos.add( new Builder( "central",
+                                "default",
+                                "http://repo.maven.apache.org/maven2" ).build() );
     }
     
     private RepositorySystemSession getSession()
     {
         if (this.session == null)
         {
-            MavenRepositorySystemSession s = new MavenRepositorySystemSession();
-            
+            DefaultRepositorySystemSession s = new DefaultRepositorySystemSession();
+
             Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
             configProps.put( ConfigurationProperties.USER_AGENT, settings.getUserAgent() );
             configProps.putAll( System.getProperties() );
             //configProps.putAll( (Map<?, ?>) getProperties() );
             configProps.putAll( (Map<?, ?>) settings.getUserProperties() );
-            s.setConfigProps( configProps );
+            s.setConfigProperties( configProps );
             
-            s.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( settings.getLocalRepository() ) );
+            s.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( s, settings.getLocalRepository() ) );
             s.setRepositoryListener( new SimpleRepositoryListener( verbose, s.getLocalRepositoryManager() ) );
             s.setOffline(settings.isOffline());
             s.setMirrorSelector(settings.getMirrorSelector());
             s.setAuthenticationSelector(settings.getAuthSelector());
             s.setProxySelector(settings.getProxySelector());
-            s.setUserProps(settings.getUserProperties());
-            s.setSystemProps(settings.getSystemProperties());
+            s.setUserProperties(settings.getUserProperties());
+            s.setSystemProperties(settings.getSystemProperties());
             this.session = s;
         }
         return this.session;
     }
         
     private ServiceLocator newServiceLocator() {
-        MavenServiceLocator locator = new MavenServiceLocator();// when using maven 3.0.4
-        //locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
+        DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
+
         locator.addService( RepositoryConnectorFactory.class, WagonRepositoryConnectorFactory.class );
-        
         locator.setServices( WagonProvider.class, new ManualWagonProvider() );
 
         return locator;
@@ -164,26 +169,39 @@ public class Aether {
             throw new RuntimeException( "can not parse given url: " + url, e );
         }
         
-        final Authentication authentication;
+        final AuthenticationBuilder authentication = new AuthenticationBuilder();;
         final String userInfo = u.getUserInfo();
         if ( userInfo != null &&  userInfo.contains( ":" ) )
         {
             int i = userInfo.indexOf(':');
-            authentication = new Authentication( userInfo.substring( 0, i ), userInfo.substring( i + 1 ) );
+            authentication.addUsername( userInfo.substring( 0, i ) );
+            authentication.addPassword( userInfo.substring( i + 1 ) );
         }
-        else
-        {
-            authentication = new Authentication( null, (String)null );
-        }
-        settings.addProxy( new Proxy( u.getProtocol(), u.getHost(), u.getPort(), authentication ) );
+        settings.addProxy( new Proxy( u.getProtocol(), u.getHost(), u.getPort(), authentication.build() ) );
     }
 
     public void addArtifact(String coordinate){
         artifacts.add(new DefaultArtifact(coordinate));
     }
-    
+
     public void addRepository(String id, String url){
-        repos.add(new RemoteRepository(id, "default", url));
+        // only repositories with "default" layout
+        Builder repo = new Builder(id, "default", url);
+        // disable snapshots
+        repo.setSnapshotPolicy( new RepositoryPolicy( false, null, null ) );
+        // ebable releases
+        repo.setReleasePolicy( null );
+        repos.add( repo.build() );
+    }
+    
+    public void addSnapshotRepository(String id, String url){
+        // only repositories with "default" layout
+        Builder repo = new Builder(id, "default", url);
+        // enable snapshots
+        repo.setSnapshotPolicy( null );
+        // disable releases
+        repo.setReleasePolicy( new RepositoryPolicy( false, null, null ) );
+        repos.add( repo.build() );
     }
 
     public void resolve() throws DependencyCollectionException, DependencyResolutionException {
@@ -202,12 +220,12 @@ public class Aether {
             {
                 r = mirror;
             }
-            Proxy proxy = settings.getProxySelector().getProxy( r );
-            if ( proxy != null )
+            Proxy proxy = settings.getProxySelector().getProxy( r );if ( proxy != null )
             {
-                r.setProxy( proxy );
+                Builder builder = new RemoteRepository.Builder( r );
+                builder.setProxy( proxy );
+                r = builder.build();
             }
-            
             collectRequest.addRepository( r );            
         }
                 
