@@ -28,6 +28,24 @@ EOF
     subject.repositories[0].id.must_equal "central"
     subject.repositories[1].id.must_equal "first"
     subject.repositories[2].id.must_equal "second"
+    subject.repositories[0].get_policy( false ).is_enabled.must_equal true
+    subject.repositories[0].get_policy( true ).is_enabled.must_equal true
+    subject.repositories[1].get_policy( true ).is_enabled.must_equal false
+    subject.repositories[2].get_policy( true ).is_enabled.must_equal false
+  end
+
+  it 'snapshot repositories' do
+    File.open(jfile, 'w') do |f|
+      f.write <<-EOF
+snapshot_repository :snap, "http://example.com/repo"
+EOF
+    end
+    jarfile.populate_unlocked subject
+    subject.repositories.size.must_equal 2
+    subject.artifacts.size.must_equal 0
+    subject.repositories[0].id.must_equal "central"
+    subject.repositories[1].id.must_equal "snap"
+    subject.repositories[1].get_policy( true ).is_enabled.must_equal true
   end
 
   it 'artifacts without locked' do
