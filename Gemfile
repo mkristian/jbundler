@@ -1,4 +1,2 @@
-source :rubygems
+source 'https://rubygems.org'
 gemspec
-
-gem 'jruby-openssl', '0.8.2', :platform => 'jruby'
