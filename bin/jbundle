@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
+# ensure we use the right version
+gem 'ruby-maven', '>=3.1.0'
 
 if ARGV[0] == 'help'
 
@@ -19,50 +21,54 @@ else
 
   require 'jbundler/config'
   config = JBundler::Config.new
-  begin
-    require 'yaml'
-    bundle_config = YAML.load_file( File.join( ENV['HOME'], 
-                                               '.bundle', 
-                                               'config' ) )
-    mirrors = bundle_config.select { |k,v| nil != (k =~ /BUNDLE_MIRROR__/) }
-    if config.rubygems_mirror || mirrors.size > 0
-      mirrors.each do |k,v| 
-        ENV[ k ] = v
-      end
-      if config.rubygems_mirror
-        ENV['BUNDLE_MIRROR__HTTP://RUBYGEMS.ORG'] = config.rubygems_mirror
-        ENV['BUNDLE_MIRROR__HTTPS://RUBYGEMS.ORG'] = config.rubygems_mirror
-      end
 
-      begin
-        load Gem.bin_path('nexus', 'nbundle') 
-      rescue Gem::GemNotFoundException
-        warn ''
-        warn 'to use a rubygems mirror you need to install the nexus gem'
-        warn '    $ gem install nexus'
-        warn ''
-        warn 'rubygems mirror ignored !'
-      end
-    else
-      load Gem.bin_path('bundler', 'bundle') 
-    end
-  rescue Exception
-    if ARGV[0] == 'console'
-      ARGV.shift
-      require 'jbundler'
-      if defined? JBUNDLER_CLASSPATH
-        warn 'Jarfile dependencies loaded'
+  if ['install', 'update', 'show', 'console'].member?( ARGV[0] )
+    begin
+      require 'yaml'
+      bundle_config = YAML.load_file( File.join( ENV['HOME'], 
+                                                 '.bundle', 
+                                                 'config' ) )
+      mirrors = bundle_config.select { |k,v| nil != (k =~ /BUNDLE_MIRROR__/) }
+      if config.rubygems_mirror || mirrors.size > 0
+        mirrors.each do |k,v| 
+          ENV[ k ] = v
+        end
+        if config.rubygems_mirror
+          ENV['BUNDLE_MIRROR__HTTP://RUBYGEMS.ORG'] = config.rubygems_mirror
+          ENV['BUNDLE_MIRROR__HTTPS://RUBYGEMS.ORG'] = config.rubygems_mirror
+        end
+
+        begin
+          load Gem.bin_path('nexus', 'nbundle') 
+        rescue Gem::GemNotFoundException
+          warn ''
+          warn 'to use a rubygems mirror you need to install the nexus gem'
+          warn '    $ gem install nexus'
+          warn ''
+          warn 'rubygems mirror ignored !'
+        end
       else
-        warn 'Could not locate Jarfile'
-        
+        load Gem.bin_path('bundler', 'bundle') 
       end
-      IRB.start
+      require 'jbundler/cli'
+      JBundler::Cli.start
+    rescue Exception => e
+      if ARGV[0] == 'console'
+        ARGV.shift
+        require 'jbundler'
+        if defined? JBUNDLER_CLASSPATH
+          warn 'Jarfile dependencies loaded'
+        else
+          warn 'Could not locate Jarfile'
+          
+        end
+        IRB.start
+      else
+        raise e
+      end
     end
-  end
-
-  if ARGV[0] && ['install', 'update', 'show'].member?(ARGV[0])
+  else
     require 'jbundler/cli'
-
     JBundler::Cli.start
   end
 
