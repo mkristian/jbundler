@@ -15,6 +15,8 @@ module JBundler
     def show_it( debug = false )
       require 'jbundler'
       jfile = ::Maven::Tools::Jarfile.new( @config.jarfile )
+p File.dirname( @config.jarfile )
+p @config.gemfile
       project = maven do
         basedir( File.dirname( @config.jarfile ) )
 
