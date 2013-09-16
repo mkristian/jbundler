@@ -35,6 +35,7 @@ module JBundler
     def temp_dir
       @temp_dir ||=
         begin
+          # on travis the mktmpdir failed
           d = Dir.mktmpdir rescue FileUtils.mkdir( ".tmp" + SecureRandom.hex( 12) ).first
           at_exit { FileUtils.rm_rf(d.dup) }
           d

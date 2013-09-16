@@ -1,1 +1,3 @@
+# provide non https as well for travis
+repo 'central', 'http://repo.maven.apache.org/maven2/'
 jar 'junit:junit', '4.11'
