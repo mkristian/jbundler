@@ -37,11 +37,11 @@ module JBundler
 
     if defined? JRUBY_VERSION
       def jbundler_env(key)
-        ENV[key.upcase.gsub(/[.]/, '_')] || java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) || @config[key.downcase.sub(/^j?bundle_/, '').sub(/[.]/, '_')]
+        @config[key.downcase.sub(/^j?bundle_/, '').sub(/[.]/, '_')] || java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) || ENV[key.upcase.gsub(/[.]/, '_')]
       end
     else
       def jbundler_env(key)
-        ENV[key.upcase.gsub(/[.]/, '_')] || @config[key.downcase.sub(/^j?bundler/, '').sub(/[.]/, '_')]
+        @config[key.downcase.sub(/^j?bundler/, '').sub(/[.]/, '_')] || ENV[key.upcase.gsub(/[.]/, '_')]
       end
     end
     private :jbundler_env
