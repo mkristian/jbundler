@@ -63,11 +63,42 @@ public class TestAether {
     }
 
     private DefaultDependencyNode generateNode(final String coordinates) {
+        return new DefaultDependencyNode( generateDependency( coordinates ) );
+    }
+    
+    private Dependency generateDependency(final String coordinates) {
+        return new Dependency( generateArtifact( coordinates ), null );
+    }
+
+    private Artifact generateArtifact(final String coordinates) {
         final DefaultArtifact artifact = new DefaultArtifact(coordinates);
         // Add a dummy file to pretend the artifact was resolved
-        final Artifact artifactWithFile = artifact.setFile(Mockito.mock(File.class));
-
-        final Dependency dependency = new Dependency(artifactWithFile, null);
-        return new DefaultDependencyNode(dependency);
+        return artifact.setFile(Mockito.mock(File.class));
+    }
+    
+    @Test
+    public void testResolve() throws Exception {
+        Aether aether = new Aether( false );
+        
+        aether.addArtifact( "org.slf4j:slf4j-simple:jar:(1.6.2,1.7.0)" );
+        aether.addArtifact( "ruby.bundler:gem_with_jar:pom:0.0.0" );
+        aether.addArtifact( "ruby.bundler:nokogiri-maven:pom:1.5.0" );
+        aether.setLocalRepository( new File("./src/example/repo" ) );
+        aether.setOffline( true );
+        aether.resolve();
+        
+        final String[] coords = new String[]{
+                                             "org.slf4j:slf4j-simple:jar:1.6.6",
+                                             "org.slf4j:slf4j-api:jar:1.6.6",
+                                             "ruby.bundler:gem_with_jar:pom:0.0.0",
+                                             "ruby.bundler:nokogiri-maven:pom:1.5.0",
+                                             "msv:isorelax:jar:20050913",
+                                             "thaiopensource:jing:jar:20030619",
+                                             "nekohtml:nekodtd:jar:0.1.11",
+                                             "xml-apis:xml-apis:jar:1.0.b2",
+                                             "net.sourceforge.nekohtml:nekohtml:jar:1.9.15",
+                                             "xerces:xercesImpl:jar:2.9.0" };
+        
+        Assert.assertEquals( aether.getResolvedCoordinates(), Arrays.asList( coords ) );
     }
 }

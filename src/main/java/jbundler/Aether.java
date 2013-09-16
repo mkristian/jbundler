@@ -30,7 +30,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.apache.maven.settings.Mirror;
@@ -50,7 +53,6 @@ import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.Installer;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
-import org.eclipse.aether.internal.impl.DefaultRepositorySystem;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.Proxy;
@@ -61,6 +63,7 @@ import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.locator.ServiceLocator;
+import org.eclipse.aether.util.artifact.JavaScopes;
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 //import org.apache.maven.settings.Mirror;
@@ -87,14 +90,14 @@ public class Aether {
         
         repos.add( new Builder( "central",
                                 "default",
-                                "http://repo.maven.apache.org/maven2" ).build() );
+                                "https://repo.maven.apache.org/maven2" ).build() );
     }
     
     private RepositorySystemSession getSession()
     {
         if (this.session == null)
         {
-            DefaultRepositorySystemSession s = new DefaultRepositorySystemSession();
+            DefaultRepositorySystemSession s = MavenRepositorySystemUtils.newSession();
 
             Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
             configProps.put( ConfigurationProperties.USER_AGENT, settings.getUserAgent() );
@@ -210,8 +213,9 @@ public class Aether {
         }
        
         CollectRequest collectRequest = new CollectRequest();
+
         for( Artifact a: artifacts ){
-            collectRequest.addDependency( new Dependency( a, "compile" ) );
+            collectRequest.addDependency( new Dependency( a, JavaScopes.COMPILE ) );
         }
 
         for( RemoteRepository r: repos ){
@@ -229,10 +233,9 @@ public class Aether {
             collectRequest.addRepository( r );            
         }
                 
-        node = repoSystem.collectDependencies( getSession(), collectRequest ).getRoot();
+        this.node = repoSystem.collectDependencies( getSession(), collectRequest ).getRoot();
+        DependencyRequest dependencyRequest = new DependencyRequest( this.node, null );
 
-        DependencyRequest dependencyRequest = new DependencyRequest( node, null );
-        
         repoSystem.resolveDependencies( getSession(), dependencyRequest  );
     }
 
@@ -246,8 +249,9 @@ public class Aether {
     
     public String getClasspath() {
         PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
+
         node.accept( nlg );
-        
+
         StringBuilder buffer = new StringBuilder( 1024 );
 
         for ( Iterator<DependencyNode> it = nlg.getNodes().iterator(); it.hasNext(); )
@@ -282,7 +286,7 @@ public class Aether {
     static List<String> generateCoordinatesForNodes(final List<DependencyNode> nodes) {
         final List<String> result = new ArrayList<String>();
         for (final DependencyNode node : nodes) {
-            if (node.getDependency() != null) {
+            if (node.getDependency() != null ) {
                 final Artifact artifact = node.getDependency().getArtifact();
                 if (artifact.getFile() != null) {
                     final StringBuilder coord = new StringBuilder(artifact.getGroupId()).append(":")
