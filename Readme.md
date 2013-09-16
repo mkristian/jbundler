@@ -32,9 +32,21 @@ and now install the bundle both **gems and jars**
 
     jbundle install
 
-#### Gemfile only
+#### Building
 
-if there is only a **Gemfile** and no Jarfile **jbundler** just handles all the declared [jar dependencies of gems](https://github.com/mkristian/jbundler/wiki/Build). it will only look into gems which bundler loaded.
+building the jar
+```rake jar```
+
+building the gem
+```rake build```
+
+running the junit test
+```rake junit```
+
+running the minitest
+```rake minitest```
+
+make sure you use jruby ;)
 
 #### Gemfile and Jarfile
 
@@ -76,6 +88,22 @@ using the same syntax as use in the **Jarfile**. there are limitations with such
 	include JBundler::Lazy
 	
 will offer the same `jar`/`jars` method than you have inside the console.
+
+# extra commands
+
+## jbundler tree
+
+shows the dependency tree - without the locked version. i.e. an install or update would result in the shown version.
+
+with locked down versions that tree is more hint then a real picture of the situation !!
+
+## jruby executable -b start.rb
+
+will create an executable jar file using the given ruby script as bootstrap script. it will include the comple jruby and all the dependent jars as well all the gems packed into it as well. the
+
+     jruby '1.7.4'
+
+declaration in the *Jarfile* will determinate the jruby version to use for the executable jar.
 
 ## example ##
 
