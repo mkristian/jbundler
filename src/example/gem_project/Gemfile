@@ -1,13 +1,3 @@
 source :rubygems
 
 gemspec
-
-gem 'jbundler', :path => '../../..'
-
-#needed for local setup
-#gem 'maven-tools', :path => '../../../../maven-tools'
-
-
-# needed for cucumber since the used "rmvn" can not 
-# resolve deps from local jbundler
-gem 'ruby-maven', '3.0.4.1'

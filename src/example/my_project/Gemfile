@@ -1,12 +1,4 @@
 source :rubygems
 
-gem 'jbundler', :path => '../../..'
 gem 'gem_with_jar', :path => '../gem_with_jar'
 gem 'nokogiri-maven'
-
-#needed for local setup
-#gem 'maven-tools'#, :path => '../../../../maven-tools'
-
-# needed for cucumber since the used "rmvn" can not 
-# resolve deps from local jbundler
-gem 'ruby-maven', '3.0.4.1', :require => false

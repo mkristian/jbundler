@@ -27,10 +27,10 @@ END
   s.files += Dir['Gemfile*']
   s.test_files += Dir['spec/*_spec.rb']
 
-  s.add_runtime_dependency "ruby-maven", "~> 3.1.0.0"
+  s.add_runtime_dependency "ruby-maven", ">= 3.1.0.0.1", "< 3.1.1"
   s.add_runtime_dependency "bundler", "~> 1.2"
   s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency "thor", "< 0.16.0", "> 0.14.0"
-  s.add_development_dependency "minitest", "~> 5.0"
+  s.add_development_dependency "minitest", "~> 4.0"
 #  s.add_development_dependency "copyright-header", "1.0.8"
 end

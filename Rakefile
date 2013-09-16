@@ -1,11 +1,13 @@
 #-*- mode: ruby -*-
 
+raise "\n\n\tuse JRuby for this project !!!!\n\n\n" unless defined? JRUBY_VERSION
+
 require 'maven/ruby/tasks'
 
 task :default => [ :test ]
 
 desc 'run all the specs'
-task :test => :minispec
+task :test => [ :minispec, :junit ]
 
 task :minispec do
   unless File.exists? File.join('lib', 'jbundler.jar' )
