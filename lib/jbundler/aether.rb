@@ -82,6 +82,7 @@ module JBundler
     def add_repository(name, url)
       @aether.add_repository(name, url)
     end
+
     def add_snapshot_repository(name, url)
       @aether.add_snapshot_repository(name, url)
     end
