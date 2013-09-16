@@ -7,7 +7,7 @@ require 'maven/ruby/tasks'
 task :default => [ :test ]
 
 desc 'run all the specs'
-task :test => [ :minispec, :junit ]
+task :test => [ :minispec ]#, :junit ]
 
 task :minispec do
   unless File.exists? File.join('lib', 'jbundler.jar' )

@@ -21,6 +21,7 @@
 require 'fileutils'
 require 'tempfile'
 require 'maven/tools/coordinate'
+require 'securerandom'
 require 'java'
 
 module JBundler
@@ -34,7 +35,7 @@ module JBundler
     def temp_dir
       @temp_dir ||=
         begin
-          d = Dir.mktmpdir
+          d = Dir.mktmpdir rescue FileUtils.mkdir( ".tmp" + SecureRandom.hex( 12) ).first
           at_exit { FileUtils.rm_rf(d.dup) }
           d
         end

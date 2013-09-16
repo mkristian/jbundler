@@ -1,12 +1,12 @@
 language: ruby
 rvm:
-  - jruby-18mode
+#  - jruby-18mode
   - jruby-19mode
-  - jruby-head
+#  - jruby-head
 jdk:
-  - openjdk6
+#  - openjdk6
   - openjdk7
-  - oraclejdk7
+#  - oraclejdk7
 #language: java
 #install: mvn prepare-package -Dmaven.test.skip -quiet
 #script: mvn cucumber:test -Djruby.versions=1.5.6
