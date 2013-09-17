@@ -1,5 +1,5 @@
 language: ruby
-before-install: rvm use jruby-1.7.4 --install --binary --fuzzy
+before_install: rvm get stable --without-gems=rubygems-bundler
 rvm:
 #  - jruby-18mode
 #  - jruby-19mode
