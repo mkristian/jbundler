@@ -6,6 +6,7 @@ require 'stringio'
 describe JBundler::Tree do
 
   it 'should show dependency tree' do
+    skip 'rvm is not working properly' if ENV[ 'rvm_version' ]
     dir = File.join( File.dirname( __FILE__ ), 'tree' )
     java.lang.System.set_property( 'user.dir', dir )
     FileUtils.cd( dir ) do

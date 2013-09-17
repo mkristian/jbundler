@@ -7,7 +7,13 @@ require 'maven/ruby/tasks'
 task :default => [ :test ]
 
 desc 'run all the specs'
-task :test => [ :minispec ]#, :junit ]
+if ENV[ 'rvm_version' ]
+  task :test => ( [ :minispec ]
+
+  warn 'rvm is not working properly'
+else
+  task :test => ( [ :minispec, :junit ]
+end
 
 task :minispec do
   unless File.exists? File.join('lib', 'jbundler.jar' )

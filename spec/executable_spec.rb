@@ -13,6 +13,7 @@ describe JBundler::Executable do
   end
 
   it 'should create executable jar' do
+    skip 'rvm is not working properly' if ENV[ 'rvm_version' ]
     exec = JBundler::Executable.new( 'start.rb', 
                                      JBundler::Config.new )
     exec.groups = [:default]
