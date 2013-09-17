@@ -19,7 +19,6 @@ properties( 'jruby.versions' => ['1.6.8','1.7.4','1.5.6'].join(','),
             # overwrite via cli -Djruby.use18and19=false
             'jruby.18and19' => true,
             # just lock the versions
-            'jruby.plugins.version' => '1.0.0-beta-1-SNAPSHOT',
             'jruby.version' => '1.7.4',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
