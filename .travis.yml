@@ -2,8 +2,8 @@ language: ruby
 before_install: rvm get stable --without-gems=rubygems-bundler
 rvm:
 #  - jruby-18mode
-#  - jruby-19mode
-  - jruby-head
+  - jruby-19mode
+#  - jruby-head
 jdk:
 #  - openjdk6
   - openjdk7
