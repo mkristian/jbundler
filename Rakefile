@@ -8,11 +8,11 @@ task :default => [ :test ]
 
 desc 'run all the specs'
 if ENV[ 'rvm_version' ]
-  task :test => ( [ :minispec ]
+  task :test => [ :minispec ]
 
   warn 'rvm is not working properly'
 else
-  task :test => ( [ :minispec, :junit ]
+  task :test => [ :minispec, :junit ]
 end
 
 task :minispec do
