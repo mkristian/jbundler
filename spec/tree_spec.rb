@@ -6,7 +6,11 @@ require 'stringio'
 describe JBundler::Tree do
 
   it 'should show dependency tree' do
+
+    skip 'that spec does not execute properly with maven' if java.lang.System.get_property( 'jruby.script' ) == nil
+
     skip 'rvm is not working properly' if ENV[ 'rvm_version' ]
+
     dir = File.join( File.dirname( __FILE__ ), 'tree' )
     java.lang.System.set_property( 'user.dir', dir )
     FileUtils.cd( dir ) do
@@ -25,3 +29,5 @@ describe JBundler::Tree do
   end
 
 end
+
+FileUtils.rm_rf( File.join( File.expand_path( __FILE__ ).sub( /_spec.rb/, '' ), 'target' ) )
