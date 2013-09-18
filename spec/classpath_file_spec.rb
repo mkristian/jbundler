@@ -5,7 +5,7 @@ require 'jbundler/gemfile_lock'
 
 describe JBundler::ClasspathFile do
 
-  let(:workdir) { File.join('target', 'tmp') }
+  let(:workdir) { File.join('pkg', 'tmp') }
   let(:jfile) { File.join(workdir, 'jarfile') }
   let(:gfile_lock) { File.join(workdir, 'gemfile.lock') }
   let(:jfile_lock) { jfile + ".lock"}
