@@ -38,7 +38,8 @@ module JBundler
           # on travis the mktmpdir failed
           d = Dir.mktmpdir rescue FileUtils.mkdir( ".tmp" + SecureRandom.hex( 12) ).first
           at_exit { FileUtils.rm_rf(d.dup) }
-          d
+          # for jruby-1.7.4 1.8 mode add expand_path
+          File.expand_path( d )
         end
     end
       
