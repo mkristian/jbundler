@@ -1,3 +1,4 @@
+# single spec setup
 $LOAD_PATH.unshift File.join( File.dirname( File.expand_path( File.dirname( __FILE__ ) ) ),
                               'lib' )
 

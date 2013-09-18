@@ -23,3 +23,5 @@ describe JBundler::Executable do
   end
 
 end
+
+FileUtils.rm_rf( File.join( File.expand_path( __FILE__ ).sub( /_spec.rb/, '' ), 'target' ) )
