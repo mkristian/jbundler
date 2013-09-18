@@ -54,6 +54,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>rspec</artifactId>
+      <version>[0,3.0)</version>
+      <type>gem</type>
+    </dependency>
+    <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby-core</artifactId>
       <version>1.7.4</version>

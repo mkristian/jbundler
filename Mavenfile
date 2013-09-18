@@ -1,6 +1,6 @@
 #-*- mode: ruby -*-
 
-gemspec
+gemfile
 
 jarfile
 
@@ -31,11 +31,11 @@ scope :test do
 end
 
 plugin :compiler, '3.1' do
-  execute_goal( :testCompile, :phase => 'test-compile' )
+  execute_goals( :testCompile, :phase => 'test-compile' )
 end
 
 plugin :surefire, '2.15' do
-  execute_goal :test, :phase => :test
+  execute_goals :test, :phase => :test
 end
 
 # vim: syntax=Ruby
