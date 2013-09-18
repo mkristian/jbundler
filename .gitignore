@@ -4,7 +4,7 @@
 target
 pkg
 # no Gemfile.lock
-Gemfile.lock
+*.lock
 .idea
 *.iml
 *.log
