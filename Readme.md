@@ -129,7 +129,7 @@ jbundler does not completely obey the **$HOME/.m2/settings.xml** from maven wher
 
 some tests did not work with RVM and/or rubygems-bundler - there are some weird classloader issue popping up. there is a problem with the way the classloader gets setup. but a manual jruby installion or using rbenv is just working fine.
 
-those issue might pop up with ```jbunle tree`` and ```jbundle executable```
+those issue might pop up with ```jbunle tree``` and ```jbundle executable```
 
 ## running tests ##
 
