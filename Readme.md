@@ -131,6 +131,15 @@ some tests did not work with RVM and/or rubygems-bundler - there are some weird 
 
 those issue might pop up with ```jbunle tree`` and ```jbundle executable```
 
+## running tests ##
+
+* ```rake``` will just execute all tests (skips some with rvm)
+* ```rake minitest``` runs the minitest specs
+* ```rake junit``` runs the junit java tests
+* ```jruby spec/abc_spec.rb``` runs that given tests (just use the right file)
+* ```mvn test``` will also run all tests (skips some)
+* ```rmvn test`` same as ```mvn test```
+
 ## update ##
 
 update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Jarfile.lock*
