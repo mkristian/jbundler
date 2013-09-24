@@ -90,7 +90,7 @@ public class Aether {
         
         repos.add( new Builder( "central",
                                 "default",
-                                "https://repo.maven.apache.org/maven2" ).build() );
+                                "http://repo2.maven.org/maven2" ).build() );
     }
     
     private RepositorySystemSession getSession()
