@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jbundler</artifactId>
-  <version>0.5.2</version>
+  <version>0.5.3</version>
   <packaging>gem</packaging>
   <name>managing jar dependencies</name>
   <description>managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
@@ -146,6 +146,11 @@
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>org.jboss.interceptor</groupId>
+      <artifactId>jboss-interceptor-api</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>jsr250-api</artifactId>
       <version>1.0</version>
@@ -172,6 +177,11 @@
       <classifier>no_aop</classifier>
     </dependency>
     <dependency>
+      <groupId>org.sonatype.sisu</groupId>
+      <artifactId>sisu-guava</artifactId>
+      <version>0.9.9</version>
+    </dependency>
+    <dependency>
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
@@ -180,6 +190,11 @@
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.inject</artifactId>
       <version>0.0.0.M2a</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>asm</groupId>
