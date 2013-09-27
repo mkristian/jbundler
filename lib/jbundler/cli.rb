@@ -52,10 +52,12 @@ module JBundler
     end
 
     desc 'executable', 'create an executable jar with a given bootstrap.rb file'
-    method_option :bootstrap, :type => :string, :aliases => '-b', :required => true, :desc => 'file which will be executed when the jar gets executed'
+    method_option :bootstrap, :type => :string, :aliases => '-b'#, :required => true, :desc => 'file which will be executed when the jar gets executed'
+    method_option :compile, :type => :boolean, :aliases => '-c', :default => false, :desc => 'compile the ruby files from the lib directory'
+    method_option :verbose, :type => :boolean, :aliases => '-v', :default => false, :desc => 'more output'
     method_option :groups, :type => :array, :aliases => '-g', :desc => 'bundler groups to use for determine the gems to include in the jar file'
     def executable
-      ex = JBundler::Executable.new( options[ :bootstrap ], config )
+      ex = JBundler::Executable.new( options[ 'bootstrap' ], config, options[ 'compile' ], options[ :verbose ], *( options[ 'groups' ] || [:default] ) )
       ex.packit
     end
 
@@ -75,7 +77,6 @@ module JBundler
     def update
       if ARGV.size == 1
         require 'java'
-        require 'jbundler/config'
         config = JBundler::Config.new
         FileUtils.rm_f(config.jarfile_lock)
         
