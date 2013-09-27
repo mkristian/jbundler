@@ -1,3 +1,4 @@
+require 'java' #for jruby before 1.7.x
 import 'org.junit.runner.JUnitCore'
 import 'test.AppTest'
 

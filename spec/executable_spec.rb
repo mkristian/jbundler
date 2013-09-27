@@ -21,17 +21,20 @@ describe JBundler::Executable do
 
     it "should create #{exec_dir} jar" do
       skip 'rvm is not working properly' if ENV[ 'rvm_version' ]
+      skip "jruby #{JRUBY_VERSION}" if JRUBY_VERSION < '1.6.'
       dir = eval "#{exec_dir}"
 
       FileUtils.chdir( dir ) do
-      exec = JBundler::Executable.new( 'start.rb', 
-                                       JBundler::Config.new,
-                                       File.basename( dir ) == 'executable_compile',
-                                       false,
-                                       :default )
-      exec.packit
-      
-      `java -jar target/executable/#{exec_dir}.jar`.must_equal 'hello world'
+        exec = JBundler::Executable.new( 'start.rb', 
+                                         JBundler::Config.new,
+                                         File.basename( dir ) == 'executable_compile',
+                                         false,
+                                         :default )
+        exec.packit
+        
+        `java -jar target/executable/#{exec_dir}.jar`.must_equal 'hello world'
+        
+        FileUtils.rm_rf( 'target' ) if ENV[ 'KEEP' ].nil?
       end
     end
   end
