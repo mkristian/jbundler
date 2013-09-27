@@ -51,7 +51,7 @@ module JBundler
       JBundler::Tree.new( config ).show_it
     end
 
-    desc 'executable', 'create an executable jar with a given bootstrap.rb file'
+    desc 'executable', 'create an executable jar with a given bootstrap.rb file\nLIMITATION: only for jruby 1.6.x and newer'
     method_option :bootstrap, :type => :string, :aliases => '-b'#, :required => true, :desc => 'file which will be executed when the jar gets executed'
     method_option :compile, :type => :boolean, :aliases => '-c', :default => false, :desc => 'compile the ruby files from the lib directory'
     method_option :verbose, :type => :boolean, :aliases => '-v', :default => false, :desc => 'more output'

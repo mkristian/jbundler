@@ -22,9 +22,11 @@ module JBundler
     private
 
     def setup_jruby( jruby )
-      if ( jruby < '1.7' )
+      if ( jruby < '1.6' )
+        raise 'jruby before 1.6 are not supported'
+      elsif ( jruby < '1.7' )
         warn 'jruby version below 1.7 uses jruby-complete'
-        jar 'org.jruby:jruby-core', jruby
+        jar 'org.jruby:jruby-complete', jruby
       elsif ( jruby < '1.7.5' )
         jar 'org.jruby:jruby-core', jruby
       else
