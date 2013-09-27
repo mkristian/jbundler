@@ -8,3 +8,5 @@ pkg
 .idea
 *.iml
 *.log
+.ruby-version
+*.pom.xml
