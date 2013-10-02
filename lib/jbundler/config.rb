@@ -79,7 +79,7 @@ module JBundler
     end
 
     def classpath_file
-      '.jbundler/classpath.rb'
+      jbundler_env('JBUNDLE_CLASSPATH_FILE') || '.jbundler/classpath.rb'
     end
 
     def local_repository
