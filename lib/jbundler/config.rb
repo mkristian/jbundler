@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 Kristian Meier
+# Copyright (C) 2013 Christian Meier
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -32,16 +32,20 @@ module JBundler
       homefile = File.join(ENV['HOME'], file)
       home_config = YAML.load_file(homefile) if File.exists?(homefile)
       pwd_config = YAML.load_file(file) if File.exists?(file)
+      File.expand_path( file )
       @config = (home_config || {}).merge(pwd_config || {})
     end
 
     if defined? JRUBY_VERSION
       def jbundler_env(key)
-        @config[key.downcase.sub(/^j?bundle_/, '').sub(/[.]/, '_')] || java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) || ENV[key.upcase.gsub(/[.]/, '_')]
+        java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) ||
+          ENV[key.upcase.gsub(/[.]/, '_')] ||
+          @config[key.downcase.sub(/^j?bundle_/, '').sub(/[.]/, '_')]
       end
     else
       def jbundler_env(key)
-        @config[key.downcase.sub(/^j?bundler/, '').sub(/[.]/, '_')] || ENV[key.upcase.gsub(/[.]/, '_')]
+        ENV[key.upcase.gsub(/[.]/, '_')] ||
+          @config[key.downcase.sub(/^j?bundler/, '').sub(/[.]/, '_')]
       end
     end
     private :jbundler_env

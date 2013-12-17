@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 Kristian Meier
+# Copyright (C) 2013 Christian Meier
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -20,6 +20,7 @@
 #
 require 'maven/tools/jarfile'
 require 'jbundler/classpath_file'
+require 'jbundler/vendor'
 require 'jbundler/gemfile_lock'
 require 'jbundler/aether'
 
@@ -33,21 +34,17 @@ else
   classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
   gemfile_lock = JBundler::GemfileLock.new(jarfile, config.gemfile_lock)
 
-  if classpath_file.needs_update?(jarfile, gemfile_lock)
-    if vendor.vendored?
-      warn "already vendored, please remove the #{config.vendor_dir} manually to install or update"
-    else
-      aether = JBundler::AetherRuby.new(config)
-
-      jarfile.populate_unlocked(aether)
-      gemfile_lock.populate_dependencies(aether)
-      jarfile.populate_locked(aether)
-      
-      aether.resolve
-      
-      classpath_file.generate(aether.classpath_array)
-      jarfile.generate_lockfile(aether.resolved_coordinates)
-    end
+  if classpath_file.needs_update?(jarfile, gemfile_lock) && ! vendor.vendored?
+    aether = JBundler::AetherRuby.new(config)
+    
+    jarfile.populate_unlocked(aether)
+    gemfile_lock.populate_dependencies(aether)
+    jarfile.populate_locked(aether)
+    
+    aether.resolve
+    
+    classpath_file.generate(aether.classpath_array)
+    jarfile.generate_lockfile(aether.resolved_coordinates)
   end
 
   if vendor.vendored?

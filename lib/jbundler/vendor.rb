@@ -15,12 +15,19 @@ module JBundler
       end
     end
 
+    def clear
+      FileUtils.mkdir_p( @dir )
+      Dir[ File.join( @dir, '*' ) ].each do |f|
+        FileUtils.rm_f( f )
+      end
+    end
+
     def setup( classpath_file )
       classpath_file.require_classpath
       FileUtils.mkdir_p( @dir )
       JBUNDLER_CLASSPATH.each do |f|
-        FileUtils.cp_a( f, File.join( @dir,
-                                      File.basename( f ) ) )
+        FileUtils.cp( f, File.join( @dir,
+                                    File.basename( f ) ) )
       end
     end
 

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 Kristian Meier
+# Copyright (C) 2013 Christian Meier
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -34,7 +34,7 @@ module JBundler
         require 'jbundler/classpath_file'
         require 'jbundler/vendor'
         classpath_file = JBundler::ClasspathFile.new( config.classpath_file )
-        vendor = JBundler::ClasspathFile.new( config.vendor_dir )
+        vendor = JBundler::Vendor.new( config.vendor_dir )
         if vendor.vendored?
           puts "JBundler classpath:"
           vendor.require_jars.each do |path|
@@ -74,13 +74,18 @@ module JBundler
     end
     
     desc 'install', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given."
-    method_option :deploy, :type => :boolean, :default => false, :desc => 'copy the jars into the vendor/jars directory (or as configured). these vendored jars have preference before the classpath jars !'
+    method_option :deployment, :type => :boolean, :default => false, :desc => "copy the jars into the vendor/jars directory (or as configured). these vendored jars have preference before the classpath jars !"
+    method_option :no_deployment, :type => :boolean, :default => false, :desc => 'clears the vendored jars'
     def install
       require 'jbundler'
-      if options[ :deploy ]
+      if options[ :no_deployment ]
+        vendor = JBundler::Vendor.new( config.vendor_dir )
+        vendor.clear
+      end
+      if options[ :deployment ]
         vendor = JBundler::Vendor.new( config.vendor_dir )
         if vendor.vendored?
-          raise "already verdored. please remove #{config.vendor_dir} manually"
+          raise "already vendored. please 'jbundle install --no-deployment before."
         else
           vendor.setup( JBundler::ClasspathFile.new( config.classpath_file ) )
         end

@@ -10,3 +10,4 @@ pkg
 *.log
 .ruby-version
 *.pom.xml
+dependency-reduced-pom.xml

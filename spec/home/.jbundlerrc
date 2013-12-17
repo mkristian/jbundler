@@ -1,0 +1,9 @@
+verbose: false
+local_repository: localrepo
+jarfile: jarfile
+gemfile: Gem_file
+skip: true
+settings: Settings.xml
+offline: false
+work_dir: target/pkg
+vendor_dir: vendor/my_jars

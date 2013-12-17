@@ -1,16 +1,24 @@
 #-*- mode: ruby -*-
 
-raise "\n\n\tuse JRuby for this project !!!!\n\n\n" unless defined? JRUBY_VERSION
-
 require 'maven/ruby/tasks'
 
 task :default => [ :test ]
 
-desc 'run all the specs'
+desc 'run all tests'
+task :all do
+  maven.verify
+end
+
+desc 'run some integration test'
+task :integration do
+  maven.verify( '-Dmaven.test.skip' )
+end
+
+desc 'run all the specs und junit tests'
 if ENV[ 'rvm_version' ]
   task :test => [ :minispec ]
 
-  warn 'rvm is not working properly'
+  warn 'rvm is not working properly with ruby-maven so NO junit tests'
 else
   task :test => [ :minispec, :junit ]
 end

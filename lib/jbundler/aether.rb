@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 Kristian Meier
+# Copyright (C) 2013 Christian Meier
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -53,9 +53,13 @@ module JBundler
       @aether = Aether.new( config.verbose )
       @aether.add_proxy( config.proxy ) if config.proxy
       @aether.add_mirror( config.mirror ) if config.mirror
-      @aether.offline = config.offline
-      @aether.user_settings = config.settings if config.settings
-      @aether.local_repository = java.io.File.new(config.local_repository) if config.local_repository
+      @aether.offline = config.offline 
+      if config.settings
+        @aether.user_settings = java.io.File.new( config.settings )
+      end
+      if config.local_repository
+        @aether.local_repository = java.io.File.new(config.local_repository)
+      end
     rescue NativeException => e
       e.cause.print_stack_trace
       raise e
