@@ -46,6 +46,7 @@ import org.eclipse.aether.connector.wagon.WagonProvider;
 import org.eclipse.aether.connector.wagon.WagonRepositoryConnectorFactory;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.graph.Exclusion;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.Installer;
 import org.eclipse.aether.installation.InstallRequest;
@@ -70,7 +71,7 @@ public class Aether {
     private DependencyNode node;
     private final RepositorySystem repoSystem;
     private RepositorySystemSession session;
-    private List<Artifact> artifacts = new LinkedList<Artifact>();
+    private List<Dependency> dependencies = new LinkedList<Dependency>();
     private List<RemoteRepository> repos = new LinkedList<RemoteRepository>();
     private final Installer installer;
     
@@ -180,8 +181,23 @@ public class Aether {
         settings.addProxy( new Proxy( u.getProtocol(), u.getHost(), u.getPort(), authentication.build() ) );
     }
 
-    public void addArtifact(String coordinate){
-        artifacts.add(new DefaultArtifact(coordinate));
+    public void addArtifact( String coordinate ){
+        addArtifact( coordinate, JavaScopes.COMPILE );
+    }
+
+    public void addArtifact( String coordinate, String scope ){
+        dependencies.add( new Dependency( new DefaultArtifact(coordinate), scope ) );
+    }
+
+    public void addArtifactWithExclusions(String coordinate, String scope, String... exclusions){
+        DefaultArtifact artifact = new DefaultArtifact( coordinate );
+        List<Exclusion> list = new ArrayList<Exclusion>( exclusions.length );
+        for( String exclusion : exclusions ){
+            String[] parts = exclusion.split( ":" );
+            list.add( new Exclusion( parts[ 0 ], parts[ 1 ], "*", "*" ) );
+        }
+        Dependency dependency = new Dependency( artifact, scope, false, list);
+        dependencies.add( dependency );
     }
 
     public void addRepository(String id, String url){
@@ -205,14 +221,14 @@ public class Aether {
     }
 
     public void resolve() throws DependencyCollectionException, DependencyResolutionException {
-        if (artifacts.size() == 0){
+        if (dependencies.size() == 0){
             throw new IllegalArgumentException("no artifacts given");
         }
        
         CollectRequest collectRequest = new CollectRequest();
 
-        for( Artifact a: artifacts ){
-            collectRequest.addDependency( new Dependency( a, JavaScopes.COMPILE ) );
+        for( Dependency dependency: dependencies ){
+            collectRequest.addDependency( dependency );
         }
 
         for( RemoteRepository r: repos ){
@@ -241,7 +257,11 @@ public class Aether {
     }
 
     public List<Artifact> getArtifacts(){
-        return Collections.unmodifiableList( artifacts );
+        List<Artifact> result = new ArrayList<Artifact>( dependencies.size() );
+        for( Dependency dependency: dependencies ){
+            result.add( dependency.getArtifact() );
+        }
+        return result;
     }
     
     public String getClasspath() {
