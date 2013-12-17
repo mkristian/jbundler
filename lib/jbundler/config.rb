@@ -25,7 +25,7 @@ module JBundler
   # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
   class Config
 
-    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline, :work_dir
+    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline, :work_dir, :vendor_dir
 
     def initialize
       file = '.jbundlerrc'
@@ -116,6 +116,10 @@ module JBundler
 
     def work_dir
       @work_dir ||= jbundler_env('JBUNDLE_WORK_DIR') || 'target'
+    end
+
+    def vendor_dir
+      @vendor_dir ||= jbundler_env('JBUNDLE_VENDOR_DIR') || File.join( 'vendor', 'jars' )
     end
 
   end

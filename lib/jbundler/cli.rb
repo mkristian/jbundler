@@ -32,8 +32,15 @@ module JBundler
       def do_show
         require 'java' 
         require 'jbundler/classpath_file'
-        classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
-        if classpath_file.exists?
+        require 'jbundler/vendor'
+        classpath_file = JBundler::ClasspathFile.new( config.classpath_file )
+        vendor = JBundler::ClasspathFile.new( config.vendor_dir )
+        if vendor.vendored?
+          puts "JBundler classpath:"
+          vendor.require_jars.each do |path|
+            puts "  * #{path}"
+          end
+        elsif classpath_file.exists?
           classpath_file.require_classpath unless defined? JBUNDLER_CLASSPATH
           puts "JBundler classpath:"
           JBUNDLER_CLASSPATH.each do |path|
@@ -52,7 +59,7 @@ module JBundler
     end
 
     desc 'executable', 'create an executable jar with a given bootstrap.rb file\nLIMITATION: only for jruby 1.6.x and newer'
-    method_option :bootstrap, :type => :string, :aliases => '-b'#, :required => true, :desc => 'file which will be executed when the jar gets executed'
+    method_option :bootstrap, :type => :string, :aliases => '-b', :required => true, :desc => 'file which will be executed when the jar gets executed'
     method_option :compile, :type => :boolean, :aliases => '-c', :default => false, :desc => 'compile the ruby files from the lib directory'
     method_option :verbose, :type => :boolean, :aliases => '-v', :default => false, :desc => 'more output'
     method_option :groups, :type => :array, :aliases => '-g', :desc => 'bundler groups to use for determine the gems to include in the jar file'
@@ -67,8 +74,17 @@ module JBundler
     end
     
     desc 'install', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given."
+    method_option :deploy, :type => :boolean, :default => false, :desc => 'copy the jars into the vendor/jars directory (or as configured). these vendored jars have preference before the classpath jars !'
     def install
       require 'jbundler'
+      if options[ :deploy ]
+        vendor = JBundler::Vendor.new( config.vendor_dir )
+        if vendor.vendored?
+          raise "already verdored. please remove #{config.vendor_dir} manually"
+        else
+          vendor.setup( JBundler::ClasspathFile.new( config.classpath_file ) )
+        end
+      end
       do_show
       puts 'Your jbundle is complete! Use `jbundle show` to see where the bundled jars are installed.'
     end
