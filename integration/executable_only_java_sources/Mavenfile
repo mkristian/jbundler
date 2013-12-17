@@ -1,0 +1,15 @@
+#-*- mode: ruby -*-
+
+eval_pom( File.read( '../../lib/jbundler/executable_pom.rb' ) )
+
+properties( 'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+phase :package do
+
+  plugin 'org.codehaus.mojo:exec-maven-plugin', '1.2.1' do
+    execute_goal( 'exec',
+                  :arguments => ['-jar', 'target/executable/executable_only_java_sources.jar' ],
+                  :executable => 'java' )
+  end
+end

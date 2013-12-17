@@ -1,0 +1,10 @@
+import java.io.*;
+
+File tree = new File( basedir, "target/tree.txt" );
+if( !tree.exists() ){
+  throw new RuntimeException( "file does not exists: " + tree ); 
+}
+if ( ! org.codehaus.plexus.util.FileUtils.contentEquals( new File( basedir, "ref.txt" ), tree ) ){
+  throw new RuntimeException( "reference tree does not match" );
+}
+
