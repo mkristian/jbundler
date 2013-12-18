@@ -47,7 +47,7 @@ describe JBundler::Vendor do
     j = Dir[ File.join( vdir, '*' ) ].collect do |f|
       File.basename( f )
     end
-    j.must_equal jars
+    j.sort.must_equal jars.sort
 
     subject.vendored?.must_equal true
 
