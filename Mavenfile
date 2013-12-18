@@ -4,7 +4,7 @@ gemfile
 
 jarfile
 
-# resolve conflict for jruby
+# resolve version conflict for jruby
 jar 'org.yaml:snakeyaml:1.13'
 
 jruby_plugin :minitest do

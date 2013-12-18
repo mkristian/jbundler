@@ -1,4 +1,5 @@
 language: ruby
+bundler_args: --without copyright
 rvm:
   - jruby-18mode
   - jruby-19mode
@@ -7,9 +8,7 @@ jdk:
   - openjdk6
   - openjdk7
   - oraclejdk7
-#language: java
-#install: mvn prepare-package -Dmaven.test.skip -quiet
-#script: mvn cucumber:test -Djruby.versions=1.5.6
-#jdk:
-#  - openjdk6
-#  - openjdk7
+matrix:
+  include:
+    - rvm: jruby
+      script: mvn clean verify
