@@ -11,4 +11,5 @@ jdk:
 matrix:
   include:
     - rvm: jruby
+      jdk: openjdk7
       script: mvn clean verify
