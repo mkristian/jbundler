@@ -13,9 +13,7 @@ jruby_plugin :minitest do
   execute_goals( :spec, :minispecDirectory => 'spec/*_spec.rb' )
 end
 
-# putting 1.5.6 at the end works around the problem of installing gems
-# with "bad" timestamps
-properties( 'jruby.versions' => ['1.6.8','1.7.4','1.5.6'].join(','),
+properties( 'jruby.versions' => ['1.6.8','1.7.4'].join(','),
             'jruby.modes' => ['1.8', '1.9', '2.0'].join(','),
             # just lock the versions
             'jruby.version' => '1.7.4',

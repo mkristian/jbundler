@@ -15,7 +15,7 @@
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.modes>1.8,1.9,2.0</jruby.modes>
     <jruby.plugins.version>1.0.0-rc4</jruby.plugins.version>
-    <jruby.versions>1.6.8,1.7.4,1.5.6</jruby.versions>
+    <jruby.versions>1.6.8,1.7.4</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
@@ -139,6 +139,11 @@
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>org.jboss.interceptor</groupId>
+      <artifactId>jboss-interceptor-api</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>jsr250-api</artifactId>
       <version>1.0</version>
@@ -165,6 +170,11 @@
       <classifier>no_aop</classifier>
     </dependency>
     <dependency>
+      <groupId>org.sonatype.sisu</groupId>
+      <artifactId>sisu-guava</artifactId>
+      <version>0.9.9</version>
+    </dependency>
+    <dependency>
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
@@ -173,6 +183,11 @@
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.inject</artifactId>
       <version>0.0.0.M2a</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>asm</groupId>
