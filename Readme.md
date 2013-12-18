@@ -129,15 +129,17 @@ jbundler does not completely obey the **$HOME/.m2/settings.xml** from maven wher
 
 some tests did not work with RVM and/or rubygems-bundler - there are some weird classloader issue popping up. there is a problem with the way the classloader gets setup. but a manual jruby installion or using rbenv is just working fine.
 
-those issue might pop up with ```jbunle tree``` and ```jbundle executable```
+those issue might pop up with ```jbundle tree``` and ```jbundle executable```
 
 ## running tests ##
 
-* ```rake``` will just execute all tests (skips some with rvm)
+* ```rake``` will execute all tests without integration tests
+* ```rake all``` will execute all tests
 * ```rake minitest``` runs the minitest specs
+* ```rake integration``` runs the integration tests where poms are used (might fail due to hardcoded absolute paths)
 * ```rake junit``` runs the junit java tests
 * ```jruby spec/abc_spec.rb``` runs that given tests (just use the right file)
-* ```mvn test``` will also run all tests (skips some)
+* ```mvn test``` will also run all tests
 * ```rmvn test`` same as ```mvn test```
 
 ## update ##
