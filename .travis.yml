@@ -3,13 +3,14 @@ bundler_args: --without copyright
 rvm:
   - jruby-18mode
   - jruby-19mode
-  - jruby-head
 jdk:
   - openjdk6
   - openjdk7
   - oraclejdk7
 matrix:
   include:
+    - rvm: jruby-head
+      jdk: openjdk7
     - rvm: jruby
       jdk: openjdk7
-      script: mvn clean verify
+      script: mvn clean verify -DskipTests
