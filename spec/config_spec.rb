@@ -27,7 +27,7 @@ describe JBundler::Config do
       c.skip.must_equal nil
       c.settings.must_equal nil 
       c.offline.must_equal false
-      c.work_dir.must_equal 'target'
+      c.work_dir.must_equal 'pkg'
       c.vendor_dir.must_equal 'vendor/jars'
     end
   end

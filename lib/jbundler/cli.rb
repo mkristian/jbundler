@@ -85,6 +85,17 @@ module JBundler
     desc 'install', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given."
     method_option :deployment, :type => :boolean, :default => false, :desc => "copy the jars into the vendor/jars directory (or as configured). these vendored jars have preference before the classpath jars !"
     method_option :no_deployment, :type => :boolean, :default => false, :desc => 'clears the vendored jars'
+    method_option :path, :type => :string
+    method_option :without, :type => :array
+    method_option :system, :type => :boolean
+    method_option :local, :type => :boolean
+    method_option :binstubs, :type => :string
+    method_option :trust_policy, :type => :string
+    method_option :gemfile, :type => :string
+    method_option :jobs, :type => :string
+    method_option :retry, :type => :string
+    method_option :no_cache, :type => :boolean
+    method_option :quiet, :type => :boolean
     def install
       require 'jbundler'
       if options[ :no_deployment ]

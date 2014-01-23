@@ -102,24 +102,32 @@ module JBundler
 
     def proxy
       @proxy ||= jbundler_env('JBUNDLE_PROXY')
+      if @proxy
+        warn 'proxy config is deprecated, use settings.xml instead'
+      end
+      @proxy
     end
 
     def mirror
       @mirror ||= jbundler_env('JBUNDLE_MIRROR')
       # nice to have no leading slash
       @mirror = @mirror.sub( /\/$/, '' ) if @mirror
+      if @mirror
+        warn 'mirror config is deprecated, use settings.xml instead'
+      end
       @mirror
     end
 
     def rubygems_mirror
       @rubygems_mirror ||= jbundler_env('BUNDLE_RUBYGEMS_MIRROR')
       # here a leading slash is needed !!
-     @rubygems_mirror =  @rubygems_mirror.sub( /([^\/])$/ , "\\1/" ) if @rubygems_mirror
+      @rubygems_mirror =  @rubygems_mirror.sub( /([^\/])$/ , "\\1/" ) if @rubygems_mirror
+      warn 'reubygems mirror config is deprecated, use bundler >=1.5 and its mirror config'
       @rubygems_mirror
     end
 
     def work_dir
-      @work_dir ||= jbundler_env('JBUNDLE_WORK_DIR') || 'target'
+      @work_dir ||= jbundler_env('JBUNDLE_WORK_DIR') || 'pkg'
     end
 
     def vendor_dir

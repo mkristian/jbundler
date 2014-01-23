@@ -29,18 +29,10 @@ module JBundler
 
       else
 
-        m = Maven::Ruby::Maven.new
-        m.options[ '-f' ] = File.join( File.dirname( __FILE__ ), 
-                                       'lock_down_pom.rb' )
-        m.options[ '-q' ] = nil unless debug
-        m.verbose = debug
-        
-        @configurator.configure( m )
-        
         puts '...'
-        
-        m.exec
-        
+
+        exec_maven( debug )
+
         deps_file = File.join( File.expand_path( @config.work_dir ), 
                                'dependencies.txt' )
         deps = StringIO.new
@@ -94,6 +86,20 @@ module JBundler
         end
         puts 'jbundle complete'
       end
+    end
+
+    private
+    
+    def exec_maven( debug )
+      m = Maven::Ruby::Maven.new
+      m.options[ '-f' ] = File.join( File.dirname( __FILE__ ), 
+                                     'lock_down_pom.rb' )
+      m.options[ '-q' ] = nil unless debug
+      m.verbose = debug
+      
+      @configurator.configure( m )
+      
+      m.exec
     end
   end
 end

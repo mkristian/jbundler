@@ -3,14 +3,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>dummy</groupId>
-  <artifactId>tree</artifactId>
+  <artifactId>lock_down</artifactId>
   <version>0.0.0</version>
-  <name>tree</name>
+  <name>lock_down</name>
   <properties>
     <tesla.dump.readOnly>true</tesla.dump.readOnly>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.plugins.version>1.0.0-rc4</jruby.plugins.version>
-    <outputFile>${project.build.directory}/tree.txt</outputFile>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
@@ -32,13 +31,6 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
     </dependency>
-    <dependency>
-      <groupId>ruby.maven-tools.jar</groupId>
-      <artifactId>myfirst</artifactId>
-      <version>0</version>
-      <scope>system</scope>
-      <systemPath>/home/christian/projects/active/maven/jbundler/integration/tree/myfirst.jar</systemPath>
-    </dependency>
   </dependencies>
   <repositories>
     <repository>
@@ -47,8 +39,7 @@
     </repository>
   </repositories>
   <build>
-    <directory>target</directory>
-    <defaultGoal>dependency:tree</defaultGoal>
+    <defaultGoal>dependency:list</defaultGoal>
     <plugins>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
@@ -63,7 +54,7 @@
         </executions>
         <configuration>
           <outputDirectory>.</outputDirectory>
-          <finalName>tree</finalName>
+          <finalName>lock_down</finalName>
         </configuration>
       </plugin>
       <plugin>
@@ -74,10 +65,19 @@
             <fileset>
               <directory>.</directory>
               <includes>
-                <include>tree.jar</include>
+                <include>lock_down.jar</include>
               </includes>
             </fileset>
           </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <includeTypes>jar</includeTypes>
+          <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
+          <outputFile>target/dependencies.txt</outputFile>
         </configuration>
       </plugin>
     </plugins>

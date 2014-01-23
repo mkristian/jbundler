@@ -44,6 +44,7 @@ plugin :invoker, '1.8' do
                  :streamLogs => true,
                  #:mavenExecutable => File.join( Gem.loaded_specs['ruby-maven'].bin_dir, 'rmvn' ),
                  :pomIncludes => [ '*' ],
+                 :preBuildHookScript => 'setup',
                  :postBuildHookScript => 'verify' )
 end
 

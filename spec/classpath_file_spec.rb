@@ -77,6 +77,10 @@ describe JBundler::ClasspathFile do
   it 'generates a classpath ruby file' do
     subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR))
     File.read(cpfile).must_equal <<-EOF
+JBUNDLER_JRUBY_CLASSPATH = []
+JBUNDLER_JRUBY_CLASSPATH.freeze
+JBUNDLER_TEST_CLASSPATH = []
+JBUNDLER_TEST_CLASSPATH.freeze
 JBUNDLER_CLASSPATH = []
 JBUNDLER_CLASSPATH << 'a'
 JBUNDLER_CLASSPATH << 'b'

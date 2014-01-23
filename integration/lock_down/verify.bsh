@@ -1,0 +1,16 @@
+import java.io.*;
+
+File rawDeps = new File( basedir, "target/dependencies.txt" );
+if( !rawDeps.exists() ){
+  throw new RuntimeException( "file does not exists: " + rawDeps ); 
+}
+
+String depsText = org.codehaus.plexus.util.FileUtils.fileRead( rawDeps );
+File deps = new File( basedir, "target/deps.txt" );
+
+org.codehaus.plexus.util.FileUtils.fileWrite( deps, depsText.replaceAll( ".usr.local.*", "" ) );
+
+if ( ! org.codehaus.plexus.util.FileUtils.contentEquals( new File( basedir, "ref.txt" ), deps ) ){
+  throw new RuntimeException( "reference dependencies does not match" );
+}
+
