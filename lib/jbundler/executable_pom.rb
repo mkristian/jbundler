@@ -26,7 +26,7 @@ end
 jfile.locked.each do |dep|
   artifact( dep )
 end
-build.final_name = model.artifact_id
+
 build.directory = jworkdir
 resource do 
   directory jworkdir
@@ -49,6 +49,7 @@ Gem.loaded_specs.values.each do |s|
 end
 
 properties( 'maven.test.skip' => true,
+            'tesla.dump.pom' => 'pom.xml',
             'project.build.sourceEncoding' => 'utf-8' )
 
 jfile.populate_unlocked do |dsl|
@@ -104,6 +105,7 @@ profile :no_compile do
 end
 
 plugin( :shade, '2.1',
+        :outputFile => "${user.dir}/#{File.basename( File.expand_path( '.' ) )}_exec.jar",
         :transformers => [ { '@implementation' => 'org.apache.maven.plugins.shade.resource.ManifestResourceTransformer',
                              :mainClass => 'org.jruby.JarBootstrapMain' } ] ) do
   execute_goals( 'shade', :phase => 'package' )

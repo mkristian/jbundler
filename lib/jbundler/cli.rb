@@ -22,6 +22,7 @@ require 'thor'
 require 'jbundler/config'
 require 'jbundler/executable'
 require 'jbundler/tree'
+require 'jbundler/lock_down'
 module JBundler
   class Cli < Thor
     no_tasks do
@@ -56,6 +57,14 @@ module JBundler
     #method_option :details, :type => :boolean, :default => false
     def tree
       JBundler::Tree.new( config ).show_it
+    end
+
+    desc 'lock_down', 'using a different library to create the Jarfile.lock - experimental'
+    method_option :vendor, :type => :boolean, :default => false, :desc => 'vendor jars in given vendor directory.'
+    method_option :debug, :type => :boolean, :default => false, :desc => 'enable maven output'
+    def lock_down
+      JBundler::LockDown.new( config ).lock_down( options[ :vendor ],
+                                                  options[ :debug ] )
     end
 
     desc 'executable', 'create an executable jar with a given bootstrap.rb file\nLIMITATION: only for jruby 1.6.x and newer'

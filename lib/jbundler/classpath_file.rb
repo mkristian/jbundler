@@ -28,6 +28,12 @@ module JBundler
 
     def require_classpath
       load File.expand_path @classpathfile
+      JBUNDLER_CLASSPATH.each { |c| require c }
+    end
+
+    def require_test_classpath
+      load File.expand_path @classpathfile unless defined? JBUNLDER_TEST_CLASSPATH
+      JBUNDLER_TEST_CLASSPATH.each { |c| require c }
     end
 
     def mtime
@@ -42,18 +48,24 @@ module JBundler
       (jarfile.exists? || gemfile_lock.exists? || jarfile.exists_lock?) && (!exists? || !jarfile.exists_lock? || (jarfile.exists? && (jarfile.mtime > mtime)) || (jarfile.exists_lock? && (jarfile.mtime_lock > mtime)) || (gemfile_lock.exists? && (gemfile_lock.mtime > mtime)))
     end
 
-    def generate(classpath_array)
+    def generate( classpath_array, test_array = [], jruby_array = [] )
       FileUtils.mkdir_p(File.dirname(@classpathfile))
       File.open(@classpathfile, 'w') do |f|
-        f.puts "JBUNDLER_CLASSPATH = []"
-        classpath_array.each do |path|
-          f.puts "JBUNDLER_CLASSPATH << '#{path}'" unless path =~ /pom$/
-        end
-        f.puts "JBUNDLER_CLASSPATH.freeze"
+        dump_array( f, jruby_array || [], 'JRUBY_' )
+        dump_array( f, test_array || [], 'TEST_' )
+        dump_array( f, classpath_array || [], '' )
         f.puts "JBUNDLER_CLASSPATH.each { |c| require c }"
         f.close
       end
     end
     
+    private
+    def dump_array( file, array, prefix )
+      file.puts "JBUNDLER_#{prefix}CLASSPATH = []"
+      array.each do |path|
+        file.puts "JBUNDLER_#{prefix}CLASSPATH << '#{path}'" unless path =~ /pom$/
+      end
+      file.puts "JBUNDLER_#{prefix}CLASSPATH.freeze"
+    end
   end
 end

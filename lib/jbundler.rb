@@ -24,6 +24,16 @@ require 'jbundler/vendor'
 require 'jbundler/gemfile_lock'
 require 'jbundler/aether'
 
+module JBundler
+
+  def setup_test
+    config = JBundler::Config.new
+    JBundler::ClasspathFile.new(config.classpath_file).require_test_classpath
+    config
+  end
+
+end
+
 config = JBundler::Config.new
 
 jarfile = Maven::Tools::Jarfile.new(config.jarfile)

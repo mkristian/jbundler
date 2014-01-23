@@ -6,14 +6,18 @@ basedir( File.dirname( jfile ) )
 
 gemfile( gfile ) if File.exists? gfile
 
-jarfile( jfile, :skip_locked => true )
+jarfile( jfile )
 
 build do
   directory = jworkdir
-  default_goal 'dependency:tree'
+  default_goal 'dependency:list'
 end
         
+plugin( :dependency, '2.8',
+        :includeTypes => 'jar',
+        :outputAbsoluteArtifactFilename => true,
+        :outputFile => "#{jworkdir}/dependencies.txt" )
+
 properties( 'project.build.sourceEncoding' => 'utf-8',
             'tesla.dump.readOnly' => true,
-            'tesla.dump.pom' => 'tree.pom.xml',
-            'outputFile' => "#{jworkdir}/tree.txt" )
+            'tesla.dump.pom' => 'lockdown.pom.xml'  )

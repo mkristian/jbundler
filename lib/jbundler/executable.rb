@@ -31,11 +31,10 @@ module JBundler
       m.verbose = @config.verbose
       m.package( '-P', @config.compile ? :compile : :no_compile )
 
-      #FileUtils.rm_f( 'dependency-reduced-pom.xml' )
       puts
       puts 'now you can execute your jar like this'
       puts
-      puts "\tjava -jar #{@config.work_dir}/executable/*.jar"
+      puts "\tjava -jar #{File.basename( File.expand_path( '.' ) )}_exec.jar"
       puts
     end
   end
