@@ -5,7 +5,7 @@ gemfile
 jarfile
 
 # resolve version conflict for jruby
-jar 'org.yaml:snakeyaml:1.13'
+jar 'org.yaml:snakeyaml:1.13', :scope => :provided
 
 jruby_plugin :minitest do
   # restrict the specs since we have more *_spec,rb files deeper the 
