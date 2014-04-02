@@ -25,19 +25,48 @@ module JBundler
   # allow yaml config in $HOME/.jbundlerrc and $PWD/.jbundlerrc
   class Config
 
-    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline, :work_dir, :vendor_dir
+    RC_FILE = '.jbundlerrc'
+
+    attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline, :work_dir, :vendor_dir, :basedir
 
     def initialize
-      file = '.jbundlerrc'
-      homefile = File.join(ENV['HOME'], file)
+      homefile = File.join(ENV['HOME'], RC_FILE)
       home_config = YAML.load_file(homefile) if File.exists?(homefile)
       @config = (home_config || {})
+      @basedir = find_basedir( File.expand_path( '.' ) )
+      @basedir ||= File.expand_path( '.' )
+      file = join_basedir( RC_FILE )
       pwd_config = YAML.load_file(file) if File.exists?(file)
       @config.merge!(pwd_config || {})
     end
+    
+    def join_basedir( path )
+      if @basedir
+        File.join( @basedir, path )
+      else
+        path
+      end
+    end
 
     def find_basedir( dir )
-      
+      f = File.join( dir, RC_FILE )
+      return dir if File.exists?( f )
+      f = File.join( dir, _jarfile )
+      return dir if File.exists?( f )
+      f = File.join( dir, _gemfile )
+      return dir if File.exists?( f )
+      parent = File.dirname( dir )
+      if dir != ENV['HOME'] && dir != parent
+        find_basedir( parent )
+      end
+    end
+
+    def absolute( file )
+      if file.nil? || file == File.absolute_path( file )
+        file
+      else
+        File.join( @basedir, file )
+      end
     end
 
     if defined? JRUBY_VERSION
@@ -67,36 +96,43 @@ module JBundler
     end
 
     def jarfile
-      if File.exists?('Mvnfile')
-        warn "'Mvnfile' name is deprecated, please use 'Jarfile' instead"
-        @jarfile = 'Mvnfile'
-      end
-      @jarfile ||= jbundler_env('JBUNDLE_JARFILE') || 'Jarfile'
+      @jarfile ||= absolute( _jarfile )
     end
+
+    def _jarfile
+      jbundler_env('JBUNDLE_JARFILE') || 'Jarfile'
+    end
+    private :_jarfile
 
     def jarfile_lock
       "#{jarfile}.lock"
     end
 
     def gemfile
-      @gemfile ||= jbundler_env('BUNDLE_GEMFILE') || 'Gemfile'
+      @gemfile ||= absolute( _gemfile )
     end
+
+    def _gemfile
+      jbundler_env('BUNDLE_GEMFILE') || 'Gemfile'
+    end
+    private :_gemfile
 
     def gemfile_lock
       "#{gemfile}.lock"
     end
 
     def classpath_file
-      jbundler_env('JBUNDLE_CLASSPATH_FILE') || '.jbundler/classpath.rb'
+      absolute( jbundler_env('JBUNDLE_CLASSPATH_FILE') ||
+                '.jbundler/classpath.rb' )
     end
 
     def local_repository
       # use maven default local repo as default
-      @local_maven_repository ||= jbundler_env('JBUNDLE_LOCAL_REPOSITORY')
+      @local_maven_repository ||= absolute( jbundler_env('JBUNDLE_LOCAL_REPOSITORY') )
     end
 
     def settings
-      @settings ||= jbundler_env('JBUNDLE_SETTINGS')
+      @settings ||= absolute( jbundler_env('JBUNDLE_SETTINGS') )
     end
 
     def offline
@@ -131,11 +167,12 @@ module JBundler
     end
 
     def work_dir
-      @work_dir ||= jbundler_env('JBUNDLE_WORK_DIR') || 'pkg'
+      @work_dir ||= absolute( jbundler_env('JBUNDLE_WORK_DIR') || 'pkg' )
     end
 
     def vendor_dir
-      @vendor_dir ||= jbundler_env('JBUNDLE_VENDOR_DIR') || File.join( 'vendor', 'jars' )
+      @vendor_dir ||= absolute( jbundler_env('JBUNDLE_VENDOR_DIR') ||
+                                File.join( 'vendor', 'jars' ) )
     end
 
   end
