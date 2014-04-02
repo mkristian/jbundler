@@ -75,7 +75,7 @@ describe JBundler::ClasspathFile do
   end
 
   it 'generates a classpath ruby file without localrepo' do
-    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR), nil)
+    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR) )
     File.read(cpfile).must_equal <<-EOF
 JBUNDLER_JRUBY_CLASSPATH = []
 JBUNDLER_JRUBY_CLASSPATH.freeze
@@ -92,7 +92,7 @@ EOF
   end
 
   it 'generates a classpath ruby file with localrepo' do
-    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR), '/tmp')
+    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR), [], [], '/tmp')
     File.read(cpfile).must_equal <<-EOF
 JBUNDLER_LOCAL_REPO = ENV[ '_LOCAL_REPO_' ] || '/tmp'
 JBUNDLER_JRUBY_CLASSPATH = []
@@ -111,7 +111,7 @@ EOF
 
   it 'require classpath using default with generated localrepo' do
     ENV[ '_LOCAL_REPO_' ] = nil
-    subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), '/tmp')
+    subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), [], [], '/tmp')
     begin
       subject.require_classpath
     rescue LoadError
@@ -122,7 +122,7 @@ EOF
 
   it 'require classpath with generated localrepo' do
     ENV[ '_LOCAL_REPO_' ] = nil
-    subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), '/tmp')
+    subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), [], [], '/tmp')
     
     begin
       subject.require_classpath( '/temp' )

@@ -53,7 +53,8 @@ else
     
     aether.resolve
     
-    classpath_file.generate( aether.classpath_array, config.local_repository )
+    classpath_file.generate( aether.classpath_array, [], [], 
+                             config.local_repository )
     jarfile.generate_lockfile( aether.resolved_coordinates )
   end
 

@@ -31,9 +31,13 @@ module JBundler
       file = '.jbundlerrc'
       homefile = File.join(ENV['HOME'], file)
       home_config = YAML.load_file(homefile) if File.exists?(homefile)
+      @config = (home_config || {})
       pwd_config = YAML.load_file(file) if File.exists?(file)
-      File.expand_path( file )
-      @config = (home_config || {}).merge(pwd_config || {})
+      @config.merge!(pwd_config || {})
+    end
+
+    def find_basedir( dir )
+      
     end
 
     if defined? JRUBY_VERSION

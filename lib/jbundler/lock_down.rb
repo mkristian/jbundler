@@ -71,7 +71,8 @@ module JBundler
           end
           classpath_file.generate( jars[ :runtime ],
                                    jars[ :test ],
-                                   jars[ :jruby ] )
+                                   jars[ :jruby ],
+                                   @config.local_repository )
         end
         if needs_vendor
           puts "vendor directory: #{@config.vendor_dir}"
