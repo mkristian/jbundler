@@ -122,7 +122,7 @@ module JBundler
       @rubygems_mirror ||= jbundler_env('BUNDLE_RUBYGEMS_MIRROR')
       # here a leading slash is needed !!
       @rubygems_mirror =  @rubygems_mirror.sub( /([^\/])$/ , "\\1/" ) if @rubygems_mirror
-      warn 'reubygems mirror config is deprecated, use bundler >=1.5 and its mirror config'
+      warn 'rubygems mirror config is deprecated, use bundler >=1.5 and its mirror config'
       @rubygems_mirror
     end
 
