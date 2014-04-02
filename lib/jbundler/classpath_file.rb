@@ -26,12 +26,14 @@ module JBundler
       @classpathfile = classpathfile
     end
 
-    def require_classpath
+    def require_classpath( local_repo = nil )
+      ENV[ '_LOCAL_REPO_' ] ||= local_repo
       load File.expand_path @classpathfile
       JBUNDLER_CLASSPATH.each { |c| require c }
     end
 
-    def require_test_classpath
+    def require_test_classpath( local_repo = nil )
+      ENV[ '_LOCAL_REPO_' ] ||= local_repo
       load File.expand_path @classpathfile unless defined? JBUNLDER_TEST_CLASSPATH
       JBUNDLER_TEST_CLASSPATH.each { |c| require c }
     end
@@ -48,22 +50,31 @@ module JBundler
       (jarfile.exists? || gemfile_lock.exists? || jarfile.exists_lock?) && (!exists? || !jarfile.exists_lock? || (jarfile.exists? && (jarfile.mtime > mtime)) || (jarfile.exists_lock? && (jarfile.mtime_lock > mtime)) || (gemfile_lock.exists? && (gemfile_lock.mtime > mtime)))
     end
 
-    def generate( classpath_array, test_array = [], jruby_array = [] )
+    def generate( classpath_array, test_array = [],
+                  jruby_array = [], local_repo )
       FileUtils.mkdir_p(File.dirname(@classpathfile))
       File.open(@classpathfile, 'w') do |f|
-        dump_array( f, jruby_array || [], 'JRUBY_' )
-        dump_array( f, test_array || [], 'TEST_' )
-        dump_array( f, classpath_array || [], '' )
-        f.puts "JBUNDLER_CLASSPATH.each { |c| require c }"
+        if local_repo
+          local_repo = File.expand_path( local_repo )
+          f.puts "JBUNDLER_LOCAL_REPO = ENV[ '_LOCAL_REPO_' ] || '#{local_repo}'"
+        end
+        dump_array( f, jruby_array || [], 'JRUBY_', local_repo )
+        dump_array( f, test_array || [], 'TEST_', local_repo )
+        dump_array( f, classpath_array || [], '', local_repo )
         f.close
       end
     end
     
     private
-    def dump_array( file, array, prefix )
+    def dump_array( file, array, prefix, local_repo )
       file.puts "JBUNDLER_#{prefix}CLASSPATH = []"
       array.each do |path|
-        file.puts "JBUNDLER_#{prefix}CLASSPATH << '#{path}'" unless path =~ /pom$/
+        if local_repo
+          path.sub!( /#{local_repo}/, '' )
+          file.puts "JBUNDLER_#{prefix}CLASSPATH << (JBUNDLER_LOCAL_REPO + '#{path}')" unless path =~ /pom$/
+        else
+          file.puts "JBUNDLER_#{prefix}CLASSPATH << '#{path}'" unless path =~ /pom$/
+        end
       end
       file.puts "JBUNDLER_#{prefix}CLASSPATH.freeze"
     end

@@ -74,8 +74,8 @@ describe JBundler::ClasspathFile do
     subject.needs_update?(jarfile, gemfile_lock).must_equal true
   end
 
-  it 'generates a classpath ruby file' do
-    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR))
+  it 'generates a classpath ruby file without localrepo' do
+    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR), nil)
     File.read(cpfile).must_equal <<-EOF
 JBUNDLER_JRUBY_CLASSPATH = []
 JBUNDLER_JRUBY_CLASSPATH.freeze
@@ -88,7 +88,47 @@ JBUNDLER_CLASSPATH << 'c'
 JBUNDLER_CLASSPATH << 'd'
 JBUNDLER_CLASSPATH << 'f'
 JBUNDLER_CLASSPATH.freeze
-JBUNDLER_CLASSPATH.each { |c| require c }
 EOF
+  end
+
+  it 'generates a classpath ruby file with localrepo' do
+    subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR), '/tmp')
+    File.read(cpfile).must_equal <<-EOF
+JBUNDLER_LOCAL_REPO = ENV[ '_LOCAL_REPO_' ] || '/tmp'
+JBUNDLER_JRUBY_CLASSPATH = []
+JBUNDLER_JRUBY_CLASSPATH.freeze
+JBUNDLER_TEST_CLASSPATH = []
+JBUNDLER_TEST_CLASSPATH.freeze
+JBUNDLER_CLASSPATH = []
+JBUNDLER_CLASSPATH << (JBUNDLER_LOCAL_REPO + 'a')
+JBUNDLER_CLASSPATH << (JBUNDLER_LOCAL_REPO + 'b')
+JBUNDLER_CLASSPATH << (JBUNDLER_LOCAL_REPO + 'c')
+JBUNDLER_CLASSPATH << (JBUNDLER_LOCAL_REPO + 'd')
+JBUNDLER_CLASSPATH << (JBUNDLER_LOCAL_REPO + 'f')
+JBUNDLER_CLASSPATH.freeze
+EOF
+  end
+
+  it 'require classpath using default with generated localrepo' do
+    ENV[ '_LOCAL_REPO_' ] = nil
+    subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), '/tmp')
+    begin
+      subject.require_classpath
+    rescue LoadError
+      # there are no files to require
+    end
+    JBUNDLER_CLASSPATH.must_equal ["/tmp/a", "/tmp/b", "/tmp/c", "/tmp/d", "/tmp/f"]
+  end
+
+  it 'require classpath with generated localrepo' do
+    ENV[ '_LOCAL_REPO_' ] = nil
+    subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), '/tmp')
+    
+    begin
+      subject.require_classpath( '/temp' )
+    rescue LoadError
+      # there are no files to require
+    end
+    JBUNDLER_CLASSPATH.must_equal ["/temp/a", "/temp/b", "/temp/c", "/temp/d", "/temp/f"]
   end
 end

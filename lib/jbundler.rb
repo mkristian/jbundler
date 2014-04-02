@@ -44,17 +44,17 @@ else
   classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
   gemfile_lock = JBundler::GemfileLock.new(jarfile, config.gemfile_lock)
 
-  if classpath_file.needs_update?(jarfile, gemfile_lock) && ! vendor.vendored?
-    aether = JBundler::AetherRuby.new(config)
+  if classpath_file.needs_update?( jarfile, gemfile_lock ) && ! vendor.vendored?
+    aether = JBundler::AetherRuby.new( config )
     
-    jarfile.populate_unlocked(aether)
-    gemfile_lock.populate_dependencies(aether)
-    jarfile.populate_locked(aether)
+    jarfile.populate_unlocked( aether )
+    gemfile_lock.populate_dependencies( aether )
+    jarfile.populate_locked( aether )
     
     aether.resolve
     
-    classpath_file.generate(aether.classpath_array)
-    jarfile.generate_lockfile(aether.resolved_coordinates)
+    classpath_file.generate( aether.classpath_array, config.local_repository )
+    jarfile.generate_lockfile( aether.resolved_coordinates )
   end
 
   if vendor.vendored?
@@ -67,7 +67,7 @@ else
     end
   elsif classpath_file.exists? && jarfile.exists_lock?
     require 'java'
-    classpath_file.require_classpath
+    classpath_file.require_classpath( config.local_repository )
     if config.verbose
       warn "jbundler classpath:"
       JBUNDLER_CLASSPATH.each do |path|
