@@ -16,14 +16,15 @@ end
 
 desc 'run all the specs und junit tests'
 if ENV[ 'rvm_version' ]
-  task :test => [ :minispec ]
+  task :test => [ :specs ]
 
   warn 'rvm is not working properly with ruby-maven so NO junit tests'
 else
-  task :test => [ :minispec, :junit ]
+  task :test => [ :specs, :junit ]
 end
 
-task :minispec do
+desc 'run specs'
+task :specs do
   unless File.exists? File.join('lib', 'jbundler.jar' )
     Rake::Task[ :jar ].invoke
   end
