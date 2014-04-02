@@ -15,4 +15,5 @@ matrix:
       jdk: openjdk7
       script: mvn clean verify -DskipTests
   allow_failures:
+    - rvm: jruby-head
     - rvm: jruby
