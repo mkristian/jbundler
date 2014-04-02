@@ -37,7 +37,7 @@
       <artifactId>myfirst</artifactId>
       <version>0</version>
       <scope>system</scope>
-      <systemPath>@BASEDIR@/tree/myfirst.jar</systemPath>
+      <systemPath>@BASEDIR@/myfirst.jar</systemPath>
     </dependency>
   </dependencies>
   <repositories>
