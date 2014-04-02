@@ -37,7 +37,7 @@ describe JBundler::Vendor do
   end
 
   it 'should copy jars on setup and delete them on clear' do
-    ::JBUNDLER_CLASSPATH.replace Dir[ File.join( workdir, "*.jar" )]
+    ::JBUNDLER_CLASSPATH = Dir[ File.join( workdir, "*.jar" )]
     def cp.require_classpath
       [ '1.jar', '2.jar' ]
     end
