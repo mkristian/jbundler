@@ -50,7 +50,7 @@ module JBundler
       (jarfile.exists? || gemfile_lock.exists? || jarfile.exists_lock?) && (!exists? || !jarfile.exists_lock? || (jarfile.exists? && (jarfile.mtime > mtime)) || (jarfile.exists_lock? && (jarfile.mtime_lock > mtime)) || (gemfile_lock.exists? && (gemfile_lock.mtime > mtime)))
     end
 
-    def generate( classpath_array, test_array = [], jruby_array = [], local_repo )
+    def generate( classpath_array, test_array = [], jruby_array = [], local_repo = nil )
       FileUtils.mkdir_p(File.dirname(@classpathfile))
       File.open(@classpathfile, 'w') do |f|
         if local_repo
