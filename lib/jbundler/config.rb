@@ -62,7 +62,7 @@ module JBundler
     end
 
     def absolute( file )
-      if file.nil? || file == File.absolute_path( file )
+      if file.nil? || file == File.expand_path( file )
         file
       else
         File.join( @basedir, file )
