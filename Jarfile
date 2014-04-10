@@ -16,4 +16,14 @@ jar 'org.apache.maven.wagon:wagon-http', WAGON_VERSION
 jar 'org.apache.maven:maven-settings', MAVEN_VERSION
 jar 'org.apache.maven:maven-settings-builder', MAVEN_VERSION
 
+scope :test do
+  jar 'org.mockito:mockito-core', '1.9.5'
+  jar 'org.testng:testng', '6.8'
+end
+
+jruby '1.7.11', :no_asm => true do
+  # resolve version conflict for jruby
+  jar 'org.yaml:snakeyaml:1.13'
+end
+
 # vim: syntax=Ruby

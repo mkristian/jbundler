@@ -14,6 +14,9 @@ task :integration do
   maven.verify( '-Dmaven.test.skip' )
 end
 
+desc 'run all the specs, junit tests and integration tests'
+task :all => [ :specs, :junit, :integration ]
+
 desc 'run all the specs und junit tests'
 if ENV[ 'rvm_version' ]
   task :test => [ :specs ]
