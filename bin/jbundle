@@ -11,7 +11,9 @@ if ARGV[0] == 'help'
 
 else
 
-  ARGV << 'install' if ARGV.size == 0
+  if ARGV == [] || ARGV.all?{ |a| a.match( /^-/ ) }
+    ARGV.unshift 'install'
+  end
 
   if ARGV[0] == 'console'
     require 'irb'
@@ -22,37 +24,24 @@ else
   require 'jbundler/config'
   config = JBundler::Config.new
 
-  if ['install', 'update', 'show', 'console'].member?( ARGV[0] )
+  if ['lock_down', 'install', 'update', 'show', 'console'].member?( ARGV[0] )
     begin
-      file = File.join( ENV['HOME'], '.bundle', 'config' )
-      if File.exists?( file )
-        require 'yaml'
-        bundle_config = YAML.load_file( file )
-        mirrors = bundle_config.select { |k,v| nil != (k =~ /BUNDLE_MIRROR__/) }
-        if config.rubygems_mirror || mirrors.size > 0
-          mirrors.each do |k,v| 
-            ENV[ k ] = v
-          end
-          if config.rubygems_mirror
-            ENV['BUNDLE_MIRROR__HTTP://RUBYGEMS.ORG'] = config.rubygems_mirror
-            ENV['BUNDLE_MIRROR__HTTPS://RUBYGEMS.ORG'] = config.rubygems_mirror
-          end
-          
-          begin
-            load Gem.bin_path('nexus', 'nbundle') 
-          rescue Gem::GemNotFoundException
-            warn ''
-            warn 'to use a rubygems mirror you need to install the nexus gem'
-            warn '    $ gem install nexus'
-            warn ''
-            warn 'rubygems mirror ignored !'
-          end
-        else
-          load Gem.bin_path('bundler', 'bundle') 
-        end
-      else
-        load Gem.bin_path('bundler', 'bundle')         
-      end
+      is_lock_down = ARGV.delete( 'lock_down' )
+      ARGV.delete( 0 ) if is_lock_down
+      is_vendor = ARGV.delete( '--vendor' ) 
+      is_debug = ARGV.delete( '--debug' )  
+      is_verbose = ARGV.delete( '--verbose' ) 
+      ARGV.delete( '--skip-vendor' )
+      ARGV.delete( '--skip-debug' )
+      ARGV.delete( '--skip-verbose' )
+
+      load Gem.bin_path('bundler', 'bundle') 
+
+      ARGV.insert( 0, 'lock_down' ) if is_lock_down
+      ARGV.insert( 1, '--debug' ) if is_debug
+      ARGV.insert( 1, '--vendor' ) if is_vendor
+      ARGV.insert( 1, '--verbose' ) if is_verbose
+
       require 'jbundler/cli'
       JBundler::Cli.start
     rescue Exception => e

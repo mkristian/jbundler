@@ -21,7 +21,6 @@ FileUtils.cp( java.lang.System.getProperty( 'jbundler.bootstrap'),
 def jruby_home( path )
   File.join( 'META-INF/jruby.home/lib/ruby/gems/shared', path )
 end
-
  
 jfile.locked.each do |dep|
   artifact( dep )
@@ -54,19 +53,13 @@ properties( 'maven.test.skip' => true,
 
 jfile.populate_unlocked do |dsl|
   
-  # setup jruby version
-  jruby_version = dsl.jruby || JRUBY_VERSION
-  if ( jruby_version < '1.6' )
-    raise 'jruby before 1.6 are not supported'
-  elsif ( jruby_version < '1.7' )
-    warn 'jruby version below 1.7 uses jruby-complete'
-    jar 'org.jruby:jruby-complete', jruby_version
-  elsif ( jruby_version < '1.7.5' )
-    jar 'org.jruby:jruby-core', jruby_version
-  else
-    jar 'org.jruby:jruby', jruby_version
+  setup_jruby( dsl.jruby || JRUBY_VERSION, :compile )
+  dsl.artifacts.select do |a|
+    a[ :scope ] == :provided
+  end.each do |a|
+    a[ :scope ] = :compile
+    artifact( a )
   end
-
   local = dsl.artifacts.select do |a|
     a[ :system_path ]
   end

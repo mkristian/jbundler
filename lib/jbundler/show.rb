@@ -13,31 +13,32 @@ module JBundler
       @classpath_file = JBundler::ClasspathFile.new( @config.classpath_file )
     end
 
-    def do_it( debug = false )
-      jarfile = Maven::Tools::Jarfile.new( @config.jarfile )
-      vendor = JBundler::Vendor.new( @config.vendor_dir )
-      gemfile_lock = JBundler::GemfileLock.new( jarfile, 
-                                                @config.gemfile_lock )
-    end
-
     def show_classpath
-      @classpath_file.require_classpath
-      warn "jruby core classpath:"
+      return if ! @config.verbose
+      @classpath_file.load_classpath
+      warn ''
+      warn 'jruby classpath:'
+      warn '----------------'
       JBUNDLER_JRUBY_CLASSPATH.each do |path|
-        warn "\t#{path}"
+        warn "#{path}"
       end
-      warn "jbundler runtime classpath:"
+      warn ''
+      warn 'jbundler runtime classpath:'
+      warn '---------------------------'
       JBUNDLER_CLASSPATH.each do |path|
-        warn "\t#{path}"
+        warn "#{path}"
       end
-      warn "jbundler test classpath:"
+      warn ''
+      warn 'jbundler test classpath:'
+      warn '------------------------'
       if JBUNDLER_TEST_CLASSPATH.empty?
         warn "\t--- empty ---"
       else
         JBUNDLER_TEST_CLASSPATH.each do |path|
-          warn "\t#{path}"
+          warn "#{path}"
         end
       end
+      warn ''
     end
   end
 end

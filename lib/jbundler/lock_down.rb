@@ -6,6 +6,7 @@ require 'jbundler/show'
 require 'maven/tools/jarfile'
 require 'maven/ruby/maven'
 require 'fileutils'
+require 'jar_installer'
 module JBundler
   class LockDown
 
@@ -13,60 +14,61 @@ module JBundler
       @config = config
       @configurator = Configurator.new( config )
     end
+    
+    def vendor
+      @vendor ||= JBundler::Vendor.new( @config.vendor_dir )
+    end
 
-    def lock_down( needs_vendor = false, debug = false )
+    def update( debug = false, verbose = false )
+      if vendor.vendored?
+        raise 'can not update vendored jars'
+      end
+
+      FileUtils.rm_f( @config.jarfile_lock )
+      
+      lock_down( false, debug, verbose )
+    end
+
+    def lock_down( needs_vendor = false, debug = false, verbose = false )
       jarfile = Maven::Tools::Jarfile.new( @config.jarfile )
-      vendor = JBundler::Vendor.new( @config.vendor_dir )
       classpath_file = JBundler::ClasspathFile.new( @config.classpath_file )
       gemfile_lock = JBundler::GemfileLock.new( jarfile, 
                                                 @config.gemfile_lock )
 
       needs_update = classpath_file.needs_update?( jarfile, gemfile_lock )
-      if( ( ! needs_update ||
-            vendor.vendored? ) && ! vendor )
+      if ( ! needs_update && ! needs_vendor ) || vendor.vendored?
 
-        puts 'up to date'
+        puts 'Jar dependencies are up to date !'
 
       else
 
         puts '...'
-
-        exec_maven( debug )
-
-        deps_file = File.join( File.expand_path( @config.work_dir ), 
-                               'dependencies.txt' )
-        deps = StringIO.new
+       
+        locked = StringIO.new
         jars = {}
-        vendor_map = {}
-        File.read( deps_file ).each_line do |line| 
-          if line.match /:jar:/
-            jar = line.sub( /.+:/, '' ).sub( /\s$/, '' )
-            unless line.match /:provided/
-              vendor_map[ line.sub( /:[^:]+:[^:]+$/, '' )
-                            .sub( /^\s+/, '' ) ] = jar
+        deps = install_dependencies( debug, verbose )
+        deps.each do |d|
+          case d.scope
+          when :provided
+            ( jars[ :jruby ] ||= [] ) << d.file
+          when :test
+            ( jars[ :test ] ||= [] ) << d.file
+          else
+            ( jars[ :runtime ] ||= [] ) << d.file
+            if( ! d.gav.match( /^ruby.bundler:/ ) )
+              # TODO make Jarfile.lock depend on jruby version as well on
+              # include test as well, i.e. keep the scope in place
+              locked.puts d.coord
             end
-            case line
-            when /:provided:/
-              ( jars[ :jruby ] ||= [] ) << jar
-            when /:test:/
-              ( jars[ :test ] ||= [] ) << jar
-            else
-              ( jars[ :runtime ] ||= [] ) << jar
-            end
-          end
-          # TODO make lock depend on jruby version as well on
-          # include test as well, i.e. keep the scope in place
-          if( line.match( /:compile:|:runtime:/ ) &&
-              ! line.match( /^ruby.bundler:/ ) )
-            deps.puts line.sub( /:[^:]+:[^:]+$/, '' ).sub( /^\s+/, '' )
           end
         end
+
         if needs_update
-          if deps.string.empty?
+          if locked.string.empty?
             FileUtils.rm_f @config.jarfile_lock
           else
             File.open( @config.jarfile_lock, 'w' ) do |f|
-              f.print deps.string
+              f.print locked.string
             end
           end
           classpath_file.generate( jars[ :runtime ],
@@ -76,31 +78,44 @@ module JBundler
         end
         if needs_vendor
           puts "vendor directory: #{@config.vendor_dir}"
-          vendor_map.each do |key, file|
-            vendor.copy_jar( key, file )
-          end
+          vendor.vendor_dependencies( deps )
           puts
         end
-        if @config.verbose
-          Show.new( @config ).show_classpath
-          puts
-        end
-        puts 'jbundle complete'
       end
     end
 
     private
     
-    def exec_maven( debug )
+    def install_dependencies( debug, verbose )
+      deps_file = File.join( File.expand_path( @config.work_dir ), 
+                               'dependencies.txt' )
+ 
+      exec_maven( debug, verbose, deps_file )
+
+      result = []
+      File.read( deps_file ).each_line do |line|
+        dep = JarInstaller::Dependency.new( line )
+        result << dep if dep
+      end
+      result
+    ensure
+      FileUtils.rm_f( deps_file ) if deps_file
+    end
+
+    def exec_maven( debug, verbose, output )
       m = Maven::Ruby::Maven.new
       m.options[ '-f' ] = File.join( File.dirname( __FILE__ ), 
-                                     'lock_down_pom.rb' )
-      m.options[ '-q' ] = nil unless debug
+                                     'dependency_pom.rb' )
+          m.property( 'verbose', debug || verbose )
+          m.options[ '-q' ] = nil if !debug and !verbose
+          m.options[ '-e' ] = nil if !debug and verbose
+          m.options[ '-X' ] = nil if debug
       m.verbose = debug
-      
+      m.property( 'jbundler.outputFile', output )
+
       @configurator.configure( m )
-      
-      m.exec
+
+      m.exec( 'dependency:list' )
     end
   end
 end

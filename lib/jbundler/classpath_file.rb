@@ -26,15 +26,19 @@ module JBundler
       @classpathfile = classpathfile
     end
 
+    def load_classpath
+      load File.expand_path @classpathfile
+    end
+
     def require_classpath( local_repo = nil )
       ENV[ '_LOCAL_REPO_' ] ||= local_repo
-      load File.expand_path @classpathfile
+      load_classpath
       JBUNDLER_CLASSPATH.each { |c| require c }
     end
 
     def require_test_classpath( local_repo = nil )
       ENV[ '_LOCAL_REPO_' ] ||= local_repo
-      load File.expand_path @classpathfile unless defined? JBUNLDER_TEST_CLASSPATH
+      load_classpath
       JBUNDLER_TEST_CLASSPATH.each { |c| require c }
     end
 

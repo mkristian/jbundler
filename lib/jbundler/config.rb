@@ -158,14 +158,6 @@ module JBundler
       @mirror
     end
 
-    def rubygems_mirror
-      @rubygems_mirror ||= jbundler_env('BUNDLE_RUBYGEMS_MIRROR')
-      # here a leading slash is needed !!
-      @rubygems_mirror =  @rubygems_mirror.sub( /([^\/])$/ , "\\1/" ) if @rubygems_mirror
-      warn 'rubygems mirror config is deprecated, use bundler >=1.5 and its mirror config'
-      @rubygems_mirror
-    end
-
     def work_dir
       @work_dir ||= absolute( jbundler_env('JBUNDLE_WORK_DIR') || 'pkg' )
     end

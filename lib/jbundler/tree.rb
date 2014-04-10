@@ -10,7 +10,8 @@ module JBundler
 
     def show_it( debug = false )
       m = Maven::Ruby::Maven.new
-      m.options[ '-f' ] = File.join( File.dirname( __FILE__ ), 'tree_pom.rb' )
+      m.options[ '-f' ] = File.join( File.dirname( __FILE__ ), 
+                                     'dependency_pom.rb' )
       m.options[ '-q' ] = nil unless debug
       m.verbose = debug
 
@@ -18,10 +19,13 @@ module JBundler
 
       puts '...'
 
-      m.exec( 'org.apache.maven.plugins:maven-dependency-plugin:2.8:tree' )
+      tree = File.join( File.expand_path( @config.work_dir ), 
+                                 'tree.txt' )
+      m.property( 'jbundler.outputFile', tree )
 
-      puts File.read( File.join( File.expand_path( @config.work_dir ), 
-                                 'tree.txt' ) )
+      m.exec( 'dependency:tree' )
+
+      puts File.read( tree )
     end
   end
 end

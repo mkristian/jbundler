@@ -9,6 +9,7 @@ module JBundler
     end
     
     def configure( maven )
+      maven.property( 'jbundler.basedir', @config.basedir )
       maven.property( 'jbundler.jarfile', @config.jarfile )
       maven.property( 'jbundler.gemfile', @config.gemfile )
       maven.property( 'jbundler.workdir', work_dir )

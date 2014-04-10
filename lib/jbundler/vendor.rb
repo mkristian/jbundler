@@ -1,3 +1,4 @@
+require 'jar_installer'
 module JBundler
   class Vendor
 
@@ -10,8 +11,14 @@ module JBundler
     end
 
     def require_jars
-      Dir[ File.join( @dir, '**', '*' ) ].each do |f|
-        require f
+      jars = File.join( @dir, 'jbundler_jars.rb' )
+      if File.exists?( jars )
+        $LOAD_PATH << @dir
+        require 'jbundler_jars'
+      else
+        Dir[ File.join( @dir, '**', '*' ) ].each do |f|
+          require f
+        end
       end
     end
 
@@ -22,6 +29,11 @@ module JBundler
       end
     end
 
+    def vendor_dependencies( deps )
+      require_file = File.join( @dir, 'jbundler_jars.rb' )
+      JarInstaller.install_deps( deps, @dir, require_file, true )
+    end
+
     def setup( classpath_file )
       classpath_file.require_classpath
       FileUtils.mkdir_p( @dir )
@@ -29,14 +41,6 @@ module JBundler
         FileUtils.cp( f, File.join( @dir,
                                     File.basename( f ) ) )
       end
-    end
-
-    def copy_jar( coord, file )
-      target = File.join( *coord.sub( /:jar:/, '-') .split( /:/ ) )
-      target_file = File.join( @dir, target ) + '.jar'
-      FileUtils.mkdir_p( File.dirname( target_file ) )
-      FileUtils.cp( file, target_file )
-      puts "\t#{coord} to #{target}"
     end
   end
 end

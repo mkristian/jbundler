@@ -23,33 +23,26 @@ require 'jbundler/config'
 require 'jbundler/executable'
 require 'jbundler/tree'
 require 'jbundler/lock_down'
+require 'jbundler/jruby_complete'
 module JBundler
   class Cli < Thor
     no_tasks do
       def config
         @config ||= JBundler::Config.new
       end
+    end
 
-      def do_show
-        require 'java' 
-        require 'jbundler/classpath_file'
-        require 'jbundler/vendor'
-        classpath_file = JBundler::ClasspathFile.new( config.classpath_file )
-        vendor = JBundler::Vendor.new( config.vendor_dir )
-        if vendor.vendored?
-          puts "JBundler classpath:"
-          vendor.require_jars.each do |path|
-            puts "  * #{path}"
-          end
-        elsif classpath_file.exists?
-          classpath_file.require_classpath unless defined? JBUNDLER_CLASSPATH
-          puts "JBundler classpath:"
-          JBUNDLER_CLASSPATH.each do |path|
-            puts "  * #{path}"
-          end
-        else
-          puts "JBundler classpath is not installed."
-        end
+    desc 'jruby_complete', 'pack a jruby-complete jar with custom dependencies and maybe adjust jruby dependencies like newer versions of joda-time or snakeyaml', :hide => true
+    method_option :clean, :type => :boolean, :default => false
+    method_option :verbose, :type => :boolean, :default => false
+    method_option :debug, :type => :boolean, :default => false
+    method_option :show, :type => :boolean, :default => false, :desc => 'show versions of all libraries from jruby'
+    def jruby_complete
+      jc = JBundler::JRubyComplete.new( config, options )
+      if options[ :show ]
+        jc.show_versions
+      else
+        jc.packit
       end
     end
 
@@ -59,12 +52,30 @@ module JBundler
       JBundler::Tree.new( config ).show_it
     end
 
-    desc 'lock_down', 'using a different library to create the Jarfile.lock - experimental'
-    method_option :vendor, :type => :boolean, :default => false, :desc => 'vendor jars in given vendor directory.'
-    method_option :debug, :type => :boolean, :default => false, :desc => 'enable maven output'
-    def lock_down
+    desc 'install', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore most options. the install command is also the default when no command is given."
+    method_option :vendor, :type => :boolean, :default => false, :desc => 'vendor jars into vendor directory (jbundler only).'
+    method_option :debug, :type => :boolean, :default => false, :desc => 'enable maven debug output (jbundler only).'
+    method_option :verbose, :type => :boolean, :default => false, :desc => 'enable maven output (jbundler only).'
+    method_option :deployment, :type => :boolean, :default => false, :desc => "copy the jars into the vendor/jars directory (or as configured). these vendored jars have preference before the classpath jars !"
+    method_option :no_deployment, :type => :boolean, :default => false, :desc => 'clears the vendored jars'
+    method_option :path, :type => :string
+    method_option :without, :type => :array
+    method_option :system, :type => :boolean
+    method_option :local, :type => :boolean
+    method_option :binstubs, :type => :string
+    method_option :trust_policy, :type => :string
+    method_option :gemfile, :type => :string
+    method_option :jobs, :type => :string
+    method_option :retry, :type => :string
+    method_option :no_cache, :type => :boolean
+    method_option :quiet, :type => :boolean
+    def install
       JBundler::LockDown.new( config ).lock_down( options[ :vendor ],
-                                                  options[ :debug ] )
+                                                  options[ :debug ] ,
+                                                  options[ :verbose ] )
+      config.verbose = ! options[ :quiet ]
+      Show.new( config ).show_classpath
+      puts 'jbundle complete' unless options[ :quiet ]
     end
 
     desc 'executable', 'create an executable jar with a given bootstrap.rb file\nLIMITATION: only for jruby 1.6.x and newer'
@@ -82,7 +93,7 @@ module JBundler
       # dummy - never executed !!!
     end
     
-    desc 'install', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given."
+    desc 'lock_down', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given. that is kept as fall back in cases where the new install does not work as before."
     method_option :deployment, :type => :boolean, :default => false, :desc => "copy the jars into the vendor/jars directory (or as configured). these vendored jars have preference before the classpath jars !"
     method_option :no_deployment, :type => :boolean, :default => false, :desc => 'clears the vendored jars'
     method_option :path, :type => :string
@@ -96,7 +107,7 @@ module JBundler
     method_option :retry, :type => :string
     method_option :no_cache, :type => :boolean
     method_option :quiet, :type => :boolean
-    def install
+    def lock_down
       require 'jbundler'
       if options[ :no_deployment ]
         vendor = JBundler::Vendor.new( config.vendor_dir )
@@ -110,19 +121,25 @@ module JBundler
           vendor.setup( JBundler::ClasspathFile.new( config.classpath_file ) )
         end
       end
-      do_show
-      puts 'Your jbundle is complete! Use `jbundle show` to see where the bundled jars are installed.'
+      config.verbose = ! options[ :quiet ]
+      Show.new( config ).show_classpath
+      unless options[ :quiet ]
+        puts ''
+        puts 'Your jbundle is complete! Use `jbundle show` to see where the bundled jars are installed.'
+      end
     end
 
     desc 'update', "first `bundle update` is called and if there are no options then the jar dependencies will be updated. for more details see `bundle help update`."
+    method_option :debug, :type => :boolean, :default => false, :desc => 'enable maven debug output (jbundler only).'
+    method_option :verbose, :type => :boolean, :default => false, :desc => 'enable maven output (jbundler only).'
     def update
       if ARGV.size == 1
-        require 'java'
-        config = JBundler::Config.new
-        FileUtils.rm_f(config.jarfile_lock)
         
-        require 'jbundler'
-        do_show
+        JBundler::LockDown.new( config ).update( options[ :debug ] ,
+                                                 options[ :verbose ] )
+
+        config.verbose = ! options[ :quiet ]
+        Show.new( config ).show_classpath
         puts ''
         puts 'Your jbundle is updated! Use `jbundle show` to see where the bundled jars are installed.'
       end
@@ -130,9 +147,7 @@ module JBundler
 
     desc 'show', "first `bundle show` is called and if there are no options then the jar dependencies will be displayed. for more details see `bundle help show`."
     def show
-      if ARGV.size == 1
-        do_show
-     end
+      Show.new( config ).show_classpath
     end
   end
 end
