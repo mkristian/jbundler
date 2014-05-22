@@ -19,9 +19,10 @@ module JBundler
       m.property( 'verbose', debug || verbose )
       if debug
         m.options[ '-X' ] = nil
+      elsif verbose
+        m.options[ '-e' ] = nil
       else
-        m.options[ '-q' ] = nil if !verbose
-        m.options[ '-e' ] = nil if verbose
+        m.options[ '-q' ] = nil
       end
       m.verbose = debug
       m
