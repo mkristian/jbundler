@@ -12,19 +12,21 @@ module JBundler
       result.nil? ? super : result
     end
 
+    def maven_new
+      m = Maven::Ruby::Maven.new
+      m.property( 'base.dir', File.expand_path( basedir ) )
+      m.property( 'work.dir', File.expand_path( workdir ) ) if workdir
+      m.property( 'verbose', debug || verbose )
+      m.options[ '-q' ] = nil if !debug and !verbose
+      m.options[ '-e' ] = nil if !debug and verbose
+      m.options[ '-X' ] = nil if debug
+      m.verbose = debug
+      m
+    end
+    private :maven_new
+
     def maven
-      @m ||= 
-        begin
-          m = Maven::Ruby::Maven.new
-          m.property( 'base.dir', File.expand_path( basedir ) )
-          m.property( 'work.dir', File.expand_path( workdir ) ) if workdir
-          m.property( 'verbose', debug || verbose )
-          m.options[ '-q' ] = nil if !debug and !verbose
-          m.options[ '-e' ] = nil if !debug and verbose
-          m.options[ '-X' ] = nil if debug
-          m.verbose = debug
-          m
-        end
+      @m ||= maven_new
     end
 
     def basedir
