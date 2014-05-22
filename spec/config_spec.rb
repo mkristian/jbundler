@@ -10,9 +10,13 @@ describe JBundler::Config do
   let( :project ){ File.join( spec, 'project' ) }
   let( :project_dir ) { File.join( basedir, project ) }
 
-  before do     
+  before do
+    # in case we have relative path __FILE__
+    basedir
+    Jars.reset
     ENV.keys.each do |k|
       ENV.delete( k ) if k.to_s.match /^(J?)BUNDLE/
+      ENV.delete( k ) if k.to_s.match /^JARS/
     end
     if defined? JRUBY_VERSION     
       java.lang.System.properties.keys.each do |k|
@@ -27,11 +31,11 @@ describe JBundler::Config do
     FileUtils.cd( 'spec' ) do
       c = JBundler::Config.new
       c.verbose.must_equal nil
-      c.local_repository.must_equal nil
+      c.local_repository.must_equal './.m2/repository'
       c.jarfile.must_equal File.join( basedir, 'Jarfile' )
       c.gemfile.must_equal File.join( basedir, 'Gemfile' )
       c.skip.must_equal nil
-      c.settings.must_equal nil 
+      c.settings.must_equal "./.m2/settings.xml"
       c.offline.must_equal false
       c.work_dir.must_equal File.join( basedir, 'pkg' )
       c.vendor_dir.must_equal File.join( basedir, 'vendor/jars' )
@@ -40,10 +44,8 @@ describe JBundler::Config do
 
   it 'has following defaults without home and with local config' do
     ENV['HOME'] = '.'
-    
     FileUtils.cd( project ) do
       c = JBundler::Config.new
-
       c.verbose.must_equal true
       c.local_repository.must_equal File.join( project_dir, 'local' )
       c.jarfile.must_equal File.join( project_dir, 'Jar_file' )
@@ -130,6 +132,7 @@ describe JBundler::Config do
           
           FileUtils.cd eval "\"#{dir}\"" do
             pdir = eval "#{File.basename( dir )}_dir"
+            Jars.reset
             c = JBundler::Config.new
             c.verbose.must_equal true
             c.local_repository.must_equal File.join( pdir, 'local_repository' )

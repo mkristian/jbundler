@@ -19,6 +19,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 require 'yaml'
+require 'jar_dependencies'
 
 module JBundler
 
@@ -128,11 +129,22 @@ module JBundler
 
     def local_repository
       # use maven default local repo as default
-      @local_maven_repository ||= absolute( jbundler_env('JBUNDLE_LOCAL_REPOSITORY') )
+      local_maven_repository = absolute( jbundler_env('JBUNDLE_LOCAL_REPOSITORY') )
+      if local_maven_repository
+        warn "JBUNDLE_LOCAL_REPOSITORY environment or jbundle.local.repository' system property is deprecated use JARS_HOME or jars.home instead"
+        ENV[ Jars::HOME ] ||= local_maven_repository
+      else
+        Jars.home
+      end
     end
 
     def settings
-      @settings ||= absolute( jbundler_env('JBUNDLE_SETTINGS') )
+      settings = absolute( jbundler_env('JBUNDLE_SETTINGS') )
+      if settings
+        warn "JBUNDLE_SETTINGS environment or jbundle.settings' system property is deprecated use JARS_MAVEN_SETTINGS or jars.maven.settings instead"
+        ENV[ Jars::MAVEN_SETTINGS ] ||= settings
+      end
+      Jars.maven_settings
     end
 
     def offline

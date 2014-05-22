@@ -30,14 +30,12 @@ module JBundler
       load File.expand_path @classpathfile
     end
 
-    def require_classpath( local_repo = nil )
-      ENV[ '_LOCAL_REPO_' ] ||= local_repo
+    def require_classpath
       load_classpath
       JBUNDLER_CLASSPATH.each { |c| require c }
     end
 
-    def require_test_classpath( local_repo = nil )
-      ENV[ '_LOCAL_REPO_' ] ||= local_repo
+    def require_test_classpath
       load_classpath
       JBUNDLER_TEST_CLASSPATH.each { |c| require c }
     end
@@ -59,7 +57,8 @@ module JBundler
       File.open(@classpathfile, 'w') do |f|
         if local_repo
           local_repo = File.expand_path( local_repo )
-          f.puts "JBUNDLER_LOCAL_REPO = ENV[ '_LOCAL_REPO_' ] || '#{local_repo}'"
+          f.puts "require 'jar_dependencies'"
+          f.puts "JBUNDLER_LOCAL_REPO = Jars.home"
         end
         dump_array( f, jruby_array || [], 'JRUBY_', local_repo )
         dump_array( f, test_array || [], 'TEST_', local_repo )

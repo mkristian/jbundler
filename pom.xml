@@ -10,61 +10,31 @@
   <description>managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
 </description>
   <url>https://github.com/mkristian/jbundler</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Christian Meier</name>
+      <email>m.kristian@web.de</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>https://github.com/mkristian/jbundler.git</connection>
+    <url>https://github.com/mkristian/jbundler</url>
+  </scm>
   <properties>
-    <jruby.version>1.7.11</jruby.version>
+    <jruby.version>1.7.12</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.modes>1.8,1.9,2.0</jruby.modes>
-    <jruby.plugins.version>1.0.0-rc4</jruby.plugins.version>
-    <jruby.versions>1.6.8,1.7.4,1.7.11</jruby.versions>
+    <jruby.plugins.version>1.0.1</jruby.plugins.version>
+    <jruby.versions>1.6.8,1.7.4,1.7.12</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>ruby-maven</artifactId>
-      <version>[3.1.1.0.1,3.1.2)</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>maven-tools</artifactId>
-      <version>[0.34.4,0.34.99999]</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>bundler</artifactId>
-      <version>[1.5,1.99999]</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>jar-dependencies</artifactId>
-      <version>[0.0.2,0.0.99999]</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>rake</artifactId>
-      <version>[10.0,10.99999]</version>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>thor</artifactId>
-      <version>[0.18.0,0.18.99999]</version>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>minitest</artifactId>
-      <version>[4.0,4.99999]</version>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -74,6 +44,26 @@
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
       <version>0.0.0.M2a</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>3.3.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jopt-simple</groupId>
+      <artifactId>jopt-simple</artifactId>
+      <version>3.2</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -117,6 +107,16 @@
       <version>1.4</version>
     </dependency>
     <dependency>
+      <groupId>jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>0.9.94</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.9.2</artifactId>
+      <version>0.8.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
       <version>3.1.0</version>
@@ -125,6 +125,11 @@
       <groupId>org.sonatype.plexus</groupId>
       <artifactId>plexus-sec-dispatcher</artifactId>
       <version>1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -142,6 +147,11 @@
       <version>3.1.0</version>
     </dependency>
     <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-annotation</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty</artifactId>
       <version>3.4.4.Final</version>
@@ -155,6 +165,11 @@
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.jsoup</groupId>
@@ -202,6 +217,11 @@
       <version>0.0.0.M2a</version>
     </dependency>
     <dependency>
+      <groupId>org.xerial.snappy</groupId>
+      <artifactId>snappy-java</artifactId>
+      <version>1.0.5</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-settings</artifactId>
       <version>3.1.0</version>
@@ -225,6 +245,11 @@
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.101tec</groupId>
+      <artifactId>zkclient</artifactId>
+      <version>0.3</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.aether</groupId>
@@ -272,6 +297,11 @@
       <version>0.9.0.M2</version>
     </dependency>
     <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.9.2</version>
+    </dependency>
+    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.6</version>
@@ -282,18 +312,6 @@
       <version>1.7.11</version>
       <type>pom</type>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>1.9.5</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>6.8</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
   <repositories>
@@ -312,36 +330,6 @@
     </extensions>
     <directory>${basedir}/pkg</directory>
     <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <outputDirectory>lib</outputDirectory>
-          <finalName>jbundler</finalName>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>lib</directory>
-              <includes>
-                <include>jbundler.jar</include>
-              </includes>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
@@ -412,4 +400,152 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>gemfile</id>
+      <activation>
+        <file>
+          <missing>Gemfile.lock</missing>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>ruby-maven</artifactId>
+          <version>[3.1.1.0.3,3.1.2)</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>bundler</artifactId>
+          <version>[1.5,1.99999]</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>jar-dependencies</artifactId>
+          <version>[0.0.3,0.0.99999]</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>rake</artifactId>
+          <version>[10.0,10.99999]</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>thor</artifactId>
+          <version>[0.18.0,0.18.99999]</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>minitest</artifactId>
+          <version>[5.3,5.99999]</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>gemfile_lock</id>
+      <activation>
+        <file>
+          <exists>Gemfile.lock</exists>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>ruby-maven</artifactId>
+          <version>3.1.1.0.3</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>maven-tools</artifactId>
+          <version>1.0.0.rc4</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>virtus</artifactId>
+          <version>1.0.2</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>axiom-types</artifactId>
+          <version>0.1.1</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>descendants_tracker</artifactId>
+          <version>0.0.4</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>thread_safe</artifactId>
+          <version>0.3.3</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>ice_nine</artifactId>
+          <version>0.11.0</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>coercible</artifactId>
+          <version>1.0.0</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>equalizer</artifactId>
+          <version>0.0.9</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>ruby-maven-libs</artifactId>
+          <version>3.1.1</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>jar-dependencies</artifactId>
+          <version>0.0.3</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>rake</artifactId>
+          <version>10.2.2</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>thor</artifactId>
+          <version>0.18.1</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>minitest</artifactId>
+          <version>5.3.3</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>

@@ -4,22 +4,16 @@ gemfile
 
 jarfile
 
-# TODO test jars needs to be locked down 
-scope :test do
-  jar 'org.mockito:mockito-core', '1.9.5'
-  jar 'org.testng:testng', '6.8'
-end
-
 jruby_plugin :minitest do
   # restrict the specs since we have more *_spec,rb files deeper the 
   # directory tree
   execute_goals( :spec, :minispecDirectory => 'spec/*_spec.rb' )
 end
 
-properties( 'jruby.versions' => ['1.6.8','1.7.4', '1.7.11'].join(','),
+properties( 'jruby.versions' => ['1.6.8','1.7.4', '1.7.12'].join(','),
             'jruby.modes' => ['1.8', '1.9', '2.0'].join(','),
             # just lock the versions
-            'jruby.version' => '1.7.11',
+            'jruby.version' => '1.7.12',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
 

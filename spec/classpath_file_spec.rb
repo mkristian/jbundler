@@ -94,7 +94,8 @@ EOF
   it 'generates a classpath ruby file with localrepo' do
     subject.generate("a:b:c:d:f:".split(File::PATH_SEPARATOR), [], [], '/tmp')
     File.read(cpfile).must_equal <<-EOF
-JBUNDLER_LOCAL_REPO = ENV[ '_LOCAL_REPO_' ] || '/tmp'
+require 'jar_dependencies'
+JBUNDLER_LOCAL_REPO = Jars.home
 JBUNDLER_JRUBY_CLASSPATH = []
 JBUNDLER_JRUBY_CLASSPATH.freeze
 JBUNDLER_TEST_CLASSPATH = []
@@ -110,7 +111,8 @@ EOF
   end
 
   it 'require classpath using default with generated localrepo' do
-    ENV[ '_LOCAL_REPO_' ] = nil
+    ENV[ 'JARS_HOME' ] = '/tmp'
+    Jars.reset
     subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), [], [], '/tmp')
     begin
       subject.require_classpath
@@ -121,11 +123,13 @@ EOF
   end
 
   it 'require classpath with generated localrepo' do
-    ENV[ '_LOCAL_REPO_' ] = nil
+    ENV[ 'JARS_HOME' ] = '/tmp'
     subject.generate("/a:/b:/c:/d:/f:".split(File::PATH_SEPARATOR), [], [], '/tmp')
     
     begin
-      subject.require_classpath( '/temp' )
+      Jars.reset
+      ENV[ 'JARS_HOME' ] = '/temp'
+      subject.require_classpath
     rescue LoadError
       # there are no files to require
     end

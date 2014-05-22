@@ -28,14 +28,10 @@ module JBundler
       
       lock_down( false, debug, verbose )
     end
-
+    
     def lock_down( needs_vendor = false, debug = false, verbose = false )
-      jarfile = Maven::Tools::Jarfile.new( @config.jarfile )
-      classpath_file = JBundler::ClasspathFile.new( @config.classpath_file )
-      gemfile_lock = JBundler::GemfileLock.new( jarfile, 
-                                                @config.gemfile_lock )
-
-      needs_update = classpath_file.needs_update?( jarfile, gemfile_lock )
+      classpath = JBundler::ClasspathFile.new( @config.classpath_file )
+      needs_update = needs_update?( classpath )
       if ( ! needs_update && ! needs_vendor ) || vendor.vendored?
 
         puts 'Jar dependencies are up to date !'
@@ -45,47 +41,68 @@ module JBundler
         puts '...'
        
         locked = StringIO.new
-        jars = {}
-        deps = install_dependencies( debug, verbose )
-        deps.each do |d|
-          case d.scope
-          when :provided
-            ( jars[ :jruby ] ||= [] ) << d.file
-          when :test
-            ( jars[ :test ] ||= [] ) << d.file
-          else
-            ( jars[ :runtime ] ||= [] ) << d.file
-            if( ! d.gav.match( /^ruby.bundler:/ ) )
-              # TODO make Jarfile.lock depend on jruby version as well on
-              # include test as well, i.e. keep the scope in place
-              locked.puts d.coord
-            end
-          end
-        end
 
-        if needs_update
-          if locked.string.empty?
-            FileUtils.rm_f @config.jarfile_lock
-          else
-            File.open( @config.jarfile_lock, 'w' ) do |f|
-              f.print locked.string
-            end
-          end
-          classpath_file.generate( jars[ :runtime ],
-                                   jars[ :test ],
-                                   jars[ :jruby ],
-                                   @config.local_repository )
-        end
-        if needs_vendor
-          puts "vendor directory: #{@config.vendor_dir}"
-          vendor.vendor_dependencies( deps )
-          puts
-        end
+        deps = install_dependencies( debug, verbose )
+
+        jars = collect_jars( deps, locked, debug, verbose )
+
+        update_files( classpath, locked, jars ) if needs_update
+
+        vendor_it( vendor, deps ) if needs_vendor
+
       end
     end
 
     private
-    
+
+    def needs_update?( classpath )
+      jarfile = Maven::Tools::Jarfile.new( @config.jarfile )
+      gemfile_lock = JBundler::GemfileLock.new( jarfile, 
+                                                @config.gemfile_lock )
+
+      classpath.needs_update?( jarfile, gemfile_lock )
+    end
+
+    def vendor_it( vendor, deps )
+      puts "vendor directory: #{@config.vendor_dir}"
+      vendor.vendor_dependencies( deps )
+      puts
+    end
+
+    def collect_jars( deps, locked, debug, verbose )
+      jars = {}
+      deps.each do |d|
+        case d.scope
+        when :provided
+          ( jars[ :jruby ] ||= [] ) << d.file
+        when :test
+          ( jars[ :test ] ||= [] ) << d.file
+        else
+          ( jars[ :runtime ] ||= [] ) << d.file
+          if( ! d.gav.match( /^ruby.bundler:/ ) )
+            # TODO make Jarfile.lock depend on jruby version as well on
+            # include test as well, i.e. keep the scope in place
+            locked.puts d.coord
+          end
+        end
+      end
+      jars
+    end
+
+    def update_files( classpath_file, locked, jars )
+      if locked.string.empty?
+        FileUtils.rm_f @config.jarfile_lock
+      else
+        File.open( @config.jarfile_lock, 'w' ) do |f|
+          f.print locked.string
+        end
+      end
+      classpath_file.generate( jars[ :runtime ],
+                               jars[ :test ],
+                               jars[ :jruby ],
+                               @config.local_repository )
+    end
+
     def install_dependencies( debug, verbose )
       deps_file = File.join( File.expand_path( @config.work_dir ), 
                                'dependencies.txt' )
