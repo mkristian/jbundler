@@ -24,7 +24,7 @@ end
 plugin :surefire, '2.15' do
   execute_goals :test, :phase => :test
 end
-
+	
 # TODO use ruby-maven invoker to avoid prebuild pom.xml
 #require'ruby-maven'
 plugin :invoker, '1.8' do
@@ -36,6 +36,11 @@ plugin :invoker, '1.8' do
                  :pomIncludes => [ '*' ],
                  :preBuildHookScript => 'setup',
                  :postBuildHookScript => 'verify' )
+end
+
+profile!( :gemfile_lock ) do
+  # bundler will be ignored by bundler via Gemfile.lock
+  gem 'bundler', '~> 1.6'
 end
 
 # vim: syntax=Ruby

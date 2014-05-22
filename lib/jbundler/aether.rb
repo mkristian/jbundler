@@ -20,7 +20,7 @@
 #
 require 'yaml'
 require 'jbundler/config'
-require 'maven'
+require 'maven/ruby'
 
 module JBundler
 

@@ -26,6 +26,4 @@ jruby '1.7.11', :no_asm => true do
   jar 'org.yaml:snakeyaml:1.13'
 end
 
-jar 'org.apache.kafka:kafka_2.9.2', '0.8.1'
-jar 'log4j:log4j', '1.2.14'
 # vim: syntax=Ruby
