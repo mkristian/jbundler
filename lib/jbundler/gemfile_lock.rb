@@ -35,6 +35,10 @@ module JBundler
       !@lockfile.nil?
     end
 
+    def newer?( mtime )
+      exists? && ( self.mtime > mtime )
+    end
+
     def mtime
       File.mtime(@lockfile) if @lockfile
     end

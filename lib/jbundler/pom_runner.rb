@@ -17,9 +17,12 @@ module JBundler
       m.property( 'base.dir', File.expand_path( basedir ) )
       m.property( 'work.dir', File.expand_path( workdir ) ) if workdir
       m.property( 'verbose', debug || verbose )
-      m.options[ '-q' ] = nil if !debug and !verbose
-      m.options[ '-e' ] = nil if !debug and verbose
-      m.options[ '-X' ] = nil if debug
+      if debug
+        m.options[ '-X' ] = nil
+      else
+        m.options[ '-q' ] = nil if !verbose
+        m.options[ '-e' ] = nil if verbose
+      end
       m.verbose = debug
       m
     end

@@ -70,17 +70,19 @@ module JBundler
       end
     end
 
+    def _jbundler_env( key )
+      ENV[ key.upcase.gsub( /[.]/, '_' ) ] ||
+        @config[ key.downcase.sub(/^j?bundle_/, '' ).sub( /[.]/, '_' ) ]
+    end
+    private :_jbundler_env
+
     if defined? JRUBY_VERSION
-      def jbundler_env(key)
-        java.lang.System.getProperty(key.downcase.gsub(/_/, '.')) ||
-          ENV[key.upcase.gsub(/[.]/, '_')] ||
-          @config[key.downcase.sub(/^j?bundle_/, '').sub(/[.]/, '_')]
+      def jbundler_env( key )
+        java.lang.System.getProperty( key.downcase.gsub( /_/, '.' ) ) ||
+          _jbundler_env( key )
       end
     else
-      def jbundler_env(key)
-        ENV[key.upcase.gsub(/[.]/, '_')] ||
-          @config[key.downcase.sub(/^j?bundler/, '').sub(/[.]/, '_')]
-      end
+      alias :jbundler_env :_jbundler_env
     end
     private :jbundler_env
 
