@@ -140,12 +140,13 @@ module JBundler
 
       out = java.io.BufferedOutputStream.new( java.io.FileOutputStream.new( @file.to_java ) )
 
-      xmlStreamWrtier = start_write_pom( out, name, version, packaging )
+      xmlStreamWriter = start_write_pom( out, name, version, packaging )
       
       write_dependencies( xmlStreamWriter, deps )
 
       end_write_pom( xmlStreamWriter )
-
+      
+    ensure
       out.close
     end
     
