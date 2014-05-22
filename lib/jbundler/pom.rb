@@ -59,7 +59,10 @@ module JBundler
 
     GROUP_ID = 'ruby.bundler'
 
-    def start_write_pom( xmlStreamWriter, name, version, packaging )
+    def start_write_pom( out, name, version, packaging )
+      outputFactory = XMLOutputFactory.newFactory()
+      xmlStreamWriter = outputFactory.createXMLStreamWriter( out )
+
       xmlStreamWriter.writeStartDocument
       xmlStreamWriter.writeStartElement("project")
       
@@ -67,7 +70,8 @@ module JBundler
       writeElement(xmlStreamWriter,"groupId", GROUP_ID)
       writeElement(xmlStreamWriter,"artifactId", name)
       writeElement(xmlStreamWriter,"version", version.to_s.to_java)
-      writeElement(xmlStreamWriter,"packaging", packaging) if packaging      
+      writeElement(xmlStreamWriter,"packaging", packaging) if packaging  
+      xmlStreamWriter
     end
 
     def to_classifier_version( coords )
@@ -78,27 +82,31 @@ module JBundler
       end
     end
 
+    def write_dep( xmlStreamWriter, coord )
+      coords = coord.split(/:/)
+      group_id = coords[0]
+      artifact_id = coords[1]
+      extension = coords[2]
+      classifier, version = to_classifier_version( coords )
+      
+      xmlStreamWriter.writeStartElement("dependency".to_java)
+      writeElement(xmlStreamWriter,"groupId", group_id)
+      writeElement(xmlStreamWriter,"artifactId", artifact_id)
+      writeElement(xmlStreamWriter,"version", version)
+      
+      writeElement(xmlStreamWriter,"type", extension) if extension != 'jar'
+      writeElement(xmlStreamWriter,"classifier", classifier) if classifier
+      xmlStreamWriter.writeEndElement #dependency
+    end
+
     def write_dependencies( xmlStreamWriter, deps )
       xmlStreamWriter.writeStartElement("dependencies".to_java)
       
       deps.each do |line|
-        if coord = to_coordinate(line)
-          coords = coord.split(/:/)
-          group_id = coords[0]
-          artifact_id = coords[1]
-          extension = coords[2]
-          classifier, version = to_classifier_version( coords )
-
-          xmlStreamWriter.writeStartElement("dependency".to_java)
-          writeElement(xmlStreamWriter,"groupId", group_id)
-          writeElement(xmlStreamWriter,"artifactId", artifact_id)
-          writeElement(xmlStreamWriter,"version", version)
-          
-          writeElement(xmlStreamWriter,"type", extension) if extension != 'jar'
-          writeElement(xmlStreamWriter,"classifier", classifier) if classifier
-          xmlStreamWriter.writeEndElement #dependency
-        end
+        coord = to_coordinate(line)
+        write_dep( xmlStreamWriter, coord ) if coord
       end
+
       xmlStreamWriter.writeEndElement #dependencies
     end
 
@@ -130,11 +138,9 @@ module JBundler
 
       @file = File.join(temp_dir, 'pom.xml')
 
-      out = java.io.BufferedOutputStream.new(java.io.FileOutputStream.new(@file.to_java))
-      outputFactory = XMLOutputFactory.newFactory()
-      xmlStreamWriter = outputFactory.createXMLStreamWriter(out)
+      out = java.io.BufferedOutputStream.new( java.io.FileOutputStream.new( @file.to_java ) )
 
-      start_wrtie_pom( xmlStreamWriter, name, version, packaging )
+      xmlStreamWrtier = start_write_pom( out, name, version, packaging )
       
       write_dependencies( xmlStreamWriter, deps )
 
