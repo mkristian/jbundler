@@ -30,6 +30,25 @@ module JBundler
       def config
         @config ||= JBundler::Config.new
       end
+
+      def unvendor
+        vendor = JBundler::Vendor.new( config.vendor_dir )
+        vendor.clear
+      end
+
+      def vendor
+        vendor = JBundler::Vendor.new( config.vendor_dir )
+        if vendor.vendored?
+          raise "already vendored. please 'jbundle install --no-deployment before."
+        else
+          vendor.setup( JBundler::ClasspathFile.new( config.classpath_file ) )
+        end
+      end
+
+      def say_bundle_complete
+        puts ''
+        puts 'Your jbundle is complete! Use `jbundle show` to see where the bundled jars are installed.'
+      end
     end
 
     desc 'jruby_complete', 'pack a jruby-complete jar with custom dependencies and maybe adjust jruby dependencies like newer versions of joda-time or snakeyaml', :hide => true
@@ -109,40 +128,31 @@ module JBundler
     method_option :quiet, :type => :boolean
     def lock_down
       require 'jbundler'
-      if options[ :no_deployment ]
-        vendor = JBundler::Vendor.new( config.vendor_dir )
-        vendor.clear
-      end
-      if options[ :deployment ]
-        vendor = JBundler::Vendor.new( config.vendor_dir )
-        if vendor.vendored?
-          raise "already vendored. please 'jbundle install --no-deployment before."
-        else
-          vendor.setup( JBundler::ClasspathFile.new( config.classpath_file ) )
-        end
-      end
+
+      unvendor if options[ :no_deployment ]
+
+      vendor if options[ :deployment ]
+
       config.verbose = ! options[ :quiet ]
+
       Show.new( config ).show_classpath
-      unless options[ :quiet ]
-        puts ''
-        puts 'Your jbundle is complete! Use `jbundle show` to see where the bundled jars are installed.'
-      end
+
+      say_bundle_complete unless options[ :quiet ]
     end
 
     desc 'update', "first `bundle update` is called and if there are no options then the jar dependencies will be updated. for more details see `bundle help update`."
     method_option :debug, :type => :boolean, :default => false, :desc => 'enable maven debug output (jbundler only).'
     method_option :verbose, :type => :boolean, :default => false, :desc => 'enable maven output (jbundler only).'
     def update
-      if ARGV.size == 1
+      return unless ARGV.size == 1
         
-        JBundler::LockDown.new( config ).update( options[ :debug ] ,
-                                                 options[ :verbose ] )
+      JBundler::LockDown.new( config ).update( options[ :debug ] ,
+                                               options[ :verbose ] )
 
-        config.verbose = ! options[ :quiet ]
-        Show.new( config ).show_classpath
-        puts ''
-        puts 'Your jbundle is updated! Use `jbundle show` to see where the bundled jars are installed.'
-      end
+      config.verbose = ! options[ :quiet ]
+      Show.new( config ).show_classpath
+      puts ''
+      puts 'Your jbundle is updated! Use `jbundle show` to see where the bundled jars are installed.'
     end
 
     desc 'show', "first `bundle show` is called and if there are no options then the jar dependencies will be displayed. for more details see `bundle help show`."
