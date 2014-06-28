@@ -68,7 +68,7 @@ else
     end
   elsif classpath_file.exists? && jarfile.exists_lock?
     require 'java'
-    classpath_file.require_classpath( config.local_repository )
+    classpath_file.require_classpath
     if config.verbose
       warn "jbundler classpath:"
       JBUNDLER_CLASSPATH.each do |path|

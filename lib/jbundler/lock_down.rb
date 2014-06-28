@@ -111,7 +111,7 @@ module JBundler
 
       result = []
       File.read( deps_file ).each_line do |line|
-        dep = JarInstaller::Dependency.new( line )
+        dep = Jars::JarInstaller::Dependency.new( line )
         result << dep if dep
       end
       result
