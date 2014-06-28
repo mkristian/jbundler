@@ -11,3 +11,4 @@ pkg
 .ruby-version
 *.pom.xml
 dependency-reduced-pom.xml
+home
