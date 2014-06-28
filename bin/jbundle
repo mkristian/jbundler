@@ -17,6 +17,7 @@ else
 
   if ARGV[0] == 'console'
     require 'irb'
+    require 'jbundler'
     require 'jbundler/lazy'
     include JBundler::Lazy
   end
