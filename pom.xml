@@ -401,7 +401,7 @@
               <goal>test</goal>
             </goals>
             <configuration>
-              <testFailureIgnore>true</testFailureIgnore>
+              <skip>true</skip>
             </configuration>
           </execution>
         </executions>
