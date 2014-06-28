@@ -26,11 +26,11 @@
     <url>https://github.com/mkristian/jbundler</url>
   </scm>
   <properties>
-    <jruby.version>1.7.12</jruby.version>
+    <jruby.version>1.7.13</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
-    <jruby.modes>1.8,1.9,2.0</jruby.modes>
-    <jruby.plugins.version>1.0.1</jruby.plugins.version>
-    <jruby.versions>1.6.8,1.7.4,1.7.12</jruby.versions>
+    <jruby.modes>1.8,1.9,2.0,2.1</jruby.modes>
+    <jruby.plugins.version>1.0.3</jruby.plugins.version>
+    <jruby.versions>1.6.8,1.7.4,1.7.13</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
@@ -121,6 +121,11 @@
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>org.jboss.interceptor</groupId>
+      <artifactId>jboss-interceptor-api</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>jsr250-api</artifactId>
       <version>1.0</version>
@@ -147,6 +152,11 @@
       <classifier>no_aop</classifier>
     </dependency>
     <dependency>
+      <groupId>org.sonatype.sisu</groupId>
+      <artifactId>sisu-guava</artifactId>
+      <version>0.9.9</version>
+    </dependency>
+    <dependency>
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
@@ -155,6 +165,11 @@
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.inject</artifactId>
       <version>0.0.0.M2a</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>asm</groupId>
@@ -304,12 +319,43 @@
     <extensions>
       <extension>
         <groupId>de.saumya.mojo</groupId>
-        <artifactId>gem-extension</artifactId>
+        <artifactId>gem-with-jar-extension</artifactId>
         <version>${jruby.plugins.version}</version>
       </extension>
     </extensions>
     <directory>${basedir}/pkg</directory>
     <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>lib</outputDirectory>
+          <finalName>jbundler</finalName>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>lib</directory>
+              <includes>
+                <include>jbundler.jar</include>
+                <include>*/**/*.jar</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
@@ -437,94 +483,56 @@
           <exists>Gemfile.lock</exists>
         </file>
       </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.saumya.mojo</groupId>
+            <artifactId>gem-maven-plugin</artifactId>
+            <version>${jruby.plugins.version}</version>
+            <executions>
+              <execution>
+                <id>install gem sets for compile</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>sets</goal>
+                </goals>
+                <configuration>
+                  <scope>compile</scope>
+                  <gems>
+                    <ruby-maven>3.1.1.0.4</ruby-maven>
+                    <maven-tools>1.0.0.rc4</maven-tools>
+                    <virtus>1.0.2</virtus>
+                    <axiom-types>0.1.1</axiom-types>
+                    <descendants_tracker>0.0.4</descendants_tracker>
+                    <thread_safe>0.3.3</thread_safe>
+                    <ice_nine>0.11.0</ice_nine>
+                    <coercible>1.0.0</coercible>
+                    <equalizer>0.0.9</equalizer>
+                    <ruby-maven-libs>3.1.1</ruby-maven-libs>
+                    <jar-dependencies>0.0.3</jar-dependencies>
+                  </gems>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install gem sets for test</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>sets</goal>
+                </goals>
+                <configuration>
+                  <scope>test</scope>
+                  <gems>
+                    <rake>10.3.1</rake>
+                    <thor>0.18.1</thor>
+                    <minitest>5.3.3</minitest>
+                  </gems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
       <dependencies>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>ruby-maven</artifactId>
-          <version>3.1.1.0.4</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>maven-tools</artifactId>
-          <version>1.0.0.rc4</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>virtus</artifactId>
-          <version>1.0.2</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>axiom-types</artifactId>
-          <version>0.1.1</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>descendants_tracker</artifactId>
-          <version>0.0.4</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>thread_safe</artifactId>
-          <version>0.3.3</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>ice_nine</artifactId>
-          <version>0.11.0</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>coercible</artifactId>
-          <version>1.0.0</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>equalizer</artifactId>
-          <version>0.0.9</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>ruby-maven-libs</artifactId>
-          <version>3.1.1</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>jar-dependencies</artifactId>
-          <version>0.0.3</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>rake</artifactId>
-          <version>10.3.1</version>
-          <type>gem</type>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>thor</artifactId>
-          <version>0.18.1</version>
-          <type>gem</type>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>minitest</artifactId>
-          <version>5.3.3</version>
-          <type>gem</type>
-          <scope>test</scope>
-        </dependency>
         <dependency>
           <groupId>rubygems</groupId>
           <artifactId>bundler</artifactId>
