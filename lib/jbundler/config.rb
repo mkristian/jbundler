@@ -31,8 +31,12 @@ module JBundler
     attr_accessor :verbose, :local_repository, :jarfile, :gemfile, :skip, :settings, :offline, :work_dir, :vendor_dir, :basedir
 
     def initialize
-      homefile = File.join(ENV['HOME'], RC_FILE)
-      home_config = YAML.load_file(homefile) if File.exists?(homefile)
+      if ENV.has_key? 'HOME'
+        homefile = File.join(ENV['HOME'], RC_FILE)
+        home_config = YAML.load_file(homefile) if File.exists?(homefile)
+      else
+        home_config = nil
+      end
       @config = (home_config || {})
       @basedir = find_basedir( File.expand_path( '.' ) )
       @basedir ||= File.expand_path( '.' )
