@@ -22,10 +22,6 @@ plugin :compiler, '3.1' do
   execute_goals( :testCompile, :phase => 'test-compile' )
 end
 
-plugin :surefire, '2.15' do
-  execute_goals :test, :phase => :test, :skip => true
-end
-	
 # TODO use ruby-maven invoker to avoid prebuild pom.xml
 #require'ruby-maven'
 plugin :invoker, '1.8' do
