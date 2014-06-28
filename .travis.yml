@@ -1,20 +1,22 @@
 language: ruby
 bundler_args: --without copyright
-rvm:
-  - jruby-19mode
-  #- jruby-20mode
-jdk:
-  - openjdk6
-  - openjdk7
-  - oraclejdk7
-  - oraclejdk8
 matrix:
   include:
-    - rvm: jruby-head
-      jdk: openjdk7
+    - rvm: jruby
+      jdk: openjdk6
+      script: mvn test
     - rvm: jruby
       jdk: openjdk7
-      script: mvn clean verify -DskipTests
+      script: mvn test
+    - rvm: jruby
+      jdk: oraclejdk7
+      script: mvn test
+    - rvm: jruby
+      jdk: oraclejdk8
+      script: mvn test
+    - rvm: ruby
+      jdk: openjdk7
+      script: mvn verify -DskipTests
   allow_failures:
     - rvm: jruby-head
-    - rvm: jruby
+    - rvm: ruby
