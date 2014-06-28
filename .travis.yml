@@ -4,16 +4,16 @@ matrix:
   include:
     - rvm: jruby
       jdk: openjdk6
-      script: rm -ar src/test/java; mvn test
+      script: rm -r src/test/java; mvn test
     - rvm: jruby
       jdk: openjdk7
-      script: rm -ar src/test/java; mvn test
+      script: rm -r src/test/java; mvn test
     - rvm: jruby
       jdk: oraclejdk7
-      script: rm -ar src/test/java; mvn test
+      script: rm -r src/test/java; mvn test
     - rvm: jruby
       jdk: oraclejdk8
-      script: rm -ar src/test/java; mvn test
+      script: rm -r src/test/java; mvn test
     - rvm: ruby
       jdk: openjdk7
       script: mvn verify -DskipTests -DtestFailureIgnore
