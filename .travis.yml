@@ -16,7 +16,9 @@ matrix:
       script: rm -r src/test/java; mvn test
     - rvm: ruby
       jdk: openjdk7
-      script: mvn verify -DskipTests -DtestFailureIgnore
+      script: mvn verify -DskipTests
+    - rvm: ruby
+      jdk: openjdk7
+      script: mvn verify -DskipTests -Dinvoker.test=tree
   allow_failures:
-    - rvm: jruby-head
     - rvm: ruby
