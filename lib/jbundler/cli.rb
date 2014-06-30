@@ -157,6 +157,7 @@ module JBundler
 
     desc 'show', "first `bundle show` is called and if there are no options then the jar dependencies will be displayed. for more details see `bundle help show`."
     def show
+      config.verbose = true
       Show.new( config ).show_classpath
     end
   end

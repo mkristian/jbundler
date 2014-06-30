@@ -18,63 +18,70 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-require 'maven/tools/jarfile'
-require 'jbundler/classpath_file'
-require 'jbundler/vendor'
-require 'jbundler/gemfile_lock'
-require 'jbundler/aether'
+
+require 'jbundler/context'
 
 module JBundler
 
-  def setup_test
-    config = JBundler::Config.new
-    JBundler::ClasspathFile.new(config.classpath_file).require_test_classpath
-    config
+  def self.context
+    @context ||= JBundler::Context.new
   end
 
-end
-
-config = JBundler::Config.new
-
-jarfile = Maven::Tools::Jarfile.new(config.jarfile)
-if config.skip
-  warn "skip jbundler setup"
-else
-  vendor = JBundler::Vendor.new(config.vendor_dir)
-  classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
-  gemfile_lock = JBundler::GemfileLock.new(jarfile, config.gemfile_lock)
-
-  if classpath_file.needs_update?( jarfile, gemfile_lock ) && ! vendor.vendored?
-    aether = JBundler::AetherRuby.new( config )
-    
-    jarfile.populate_unlocked( aether )
-    gemfile_lock.populate_dependencies( aether )
-    jarfile.populate_locked( aether )
-    
-    aether.resolve
-    
-    classpath_file.generate( aether.classpath_array, [], [], 
-                             config.local_repository )
-    jarfile.generate_lockfile( aether.resolved_coordinates )
+  def self.setup_test
+    context.classpath.require_test_classpath
+    context.config
   end
 
-  if vendor.vendored?
-    jars = vendor.require_jars
-    if config.verbose
-      warn "jbundler classpath:"
-      jars.each do |path|
-        warn "\t#{path}"
-      end
-    end
-  elsif classpath_file.exists? && jarfile.exists_lock?
-    require 'java'
-    classpath_file.require_classpath
-    if config.verbose
-      warn "jbundler classpath:"
-      JBUNDLER_CLASSPATH.each do |path|
-        warn "\t#{path}"
-      end
+  def self.update
+    if( context.classpath.needs_update?( context.jarfile, 
+                                         context.gemfile_lock ) and
+        not context.vendor.vendored? )
+      
+      warn 'deprecated - use jbundle install to update bundle'
+      aether = JBundler::AetherRuby.new( context.config )
+      
+      context.jarfile.populate_unlocked( aether )
+      context.gemfile_lock.populate_dependencies( aether )
+      context.jarfile.populate_locked( aether )
+      
+      aether.resolve
+      
+      context.classpath.generate( aether.classpath_array, [], [], 
+                                  context.config.local_repository )
+      context.jarfile.generate_lockfile( aether.resolved_coordinates )
     end
   end
 
+  def self.require_jars
+    if context.vendor.vendored?
+      jars = context.vendor.require_jars
+      if context.config.verbose
+        warn "jbundler classpath:"
+        jars.each do |path|
+          warn "\t#{path}"
+        end
+      end
+    elsif context.classpath.exists? && context.jarfile.exists_lock?
+      require 'java'
+      context.classpath_file.require_classpath
+      if context.config.verbose
+        warn "jbundler classpath:"
+        JBUNDLER_CLASSPATH.each do |path|
+            warn "\t#{path}"
+        end
+      end
+      Jars.freeze_loading
+    end
+  end
+    
+  def self.setup
+    if context.config.skip
+      warn "skip jbundler setup" if context.config.verbose
+    else
+      update
+      require_jars
+    end
+  end
 end
+
+JBundler.setup

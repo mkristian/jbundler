@@ -11,14 +11,16 @@ module JBundler
     end
 
     def require_jars
-      jars = File.join( @dir, 'jbundler_jars.rb' )
+      jars = File.join( @dir, 'jbundler.rb' )
       if File.exists?( jars )
-        $LOAD_PATH << @dir
-        require 'jbundler_jars'
+        $LOAD_PATH << @dir unless $LOAD_PATH.include? @dir
+        require jars
       else
         Dir[ File.join( @dir, '**', '*' ) ].each do |f|
           require f
         end
+        Jars.freeze_loading
+        true
       end
     end
 
@@ -30,8 +32,11 @@ module JBundler
     end
 
     def vendor_dependencies( deps )
-      require_file = File.join( @dir, 'jbundler_jars.rb' )
-      JarInstaller.install_deps( deps, @dir, require_file, true )
+      require_file = File.join( @dir, 'jbundler.rb' )
+      Jars::JarInstaller.install_deps( deps, @dir, require_file, true ) do |f|
+        f.puts
+        f.puts 'Jars.freeze_loading'
+      end
     end
 
     def setup( classpath_file )

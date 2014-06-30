@@ -31,7 +31,7 @@ describe JBundler::Vendor do
 
   it 'is not vendored' do
     subject.vendored?.must_equal false
-    subject.require_jars.size.must_equal 0
+    subject.require_jars.must_equal true
     FileUtils.rm_rf( vdir )
     subject.vendored?.must_equal false
   end
@@ -51,7 +51,7 @@ describe JBundler::Vendor do
 
     subject.vendored?.must_equal true
 
-    subject.require_jars.size.must_equal 2
+    subject.require_jars.must_equal true
 
     subject.clear
     Dir[ File.join( vdir, '*' ) ].must_equal []

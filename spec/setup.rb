@@ -10,3 +10,7 @@ begin
 rescue LoadError
 end
 require 'minitest/autorun'
+
+# supress warnings
+require 'stringio'
+$stderr = StringIO.new

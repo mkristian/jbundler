@@ -15,30 +15,39 @@ module JBundler
 
     def show_classpath
       return if ! @config.verbose
-      @classpath_file.load_classpath
-      warn ''
-      warn 'jruby classpath:'
-      warn '----------------'
-      JBUNDLER_JRUBY_CLASSPATH.each do |path|
-        warn "#{path}"
-      end
-      warn ''
-      warn 'jbundler runtime classpath:'
-      warn '---------------------------'
-      JBUNDLER_CLASSPATH.each do |path|
-        warn "#{path}"
-      end
-      warn ''
-      warn 'jbundler test classpath:'
-      warn '------------------------'
-      if JBUNDLER_TEST_CLASSPATH.empty?
-        warn "\t--- empty ---"
+      vendor = JBundler::Vendor.new(@config.vendor_dir)
+      if vendor.vendored?
+        vendor.require_jars
+        warn "complete classpath:"
+        $CLASSPATH.each do |path|
+          warn "\t#{path}"
+        end
       else
-        JBUNDLER_TEST_CLASSPATH.each do |path|
+        @classpath_file.load_classpath
+        warn ''
+        warn 'jbundler provided classpath:'
+        warn '----------------'
+        JBUNDLER_JRUBY_CLASSPATH.each do |path|
           warn "#{path}"
         end
+        warn ''
+        warn 'jbundler runtime classpath:'
+        warn '---------------------------'
+        JBUNDLER_CLASSPATH.each do |path|
+          warn "#{path}"
+        end
+        warn ''
+        warn 'jbundler test classpath:'
+        warn '------------------------'
+        if JBUNDLER_TEST_CLASSPATH.empty?
+          warn "\t--- empty ---"
+        else
+          JBUNDLER_TEST_CLASSPATH.each do |path|
+            warn "#{path}"
+          end
+        end
+        warn ''
       end
-      warn ''
     end
   end
 end
