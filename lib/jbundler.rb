@@ -63,7 +63,7 @@ module JBundler
       end
     elsif context.classpath.exists? && context.jarfile.exists_lock?
       require 'java'
-      context.classpath_file.require_classpath
+      context.classpath.require_classpath
       if context.config.verbose
         warn "jbundler classpath:"
         JBUNDLER_CLASSPATH.each do |path|
