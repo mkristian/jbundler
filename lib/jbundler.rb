@@ -37,7 +37,10 @@ module JBundler
                                          context.gemfile_lock ) and
         not context.vendor.vendored? )
       
-      warn 'deprecated - use jbundle install to update bundle'
+      warn ''
+      warn 'jar bundle is outdated - use jbundle install to update bundle'
+      warn ''
+
       aether = JBundler::AetherRuby.new( context.config )
       
       context.jarfile.populate_unlocked( aether )
