@@ -3,6 +3,7 @@ require 'jbundler/classpath_file'
 require 'jbundler/vendor'
 require 'jbundler/gemfile_lock'
 require 'jbundler/show'
+require 'maven/tools/gemspec_dependencies'
 require 'maven/tools/jarfile'
 require 'maven/ruby/maven'
 require 'fileutils'
@@ -123,16 +124,42 @@ module JBundler
       m = Maven::Ruby::Maven.new
       m.options[ '-f' ] = File.join( File.dirname( __FILE__ ), 
                                      'dependency_pom.rb' )
-          m.property( 'verbose', debug || verbose )
-          m.options[ '-q' ] = nil if !debug and !verbose
-          m.options[ '-e' ] = nil if !debug and verbose
-          m.options[ '-X' ] = nil if debug
+      m.property( 'verbose', debug || verbose )
+      m.options[ '-q' ] = nil if !debug and !verbose
+      m.options[ '-e' ] = nil if !debug and verbose
+      m.options[ '-X' ] = nil if debug
       m.verbose = debug
       m.property( 'jbundler.outputFile', output )
 
       @configurator.configure( m )
 
+      attach_jar_coordinates( m )
+
       m.exec( 'dependency:list' )
+    end
+
+    private
+
+    def attach_jar_coordinates( maven )
+      load_path = $LOAD_PATH.dup
+      require 'bundler/setup'
+      done = []
+      index = 0
+      Gem.loaded_specs.each do |name, spec|
+        deps = Maven::Tools::GemspecDependencies.new( spec )
+        deps.java_dependency_artifacts.each do |a|
+          unless done.include? a.key
+            maven.property( "jbundler.jars.#{index}", a.to_s )
+            index += 1
+            done << a.key
+          end
+        end
+      end
+      if index > 0
+        maven.property( "jbundler.jars.size", index )
+      end
+    ensure
+      $LOAD_PATH.replace( load_path )
     end
   end
 end

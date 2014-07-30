@@ -9,9 +9,11 @@ if basedir != bdir
   self.instance_variable_set( :@basedir, bdir )
 end
 
-gemfile( gfile ) if File.exists? gfile
-
 jarfile( jfile, :skip_locked => true )
+
+( 0..(java.lang.System.getProperty( "jbundler.jars.size" ).to_i - 1) ).each do |i|
+  dependency_artifact Maven::Tools::Artifact.from_coordinate( java.lang.System.getProperty( "jbundler.jars.#{i}" ).to_s )
+end
 
 build do
   directory = jworkdir
