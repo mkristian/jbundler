@@ -502,7 +502,7 @@
                     <coercible>1.0.0</coercible>
                     <equalizer>0.0.9</equalizer>
                     <ruby-maven-libs>3.1.1</ruby-maven-libs>
-                    <jar-dependencies>0.0.7.dev</jar-dependencies>
+                    <jar-dependencies>0.0.7</jar-dependencies>
                   </gems>
                 </configuration>
               </execution>
@@ -515,8 +515,8 @@
                 <configuration>
                   <scope>test</scope>
                   <gems>
-                    <rake>10.3.1</rake>
-                    <minitest>5.3.3</minitest>
+                    <rake>10.3.2</rake>
+                    <minitest>5.4.0</minitest>
                   </gems>
                 </configuration>
               </execution>
