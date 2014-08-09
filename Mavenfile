@@ -4,6 +4,12 @@ gemfile
 
 jarfile
 
+# TODO remove this - not sure why they are not imported from the jarfile
+scope :test do
+  jar 'org.mockito:mockito-core', '1.9.5'
+  jar 'org.testng:testng', '6.8'
+end
+
 jruby_plugin :minitest do
   # restrict the specs since we have more *_spec,rb files deeper the 
   # directory tree
