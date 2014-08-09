@@ -140,6 +140,8 @@ module JBundler
         warn "JBUNDLE_LOCAL_REPOSITORY environment or jbundle.local.repository' system property is deprecated use JARS_HOME or jars.home instead"
         ENV[ Jars::HOME ] ||= local_maven_repository
       else
+        # first load the right settings
+        self.settings
         Jars.home
       end
     end

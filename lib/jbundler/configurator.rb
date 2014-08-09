@@ -16,6 +16,8 @@ module JBundler
       maven.property( 'jbundler.groups', @groups )
       maven.property( 'jbundler.bootstrap', @bootstrap )
       maven.property( 'maven.repo.local', @config.local_repository )
+      maven.options[ '-s' ] = @config.settings
+      maven.options[ '-o' ] = nil if @config.offline
     end
 
     def work_dir
