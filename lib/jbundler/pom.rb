@@ -22,7 +22,6 @@ require 'fileutils'
 require 'tempfile'
 require 'maven/tools/coordinate'
 require 'securerandom'
-require 'java'
 
 module JBundler
 

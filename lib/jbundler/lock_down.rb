@@ -8,6 +8,7 @@ require 'maven/tools/jarfile'
 require 'maven/ruby/maven'
 require 'fileutils'
 require 'jar_installer'
+
 module JBundler
   class LockDown
 
