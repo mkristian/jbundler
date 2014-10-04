@@ -1,5 +1,6 @@
 load File.expand_path(File.join('spec', 'setup.rb'))
 require 'maven/tools/jarfile'
+require 'maven/tools/model'
 require 'jbundler/aether'
 require 'fileutils'
 
