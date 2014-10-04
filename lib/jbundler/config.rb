@@ -82,7 +82,7 @@ module JBundler
 
     if defined? JRUBY_VERSION
       def jbundler_env( key )
-        java.lang.System.getProperty( key.downcase.gsub( /_/, '.' ) ) ||
+        ENV_JAVA[ key.downcase.gsub( /_/, '.' ) ] ||
           _jbundler_env( key )
       end
     else
