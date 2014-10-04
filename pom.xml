@@ -28,52 +28,13 @@
   <properties>
     <jruby.version>1.7.13</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
-    <jruby.modes>1.8,1.9,2.0,2.1</jruby.modes>
+    <jruby.modes>1.9,2.0,2.1</jruby.modes>
     <jruby.plugins.version>1.0.3</jruby.plugins.version>
     <jruby.versions>1.6.8,1.7.4,1.7.13</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>ruby-maven</artifactId>
-      <version>[3.1.1.0.6,3.1.2)</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>bundler</artifactId>
-      <version>[1.5,1.99999]</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>jar-dependencies</artifactId>
-      <version>[0.1.3,0.1.99999]</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>rake</artifactId>
-      <version>[10.0,10.99999]</version>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>minitest</artifactId>
-      <version>[5.3,5.99999]</version>
-      <type>gem</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jruby</groupId>
-      <artifactId>jruby-noasm</artifactId>
-      <version>1.7.11</version>
-      <type>pom</type>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-api</artifactId>
@@ -145,6 +106,13 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.13</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jruby</groupId>
+      <artifactId>jruby-noasm</artifactId>
+      <version>1.7.11</version>
+      <type>pom</type>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -255,7 +223,102 @@
   </build>
   <profiles>
     <profile>
+      <id>gemfile</id>
+      <activation>
+        <file>
+          <missing>Gemfile.lock</missing>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>ruby-maven</artifactId>
+          <version>[3.1.1.0.6,3.1.2)</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>bundler</artifactId>
+          <version>[1.5,1.99999]</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>jar-dependencies</artifactId>
+          <version>[0.1.3,0.1.99999]</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>rake</artifactId>
+          <version>[10.0,10.99999]</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>minitest</artifactId>
+          <version>[5.3,5.99999]</version>
+          <type>gem</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>gemfile_lock</id>
+      <activation>
+        <file>
+          <exists>Gemfile.lock</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.saumya.mojo</groupId>
+            <artifactId>gem-maven-plugin</artifactId>
+            <version>${jruby.plugins.version}</version>
+            <executions>
+              <execution>
+                <id>install gem sets for compile</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>sets</goal>
+                </goals>
+                <configuration>
+                  <scope>compile</scope>
+                  <gems>
+                    <ruby-maven>3.1.1.0.8</ruby-maven>
+                    <maven-tools>1.0.5</maven-tools>
+                    <virtus>1.0.3</virtus>
+                    <axiom-types>0.1.1</axiom-types>
+                    <descendants_tracker>0.0.4</descendants_tracker>
+                    <thread_safe>0.3.4</thread_safe>
+                    <ice_nine>0.11.0</ice_nine>
+                    <coercible>1.0.0</coercible>
+                    <equalizer>0.0.9</equalizer>
+                    <ruby-maven-libs>3.1.1</ruby-maven-libs>
+                    <jar-dependencies>0.1.3</jar-dependencies>
+                  </gems>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install gem sets for test</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>sets</goal>
+                </goals>
+                <configuration>
+                  <scope>test</scope>
+                  <gems>
+                    <rake>10.3.2</rake>
+                    <minitest>5.4.2</minitest>
+                  </gems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
       <dependencies>
         <dependency>
           <groupId>rubygems</groupId>
