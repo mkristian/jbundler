@@ -32,23 +32,27 @@ module JBundler
     end
     
     def lock_down( needs_vendor = false, debug = false, verbose = false )
+      jarfile = Maven::Tools::Jarfile.new( @config.jarfile )
       classpath = JBundler::ClasspathFile.new( @config.classpath_file )
-      needs_update = needs_update?( classpath )
+      if jarfile.exists_lock? && classpath.exists?
+        needs_update = false
+      else
+        needs_update = needs_update?( jarfile, classpath )
+      end
       if ( ! needs_update && ! needs_vendor ) || vendor.vendored?
 
         puts 'Jar dependencies are up to date !'
 
+        if needs_update?( jarfile, classpath )
+          "the #{classpath.file} is stale, i.e. Gemfile or Jarfile is newer. `jbundle update` will update it"
+        end
       else
 
         puts '...'
        
-        locked = StringIO.new
-
         deps = install_dependencies( debug, verbose )
 
-        jars = collect_jars( deps, locked, debug, verbose )
-
-        update_files( classpath, locked, jars ) if needs_update
+        update_files( classpath, collect_jars( deps ) ) if needs_update
 
         vendor_it( vendor, deps ) if needs_vendor
 
@@ -57,8 +61,7 @@ module JBundler
 
     private
 
-    def needs_update?( classpath )
-      jarfile = Maven::Tools::Jarfile.new( @config.jarfile )
+    def needs_update?( jarfile, classpath )
       gemfile_lock = JBundler::GemfileLock.new( jarfile, 
                                                 @config.gemfile_lock )
 
@@ -71,37 +74,32 @@ module JBundler
       puts
     end
 
-    def collect_jars( deps, locked, debug, verbose )
+    def collect_jars( deps )
       jars = {}
       deps.each do |d|
         case d.scope
         when :provided
-          ( jars[ :jruby ] ||= [] ) << d.file
+          ( jars[ :jruby ] ||= [] ) << d
         when :test
-          ( jars[ :test ] ||= [] ) << d.file
+          ( jars[ :test ] ||= [] ) << d
         else
-          ( jars[ :runtime ] ||= [] ) << d.file
-          if( ! d.gav.match( /^ruby.bundler:/ ) )
-            # TODO make Jarfile.lock depend on jruby version as well on
-            # include test as well, i.e. keep the scope in place
-            locked.puts d.coord
-          end
+          ( jars[ :runtime ] ||= [] ) << d
         end
       end
       jars
     end
 
-    def update_files( classpath_file, locked, jars )
-      if locked.string.empty?
+    def update_files( classpath_file, jars )
+      if jars.values.flatten.size == 0
         FileUtils.rm_f @config.jarfile_lock
       else
-        File.open( @config.jarfile_lock, 'w' ) do |f|
-          f.print locked.string
-        end
+        lock = Maven::Tools::DSL::JarfileLock.new( @config.jarfile )
+        lock.replace( jars )
+        lock.dump
       end
-      classpath_file.generate( jars[ :runtime ],
-                               jars[ :test ],
-                               jars[ :jruby ],
+      classpath_file.generate( (jars[ :runtime ] || []).collect { |j| j.file },
+                               (jars[ :test ] || []).collect { |j| j.file },
+                               (jars[ :jruby ] || []).collect { |j| j.file },
                                @config.local_repository )
     end
 
@@ -147,6 +145,7 @@ module JBundler
       done = []
       index = 0
       Gem.loaded_specs.each do |name, spec|
+        # TODO get rid of this somehow
         deps = Maven::Tools::GemspecDependencies.new( spec )
         deps.java_dependency_artifacts.each do |a|
           unless done.include? a.key

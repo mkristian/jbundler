@@ -12,3 +12,4 @@ pkg
 *.pom.xml
 dependency-reduced-pom.xml
 home
+pom.jbundler.gemspec.xml

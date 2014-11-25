@@ -5,7 +5,7 @@ gemfile
 jarfile
 
 jruby_plugin :minitest do
-  # restrict the specs since we have more *_spec,rb files deeper the 
+  # restrict the specs since we have more *_spec.rb files deeper in the 
   # directory tree
   execute_goals( :spec, :minispecDirectory => 'spec/*_spec.rb' )
 end
@@ -13,8 +13,8 @@ end
 properties( 'jruby.versions' => ['1.6.8','1.7.4', '1.7.13'].join(','),
             'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
             # just lock the versions
-            'jruby.version' => '1.7.13',
-            'jruby.plugins.version' => '1.0.3',
+            'jruby.version' => '1.7.16.1',
+            'jruby.plugins.version' => '1.0.7-SNAPSHOT',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
 
@@ -25,14 +25,12 @@ end
 # TODO use ruby-maven invoker to avoid prebuild pom.xml
 #require'ruby-maven'
 plugin :invoker, '1.8' do
-  execute_goals( :run,
+  execute_goals( :install, :run,
                  :id => 'integration-test',
                  :projectsDirectory => 'integration',
                  :streamLogs => true,
-                 #:mavenExecutable => File.join( Gem.loaded_specs['ruby-maven'].bin_dir, 'rmvn' ),
-                 :pomIncludes => [ '*' ],
-                 :preBuildHookScript => 'setup',
-                 :postBuildHookScript => 'verify' )
+                 :cloneProjectsTo => '${project.build.directory}',
+                 :properties => { 'jbundler.version' => '${project.version}' } )
 end
 
 profile!( :gemfile_lock ) do

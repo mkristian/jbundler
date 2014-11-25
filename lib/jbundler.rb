@@ -20,6 +20,7 @@
 #
 
 require 'jbundler/context'
+require 'jbundler/lock_down'
 
 module JBundler
 
@@ -30,29 +31,6 @@ module JBundler
   def self.setup_test
     context.classpath.require_test_classpath
     context.config
-  end
-
-  def self.update
-    if( context.classpath.needs_update?( context.jarfile, 
-                                         context.gemfile_lock ) and
-        not context.vendor.vendored? )
-      
-      warn ''
-      warn 'jar bundle is outdated - use jbundle install to update bundle'
-      warn ''
-
-      aether = JBundler::AetherRuby.new( context.config )
-      
-      context.jarfile.populate_unlocked( aether )
-      context.gemfile_lock.populate_dependencies( aether )
-      context.jarfile.populate_locked( aether )
-      
-      aether.resolve
-      
-      context.classpath.generate( aether.classpath_array, [], [], 
-                                  context.config.local_repository )
-      context.jarfile.generate_lockfile( aether.resolved_coordinates )
-    end
   end
 
   def self.require_jars
@@ -77,11 +55,16 @@ module JBundler
     end
   end
     
+  def self.install( debug = false, verbose = false )
+    jbundler = JBundler::LockDown.new( context.config )
+    msg = jbundler.lock_down( false, debug, verbose )
+    puts msg if msg
+  end
+
   def self.setup
     if context.config.skip
       warn "skip jbundler setup" if context.config.verbose
     else
-      update
       require_jars
     end
   end

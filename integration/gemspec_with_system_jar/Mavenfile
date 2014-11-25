@@ -1,0 +1,18 @@
+#-*- mode: ruby -*-
+
+id 'jbundler:gemspec_with_system_jar:0'
+
+packaging 'pom'
+
+build do
+  directory 'pkg'
+end
+
+name 'aggregator'
+
+modules ['gem', 'verify']
+
+properties( 'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

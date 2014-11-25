@@ -89,12 +89,16 @@ module JBundler
     method_option :no_cache, :type => :boolean
     method_option :quiet, :type => :boolean
     def install
-      JBundler::LockDown.new( config ).lock_down( options[ :vendor ],
-                                                  options[ :debug ] ,
-                                                  options[ :verbose ] )
+      msg = JBundler::LockDown.new( config ).lock_down( options[ :vendor ],
+                                                        options[ :debug ] ,
+                                                        options[ :verbose ] )
       config.verbose = ! options[ :quiet ]
       Show.new( config ).show_classpath
-      puts 'jbundle complete' unless options[ :quiet ]
+      unless options[ :quiet ]
+        puts 'jbundle complete !'
+        puts
+      end
+      puts msg if msg
     end
 
     desc 'executable', 'create an executable jar with a given bootstrap.rb file\nLIMITATION: only for jruby 1.6.x and newer'

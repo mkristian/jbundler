@@ -1,0 +1,12 @@
+#-*- mode: ruby -*-
+
+#inherit 'jbundler:gemspec_with_system_jar:0'#, 'relativePath' => '../Mavenfile'
+
+gemspec
+
+properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
+            'gem.path' => '${gem.home}',
+            'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

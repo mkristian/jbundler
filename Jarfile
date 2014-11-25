@@ -26,4 +26,6 @@ jruby '1.7.11', :no_asm => true do
   jar 'org.yaml:snakeyaml:1.13'
 end
 
+
+#jar 'org.apache.hbase:hbase-annotations', '=0.98.7-hadoop2'
 # vim: syntax=Ruby

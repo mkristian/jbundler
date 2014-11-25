@@ -25,6 +25,10 @@ module JBundler
     def initialize(classpathfile = '.jbundler/classpath.rb')
       @classpathfile = classpathfile
     end
+    
+    def file
+      @classpathfile
+    end
 
     def load_classpath
       load File.expand_path @classpathfile
@@ -87,14 +91,25 @@ module JBundler
     def dump_array( file, array, prefix, local_repo )
       file.puts "JBUNDLER_#{prefix}CLASSPATH = []"
       array.each do |path|
-        if local_repo
-          path.sub!( /#{local_repo}/, '' )
-          file.puts "JBUNDLER_#{prefix}CLASSPATH << (JBUNDLER_LOCAL_REPO + '#{path}')" unless path =~ /pom$/
-        else
-          file.puts "JBUNDLER_#{prefix}CLASSPATH << '#{path}'" unless path =~ /pom$/
-        end
+        dump_jar( file, path, prefix, local_repo )
       end
       file.puts "JBUNDLER_#{prefix}CLASSPATH.freeze"
+    end
+
+    def dump_jar( file, path, prefix, local_repo )
+      return if path =~ /pom$/
+      if local_repo
+        path.sub!( /#{local_repo}/, '' )
+        unless File.exists?( path )
+          file.puts "JBUNDLER_#{prefix}CLASSPATH << (JBUNDLER_LOCAL_REPO + '#{path}')"
+          path = nil
+        end
+      end
+      if path
+        # either we do not have a local_repo or the path is a absolute
+        # path from system artifact
+        file.puts "JBUNDLER_#{prefix}CLASSPATH << '#{path}'"        
+      end
     end
   end
 end
