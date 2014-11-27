@@ -2,4 +2,4 @@ source 'https://rubygems.org'
 
 gem 'first', '1.1.1'
 
-gem 'jbundler', '0.6.5.dev'
+gem 'jbundler', :path => '../../../'

@@ -44,7 +44,6 @@
     </repository>
   </repositories>
   <build>
-    <directory>pkg</directory>
     <plugins>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
@@ -81,8 +80,8 @@
         <configuration>
           <executable>java</executable>
           <environmentVariables>
-            <GEM_HOME>${project.basedir}/../pkg/rubygems</GEM_HOME>
-            <GEM_PATH>${project.basedir}/../pkg/rubygems</GEM_PATH>
+            <GEM_HOME>${gem.home}</GEM_HOME>
+            <GEM_PATH>${gem.home}</GEM_PATH>
           </environmentVariables>
         </configuration>
       </plugin>

@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.files << Dir[ '*file' ]
   s.files << 'first.gemspec'
 
-  s.add_runtime_dependency 'jar-dependencies', '0.1.5.dev'
+  s.add_runtime_dependency 'jar-dependencies', '0.1.5'
 
   s.requirements << "jar 'org.apache.hbase:hbase-annotations', '=0.98.7-hadoop2'"
 end

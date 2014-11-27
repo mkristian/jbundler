@@ -18,16 +18,13 @@ end
 
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => :java,
-        :environmentVariables => { 'GEM_HOME' => '${project.basedir}/../pkg/rubygems', 'GEM_PATH' => '${project.basedir}/../pkg/rubygems' } ) do
+        :environmentVariables => { 'GEM_HOME' => '${gem.home}',
+          'GEM_PATH' => '${gem.home}' } ) do
   execute_goal( :exec, :phase => :test,
                 :arguments => ['-classpath',
                                xml('<classpath/>'),
                                'org.jruby.Main',
                                'test.rb' ] )
-end
-
-build do
-  directory 'pkg'
 end
 
 properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
