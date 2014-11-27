@@ -65,7 +65,7 @@ module JBundler
     end
        
     def needs_update?(jarfile, gemfile_lock)
-      if jarfile.exists? || gemfile_lock.exists? || jarfile.exists_lock?
+      if ( jarfile.exists? || gemfile_lock.exists? || jarfile.exists_lock? )
         missing?( jarfile ) || jarfile_newer?( jarfile ) || jarlock_newer?( jarfile ) || gemfile_lock.newer?( mtime )
       else
         false

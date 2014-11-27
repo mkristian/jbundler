@@ -44,7 +44,8 @@ module JBundler
         puts 'Jar dependencies are up to date !'
 
         if needs_update?( jarfile, classpath )
-          "the #{classpath.file} is stale, i.e. Gemfile or Jarfile is newer. `jbundle update` will update it"
+          f = classpath.file.sub(/#{Dir.pwd}#{File::SEPARATOR}/, '' )
+          "the #{f} is stale, i.e. Gemfile or Jarfile is newer. `jbundle update` will update it"
         end
       else
 
@@ -64,7 +65,6 @@ module JBundler
     def needs_update?( jarfile, classpath )
       gemfile_lock = JBundler::GemfileLock.new( jarfile, 
                                                 @config.gemfile_lock )
-
       classpath.needs_update?( jarfile, gemfile_lock )
     end
 
