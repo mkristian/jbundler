@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jbundler</artifactId>
-  <version>0.7.0</version>
+  <version>0.7.1.dev-SNAPSHOT</version>
   <packaging>gem</packaging>
   <name>managing jar dependencies</name>
   <description>managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
