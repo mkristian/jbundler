@@ -31,7 +31,7 @@
     <jruby.version>1.7.16.1</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.modes>1.9,2.0,2.1</jruby.modes>
-    <jruby.plugins.version>1.0.7-SNAPSHOT</jruby.plugins.version>
+    <jruby.plugins.version>1.0.7</jruby.plugins.version>
     <jruby.versions>1.6.8,1.7.12,1.7.16.1</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
