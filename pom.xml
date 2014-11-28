@@ -32,7 +32,7 @@
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.modes>1.9,2.0,2.1</jruby.modes>
     <jruby.plugins.version>1.0.7-SNAPSHOT</jruby.plugins.version>
-    <jruby.versions>1.6.8,1.7.4,1.7.13</jruby.versions>
+    <jruby.versions>1.6.8,1.7.12,1.7.16.1</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
   <dependencies>
@@ -438,7 +438,7 @@
         <dependency>
           <groupId>rubygems</groupId>
           <artifactId>jar-dependencies</artifactId>
-          <version>[0.1.5,0.1.99999]</version>
+          <version>[0.1.7,0.1.99999]</version>
           <type>gem</type>
         </dependency>
         <dependency>

@@ -10,7 +10,7 @@ jruby_plugin :minitest do
   execute_goals( :spec, :minispecDirectory => 'spec/*_spec.rb' )
 end
 
-properties( 'jruby.versions' => ['1.6.8','1.7.4', '1.7.13'].join(','),
+properties( 'jruby.versions' => ['1.6.8','1.7.12', '1.7.16.1'].join(','),
             'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
             # just lock the versions
             'jruby.version' => '1.7.16.1',
