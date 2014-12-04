@@ -1,6 +1,0 @@
-#-*- mode: ruby -*-
-
-eval_pom( File.read( '../../lib/jbundler/tree_pom.rb' ) )
-
-properties( 'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
