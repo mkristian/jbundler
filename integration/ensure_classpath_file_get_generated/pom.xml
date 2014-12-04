@@ -11,8 +11,8 @@
     <jruby.version>1.7.16.1</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
-    <jruby.plugins.version>1.0.6</jruby.plugins.version>
     <gem.home>${project.basedir}/pkg/rubygems</gem.home>
+    <jruby.plugins.version>1.0.7</jruby.plugins.version>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
   <dependencies>
@@ -67,7 +67,7 @@
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-        <version>1.0.6</version>
+        <version>${jruby.plugins.version}</version>
         <executions>
           <execution>
             <goals>
