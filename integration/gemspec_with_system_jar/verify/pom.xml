@@ -48,7 +48,7 @@
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
         <executions>
           <execution>
             <goals>
@@ -82,6 +82,7 @@
           <environmentVariables>
             <GEM_HOME>${gem.home}</GEM_HOME>
             <GEM_PATH>${gem.home}</GEM_PATH>
+            <BUNDLE_GEMFILE>${project.basedir}/Gemfile</BUNDLE_GEMFILE>
           </environmentVariables>
         </configuration>
       </plugin>

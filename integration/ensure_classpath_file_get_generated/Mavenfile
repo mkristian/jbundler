@@ -8,6 +8,8 @@ gem 'jbundler', '${jbundler.version}'
 
 gem 'bundler', '1.7.7'
 
+repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
+
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => :java,
         :environmentVariables => { 'GEM_HOME' => '${gem.home}',

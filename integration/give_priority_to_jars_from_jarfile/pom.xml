@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>no_group_id_given</groupId>
-  <artifactId>hermann_kafka</artifactId>
+  <artifactId>give_priority_to_jars_from_jarfile</artifactId>
   <version>0.0.0</version>
   <packaging>pom</packaging>
-  <name>hermann_kafka</name>
+  <name>give_priority_to_jars_from_jarfile</name>
   <properties>
     <jruby.version>1.7.16.1</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
@@ -82,6 +82,7 @@
             <GEM_HOME>${gem.home}</GEM_HOME>
             <GEM_PATH>${gem.home}</GEM_PATH>
           </environmentVariables>
+          <BUNDLE_GEMFILE>${project.basedir}/Gemfile</BUNDLE_GEMFILE>
         </configuration>
       </plugin>
     </plugins>
@@ -126,19 +127,10 @@
                 <configuration>
                   <scope>compile</scope>
                   <gems>
-                    <jar-dependencies>0.1.7</jar-dependencies>
-                    <maven-tools>1.0.6</maven-tools>
-                    <virtus>1.0.3</virtus>
-                    <axiom-types>0.1.1</axiom-types>
-                    <descendants_tracker>0.0.4</descendants_tracker>
-                    <thread_safe>0.3.4</thread_safe>
-                    <ice_nine>0.11.0</ice_nine>
-                    <coercible>1.0.0</coercible>
-                    <equalizer>0.0.9</equalizer>
-                    <ruby-maven>3.1.1.0.8</ruby-maven>
-                    <ruby-maven-libs>3.1.1</ruby-maven-libs>
                     <hermann>0.20.1</hermann>
                     <concurrent-ruby>0.7.0</concurrent-ruby>
+                    <jar-dependencies>0.1.7</jar-dependencies>
+                    <thread_safe>0.3.4</thread_safe>
                     <zk>1.9.4</zk>
                     <logging>1.8.2</logging>
                     <little-plugger>1.1.3</little-plugger>
