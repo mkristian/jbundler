@@ -13,7 +13,9 @@ repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => :java,
         :environmentVariables => { 'GEM_HOME' => '${gem.home}',
-          'GEM_PATH' => '${gem.home}' } ) do
+          'GEM_PATH' => '${gem.home}',
+          # for travis
+          'BUNDLE_GEMFILE' => '${project.basedir}/Gemfile' } ) do
   execute_goal( :exec, :phase => :test,
                 :arguments => ['-classpath',
                                xml('<classpath/>'),

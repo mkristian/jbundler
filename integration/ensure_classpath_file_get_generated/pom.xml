@@ -67,6 +67,7 @@
           <environmentVariables>
             <GEM_HOME>${gem.home}</GEM_HOME>
             <GEM_PATH>${gem.home}</GEM_PATH>
+            <BUNDLE_GEMFILE>${project.basedir}/Gemfile</BUNDLE_GEMFILE>
           </environmentVariables>
         </configuration>
       </plugin>
