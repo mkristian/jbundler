@@ -1,0 +1,37 @@
+#-*- mode: ruby -*-
+
+packaging 'pom'
+
+jar 'org.jruby:jruby', '${jruby.version}'
+
+gem 'jbundler', '${jbundler.version}'
+
+gem 'bundler', '1.7.7'
+
+repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
+
+plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
+        :executable => :java,
+        :environmentVariables => { 'GEM_HOME' => '${gem.home}',
+          'GEM_PATH' => '${gem.home}',
+          # for travis
+          'BUNDLE_GEMFILE' => '${project.basedir}/Gemfile' } ) do
+  execute_goal( :exec, :phase => :test,
+                :arguments => ['-classpath',
+                               xml('<classpath/>'),
+                               'org.jruby.Main',
+                               'test.rb' ] )
+end
+
+jruby_plugin :gem do
+  execute_goal :initialize
+end
+
+properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
+            'gem.path' => '${gem.home}',
+            'jruby.version' => '1.7.16.1',
+            'jruby.plugins.version' => '1.0.7',
+            'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

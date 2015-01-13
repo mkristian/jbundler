@@ -51,7 +51,7 @@ module JBundler
 
         puts '...'
        
-        deps = install_dependencies( debug, verbose )
+        deps = install_dependencies( debug, verbose, jarfile.exists_lock? )
 
         update_files( classpath, collect_jars( deps ) ) if needs_update
 
@@ -103,11 +103,11 @@ module JBundler
                                @config.local_repository )
     end
 
-    def install_dependencies( debug, verbose )
+    def install_dependencies( debug, verbose, exclude_transitive = false )
       deps_file = File.join( File.expand_path( @config.work_dir ), 
                                'dependencies.txt' )
  
-      exec_maven( debug, verbose, deps_file )
+      exec_maven( debug, verbose, deps_file, exclude_transitive )
 
       result = []
       File.read( deps_file ).each_line do |line|
@@ -119,7 +119,7 @@ module JBundler
       FileUtils.rm_f( deps_file ) if deps_file
     end
 
-    def exec_maven( debug, verbose, output )
+    def exec_maven( debug, verbose, output, exclude_transitive = false )
       m = Maven::Ruby::Maven.new
       m.options[ '-f' ] = File.join( File.dirname( __FILE__ ), 
                                      'dependency_pom.rb' )
@@ -127,6 +127,7 @@ module JBundler
       m.options[ '-q' ] = nil if !debug and !verbose
       m.options[ '-e' ] = nil if !debug and verbose
       m.options[ '-X' ] = nil if debug
+      m.options[ '-DexcludeTransitive' ] = exclude_transitive
       m.verbose = debug
       m.property( 'jbundler.outputFile', output )
 

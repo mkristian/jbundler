@@ -1,0 +1,1 @@
+jar 'org.opensaml:opensaml', '2.6.1', :exclusions => ['org.bouncycastle:bcprov-jdk15']
