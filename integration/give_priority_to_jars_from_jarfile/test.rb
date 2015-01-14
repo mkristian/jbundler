@@ -1,5 +1,6 @@
 #-*- mode: ruby -*-
-
+p ENV['BUNDLE_GEMFILE']
+p - * 80
 require 'jbundler'
 
 JBundler.install
