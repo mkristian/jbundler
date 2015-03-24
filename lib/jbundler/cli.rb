@@ -23,6 +23,9 @@ require 'jbundler/config'
 require 'jbundler/executable'
 require 'jbundler/tree'
 module JBundler
+  # As of v1.9.0, bundler's vendored version of thor is namespaced
+  Thor = Bundler::Thor if Bundler.const_defined?(:Thor)
+
   class Cli < Thor
     no_tasks do
       def config
@@ -30,7 +33,7 @@ module JBundler
       end
 
       def do_show
-        require 'java' 
+        require 'java'
         require 'jbundler/classpath_file'
         classpath_file = JBundler::ClasspathFile.new(config.classpath_file)
         if classpath_file.exists?
@@ -65,7 +68,7 @@ module JBundler
     def console
       # dummy - never executed !!!
     end
-    
+
     desc 'install', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given."
     def install
       require 'jbundler'
@@ -79,7 +82,7 @@ module JBundler
         require 'java'
         config = JBundler::Config.new
         FileUtils.rm_f(config.jarfile_lock)
-        
+
         require 'jbundler'
         do_show
         puts ''
