@@ -25,6 +25,9 @@ require 'jbundler/tree'
 require 'jbundler/lock_down'
 require 'jbundler/jruby_complete'
 module JBundler
+  # As of v1.9.0, bundler's vendored version of thor is namespaced
+  Thor = Bundler::Thor if Bundler.const_defined?(:Thor)
+
   class Cli < Thor
     no_tasks do
       def config
