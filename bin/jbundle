@@ -43,6 +43,13 @@ else
       ARGV.delete( '--skip-debug' )
       ARGV.delete( '--skip-verbose' )
       
+      # HACK get the module-class hierachy in place
+      module Bundler
+        class Thor
+          module Actions
+          end
+        end
+      end
       load Gem.bin_path('bundler', 'bundle') 
       
       ARGV.insert( 0, 'lock_down' ) if is_lock_down
