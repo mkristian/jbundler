@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'jbundler'
-  s.version = '0.7.3.dev'
+  s.version = '0.7.3'
 
   s.summary = 'managing jar dependencies'
   s.description = <<-END
@@ -31,7 +31,7 @@ END
 
   s.add_runtime_dependency "ruby-maven", ">= 3.1.1.0.6", "< 3.1.2"
   s.add_runtime_dependency "bundler", "~> 1.5"
-  s.add_runtime_dependency "jar-dependencies", "~> 0.1.7"
+  s.add_runtime_dependency "jar-dependencies", "~> 0.1.8"
   s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency "minitest", "~> 5.3"
 end
