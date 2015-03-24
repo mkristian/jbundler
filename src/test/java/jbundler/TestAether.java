@@ -76,7 +76,8 @@ public class TestAether {
         return artifact.setFile(Mockito.mock(File.class));
     }
     
-    @Test
+    //is going away anyways
+    //@Test
     public void testResolve() throws Exception {
         Aether aether = new Aether( false );
         
