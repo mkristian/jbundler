@@ -1,6 +1,46 @@
 #-*- mode: ruby -*-
 
-eval_pom( File.read( '../../lib/jbundler/lock_down_pom.rb' ) )
+# cleanup the test
+execute :cleanup, :initialize do
+  require 'fileutils'
+  FileUtils.rm_rf 'jars'
+end
 
-properties( 'tesla.dump.pom' => 'pom.xml',
+packaging 'pom'
+
+jar 'org.jruby:jruby', '${jruby.version}'
+
+gem 'jbundler', '${jbundler.version}'
+
+gemfile
+
+phase :test do
+  plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
+          :executable => :java,
+          :environmentVariables => { 'GEM_HOME' => '${gem.home}',
+            'GEM_PATH' => '${gem.home}',
+            # for travis
+            'BUNDLE_GEMFILE' => '${project.basedir}/Gemfile' } ) do
+    execute_goal( :exec, :id => :up2date,
+                  :arguments => ['-classpath',
+                                 xml('<classpath/>'),
+                                 'org.jruby.Main',
+                                 '${gem.home}/bin/jbundle',
+                                 '--tree', '--vendor-dir=jars'] )
+    execute_goal( :exec, :id => :update,
+                  :arguments => ['-classpath',
+                                 xml('<classpath/>'),
+                                 'org.jruby.Main',
+                                 '${gem.home}/bin/jbundle',
+                                 '--update=junit'] )
+  end
+end
+
+properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
+            'gem.path' => '${gem.home}',
+            'jruby.version' => '1.7.19',
+            'jruby.plugins.version' => '1.0.9',
+            'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

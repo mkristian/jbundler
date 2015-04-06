@@ -11,7 +11,7 @@ end
   coord = java.lang.System.getProperty( "jbundler.jars.#{i}" )
   break unless coord
   artifact = Maven::Tools::Artifact.from_coordinate( coord.to_s )
-  # HACK workaround broken maven-tools
+  # HACK around broken maven-tools
   if artifact.exclusions
     ex = artifact.classifier[1..-1] + ':' +  artifact.exclusions.join(':')
     artifact.classifier = nil

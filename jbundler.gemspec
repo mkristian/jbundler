@@ -19,17 +19,14 @@ END
   s.license = 'MIT'
 
   s.files += Dir['lib/**/*.rb']
-  s.files += Dir['spec/*.rb']
-  s.files += Dir['spec/*/*'].delete_if { |f| f =~ /~$/ }
   s.files += Dir['MIT-LICENSE']
   s.files += Dir['*.md']
   s.files += Dir['Gemfile*']
   s.test_files += Dir['spec/*_spec.rb']
 
   s.add_runtime_dependency 'maven-tools', '~> 1.0.6'
-
   s.add_runtime_dependency "ruby-maven", ">= 3.1.1.0.6", "< 3.1.2"
   s.add_runtime_dependency "jar-dependencies", "~> 0.1.10"
+  s.add_runtime_dependency "bundler", "~> 1.7"
   s.add_development_dependency "rake", "~> 10.0"
-  s.add_development_dependency "minitest", "~> 5.3"
 end

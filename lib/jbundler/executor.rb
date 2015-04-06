@@ -27,16 +27,20 @@ module JBundler
         m.options[ '-q' ] = nil
       end
       m.verbose = debug
+      attach_jar_coordinates( m )
       m
     end
     private :maven_new
+
+    def maven
+      @maven ||= maven_new
+    end
 
     def basedir
       File.expand_path( '.' )
     end
 
-    def exec( maven, *args )
-      attach_jar_coordinates( maven )
+    def exec( *args )
       maven.options[ '-f' ] = File.expand_path( '../pom.rb', __FILE__ )
       maven.exec( *args )
     end
@@ -57,6 +61,8 @@ module JBundler
           end
         end
       end
+    rescue LoadError
+      warn "no bundler found - ignore Gemfile if exists"
     ensure
       $LOAD_PATH.replace( load_path )
     end
@@ -64,22 +70,23 @@ module JBundler
     def lock_down( options = {} )
       out = File.expand_path( '.jbundler.output' )
       tree = File.expand_path( '.jbundler.tree' )
-      maven = maven_new
-      maven.property( 'maven.repo.local', Jars.home )
       maven.property( 'jars.outputFile', out )
+      maven.property( 'maven.repo.local', Jars.home )
       maven.property( 'jars.home', options[ :vendor_dir ] || Jars.home )
+      # TODO move into jar-dependencies
       maven.property( 'jars.lock', File.expand_path( 'Jars.lock' ) )
-      maven.property( 'jars.force', options[ :force ] )
+      maven.property( 'jars.force', options[ :force ] == true )
       maven.property( 'jars.update', options[ :update ] ) if options[ :update ]
-      args = [ 'gem:jars-lock' ]
 
+      args = [ 'gem:jars-lock' ]
       if options[ :tree ]
-        args += [ 'dependency:tree', '-P -gemfile.lock', '-DoutputFile=' + file ]
+        args += [ 'dependency:tree', '-P -gemfile.lock', '-DoutputFile=' + tree ]
       end
+
       puts
       puts '-- jar root dependencies --'
       puts
-      status = exec( maven, *args )
+      status = exec( *args )
       exit 1 unless status
       if File.exists?( tree )
         puts

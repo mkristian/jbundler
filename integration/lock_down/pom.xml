@@ -2,34 +2,38 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>dummy</groupId>
+  <groupId>no_group_id_given</groupId>
   <artifactId>lock_down</artifactId>
   <version>0.0.0</version>
+  <packaging>pom</packaging>
   <name>lock_down</name>
   <properties>
-    <tesla.dump.readOnly>true</tesla.dump.readOnly>
+    <jruby.version>1.7.19</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
-    <jruby.plugins.version>1.0.0-rc4</jruby.plugins.version>
+    <gem.path>${gem.home}</gem.path>
+    <gem.home>${project.basedir}/pkg/rubygems</gem.home>
+    <jruby.plugins.version>1.0.9</jruby.plugins.version>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+    <tesla.version>0.1.1</tesla.version>
   </properties>
   <dependencies>
     <dependency>
+      <groupId>org.jruby</groupId>
+      <artifactId>jruby</artifactId>
+      <version>${jruby.version}</version>
+    </dependency>
+    <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>rspec</artifactId>
-      <version>[0,3.0)</version>
+      <artifactId>jbundler</artifactId>
+      <version>${jbundler.version}</version>
       <type>gem</type>
     </dependency>
     <dependency>
-      <groupId>org.jruby</groupId>
-      <artifactId>jruby-noasm</artifactId>
-      <version>1.7.6</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <groupId>rubygems</groupId>
+      <artifactId>leafy-complete</artifactId>
+      <version>0.3.0</version>
+      <type>gem</type>
     </dependency>
   </dependencies>
   <repositories>
@@ -39,46 +43,92 @@
     </repository>
   </repositories>
   <build>
-    <defaultGoal>dependency:list</defaultGoal>
     <plugins>
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
         <executions>
           <execution>
-            <phase>prepare-package</phase>
+            <id>install gems</id>
             <goals>
-              <goal>jar</goal>
+              <goal>initialize</goal>
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <id>up2date</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>org.jruby.Main</argument>
+                <argument>${gem.home}/bin/jbundle</argument>
+                <argument>--tree</argument>
+                <argument>--vendor-dir=jars</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>update</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>org.jruby.Main</argument>
+                <argument>${gem.home}/bin/jbundle</argument>
+                <argument>--update=junit</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
         <configuration>
-          <outputDirectory>.</outputDirectory>
-          <finalName>lock_down</finalName>
+          <executable>java</executable>
+          <environmentVariables>
+            <GEM_HOME>${gem.home}</GEM_HOME>
+            <GEM_PATH>${gem.home}</GEM_PATH>
+            <BUNDLE_GEMFILE>${project.basedir}/Gemfile</BUNDLE_GEMFILE>
+          </environmentVariables>
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>.</directory>
-              <includes>
-                <include>lock_down.jar</include>
-              </includes>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.8</version>
-        <configuration>
-          <includeTypes>jar</includeTypes>
-          <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
-          <outputFile>target/dependencies.txt</outputFile>
-        </configuration>
+        <groupId>io.tesla.polyglot</groupId>
+        <artifactId>tesla-polyglot-maven-plugin</artifactId>
+        <version>${tesla.version}</version>
+        <executions>
+          <execution>
+            <id>cleanup</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <taskId>cleanup</taskId>
+              <nativePom>Mavenfile</nativePom>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>io.tesla.polyglot</groupId>
+            <artifactId>tesla-polyglot-ruby</artifactId>
+            <version>${tesla.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

@@ -1,6 +1,0 @@
-import java.io.*;
-
-new File( basedir, "Jarfile.lock" ).delete();
-new File( basedir, ".bundler/classpath.rb" ).delete();
-
-return true;

@@ -29,8 +29,8 @@ end
 
 properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
             'gem.path' => '${gem.home}',
-            'jruby.version' => '1.7.16.1',
-            'jruby.plugins.version' => '1.0.7',
+            'jruby.version' => '1.7.19',
+            'jruby.plugins.version' => '1.0.9',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
 
