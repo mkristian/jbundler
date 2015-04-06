@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jbundler</artifactId>
-  <version>0.7.4</version>
+  <version>0.8.0.pre-SNAPSHOT</version>
   <packaging>gem</packaging>
   <name>managing jar dependencies</name>
   <description>managing jar dependencies with or without bundler. adding bundler like handling of version ranges for jar dependencies.
@@ -28,82 +28,13 @@
     <url>https://github.com/mkristian/jbundler</url>
   </scm>
   <properties>
-    <jruby.version>1.7.16.1</jruby.version>
+    <jruby.version>1.7.19</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.modes>1.9,2.0,2.1</jruby.modes>
-    <jruby.plugins.version>1.0.7</jruby.plugins.version>
+    <jruby.plugins.version>1.0.9</jruby.plugins.version>
     <jruby.versions>1.6.8,1.7.12,1.7.19,9.0.0.0.pre1</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
-  <dependencies>
-    <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-api</artifactId>
-      <version>0.9.0.M2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-util</artifactId>
-      <version>0.9.0.M2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-impl</artifactId>
-      <version>0.9.0.M2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-file</artifactId>
-      <version>0.9.0.M2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-asynchttpclient</artifactId>
-      <version>0.9.0.M2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-wagon</artifactId>
-      <version>0.9.0.M2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-aether-provider</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-file</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-http</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-settings</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-settings-builder</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>1.9.5</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>6.8</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
   <repositories>
     <repository>
       <id>rubygems-releases</id>
@@ -175,18 +106,6 @@
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <executions>
-          <execution>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-invoker-plugin</artifactId>
         <version>1.8</version>
         <executions>
@@ -232,14 +151,8 @@
         </dependency>
         <dependency>
           <groupId>rubygems</groupId>
-          <artifactId>bundler</artifactId>
-          <version>[1.5,1.99999]</version>
-          <type>gem</type>
-        </dependency>
-        <dependency>
-          <groupId>rubygems</groupId>
           <artifactId>jar-dependencies</artifactId>
-          <version>[0.1.8,0.1.99999]</version>
+          <version>[0.1.10,0.1.99999]</version>
           <type>gem</type>
         </dependency>
         <dependency>
@@ -313,14 +226,6 @@
           </plugin>
         </plugins>
       </build>
-      <dependencies>
-        <dependency>
-          <groupId>rubygems</groupId>
-          <artifactId>bundler</artifactId>
-          <version>[1.6,1.99999]</version>
-          <type>gem</type>
-        </dependency>
-      </dependencies>
     </profile>
   </profiles>
 </project>

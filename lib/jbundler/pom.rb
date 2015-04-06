@@ -1,153 +1,35 @@
-#
-# Copyright (C) 2013 Christian Meier
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of
-# this software and associated documentation files (the "Software"), to deal in
-# the Software without restriction, including without limitation the rights to
-# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-# the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#
-require 'fileutils'
-require 'tempfile'
-require 'maven/tools/coordinate'
-require 'securerandom'
+bdir = java.lang.System.getProperty( "jbundler.basedir" )
+jfile = java.lang.System.getProperty( "jbundler.jarfile" )
 
-module JBundler
+basedir( bdir )
+if basedir != bdir
+  # older maven-tools needs this
+  self.instance_variable_set( :@basedir, bdir )
+end
 
-  class Pom
-
-    include Maven::Tools::Coordinate
-
-    private
-    
-    def temp_dir
-      @temp_dir ||=
-        begin
-          # on travis the mktmpdir failed
-          d = Dir.mktmpdir rescue FileUtils.mkdir( ".tmp" + SecureRandom.hex( 12) ).first
-          at_exit { FileUtils.rm_rf(d.dup) }
-          # for jruby-1.7.4 1.8 mode add expand_path
-          File.expand_path( d )
-        end
-    end
-      
-    def writeElement(xmlWriter,element_name, text)
-      xmlWriter.writeStartElement(element_name.to_java)
-      xmlWriter.writeCharacters(text.to_java)
-      xmlWriter.writeEndElement        
-    end
-    
-    def java_imports
-      %w(
-           javax.xml.stream.XMLStreamWriter
-           javax.xml.stream.XMLOutputFactory
-           javax.xml.stream.XMLStreamException
-          ).each {|i| java_import i }
-    end
-
-    GROUP_ID = 'ruby.bundler'
-
-    def start_write_pom( out, name, version, packaging )
-      outputFactory = XMLOutputFactory.newFactory()
-      xmlStreamWriter = outputFactory.createXMLStreamWriter( out )
-
-      xmlStreamWriter.writeStartDocument
-      xmlStreamWriter.writeStartElement("project")
-      
-      writeElement(xmlStreamWriter,"modelVersion","4.0.0")
-      writeElement(xmlStreamWriter,"groupId", GROUP_ID)
-      writeElement(xmlStreamWriter,"artifactId", name)
-      writeElement(xmlStreamWriter,"version", version.to_s.to_java)
-      writeElement(xmlStreamWriter,"packaging", packaging) if packaging  
-      xmlStreamWriter
-    end
-
-    def to_classifier_version( coords )
-      if coords.size == 4
-        [ nil, coords[3] ]
-      else
-        [ coords[3], coords[4] ]
-      end
-    end
-
-    def write_dep( xmlStreamWriter, coord )
-      coords = coord.split(/:/)
-      group_id = coords[0]
-      artifact_id = coords[1]
-      extension = coords[2]
-      classifier, version = to_classifier_version( coords )
-      
-      xmlStreamWriter.writeStartElement("dependency".to_java)
-      writeElement(xmlStreamWriter,"groupId", group_id)
-      writeElement(xmlStreamWriter,"artifactId", artifact_id)
-      writeElement(xmlStreamWriter,"version", version)
-      
-      writeElement(xmlStreamWriter,"type", extension) if extension != 'jar'
-      writeElement(xmlStreamWriter,"classifier", classifier) if classifier
-      xmlStreamWriter.writeEndElement #dependency
-    end
-
-    def write_dependencies( xmlStreamWriter, deps )
-      xmlStreamWriter.writeStartElement("dependencies".to_java)
-      
-      deps.each do |line|
-        coord = to_coordinate(line)
-        write_dep( xmlStreamWriter, coord ) if coord
-      end
-
-      xmlStreamWriter.writeEndElement #dependencies
-    end
-
-    def end_write_pom( xmlStreamWriter )
-      xmlStreamWriter.writeEndElement #project
-      
-      xmlStreamWriter.writeEndDocument
-      xmlStreamWriter.close
-    end
-
-    public
-    
-    def coordinate
-      @coord ||= "#{GROUP_ID}:#{@name}:#{@packaging}:#{@version}"
-    end
-    
-    def file
-      @file
-    end
-
-    def initialize(name, version, deps, packaging = nil)
-      unless defined? XMLOutputFactory
-        java_imports
-      end
-
-      @name = name
-      @packaging = packaging || 'jar'
-      @version = version
-
-      @file = File.join(temp_dir, 'pom.xml')
-
-      out = java.io.BufferedOutputStream.new( java.io.FileOutputStream.new( @file.to_java ) )
-
-      xmlStreamWriter = start_write_pom( out, name, version, packaging )
-      
-      write_dependencies( xmlStreamWriter, deps )
-
-      end_write_pom( xmlStreamWriter )
-      
-    ensure
-      out.close
-    end
-    
+( 0..10000 ).each do |i|
+  coord = java.lang.System.getProperty( "jbundler.jars.#{i}" )
+  break unless coord
+  artifact = Maven::Tools::Artifact.from_coordinate( coord.to_s )
+  # HACK workaround broken maven-tools
+  if artifact.exclusions
+    ex = artifact.classifier[1..-1] + ':' +  artifact.exclusions.join(':')
+    artifact.classifier = nil
+    artifact.exclusions = ex.split /,/
   end
+  dependency_artifact( artifact ) 
+end
+
+jarfile( jfile )
+
+properties( 'project.build.sourceEncoding' => 'utf-8' )
+
+plugin_repository :id => 'sonatype-snapshots', :url => 'https://oss.sonatype.org/content/repositories/snapshots'
+jruby_plugin :gem, '1.0.10-SNAPSHOT'
+
+plugin :dependency, '2.8'
+
+# some output
+model.dependencies.each do |d|
+  puts "      " + d.group_id + ':' + d.artifact_id + (d.classifier ? ":" + d.classifier : "" ) + ":" + d.version + ':' + (d.scope || 'compile')
 end

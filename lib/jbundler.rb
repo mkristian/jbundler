@@ -18,56 +18,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-
-require 'jbundler/context'
-require 'jbundler/lock_down'
-
 module JBundler
 
-  def self.context
-    @context ||= JBundler::Context.new
-  end
-
-  def self.setup_test
-    context.classpath.require_test_classpath
-    context.config
-  end
-
-  def self.require_jars
-    if context.vendor.vendored?
-      jars = context.vendor.require_jars
-      if context.config.verbose
-        warn "jbundler classpath:"
-        jars.each do |path|
-          warn "\t#{path}"
-        end
-      end
-    elsif context.classpath.exists? && context.jarfile.exists_lock?
-      require 'java'
-      context.classpath.require_classpath
-      if context.config.verbose
-        warn "jbundler classpath:"
-        JBUNDLER_CLASSPATH.each do |path|
-            warn "\t#{path}"
-        end
-      end
-      Jars.freeze_loading
-    end
-  end
-    
   def self.install( debug = false, verbose = false )
-    jbundler = JBundler::LockDown.new( context.config )
-    msg = jbundler.lock_down( false, debug, verbose )
-    puts msg if msg
+    require 'jbundler/executor'
+    JBundler::Executor.new( debug, verbose ).exec
   end
 
-  def self.setup
-    if context.config.skip
-      warn "skip jbundler setup" if context.config.verbose
-    else
-      require_jars
-    end
+  def self.jarfile
+    ENV[ 'jbundler.jarfile' ] || ENV_JAVA[ 'jbundler.jarfile' ] || 'Jarfile'
   end
 end
 
-JBundler.setup

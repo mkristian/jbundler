@@ -1,9 +1,0 @@
-verbose: true
-local_repository: local 
-jarfile: Jar_file
-gemfile: gemfile
-skip: false
-settings: settings.xml
-offline: true
-work_dir: pkg
-vendor_dir: vendor/myjars

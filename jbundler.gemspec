@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'jbundler'
-  s.version = '0.7.4'
+  s.version = '0.8.0.pre'
 
   s.summary = 'managing jar dependencies'
   s.description = <<-END
@@ -19,7 +19,6 @@ END
   s.license = 'MIT'
 
   s.files += Dir['lib/**/*.rb']
-  s.files += Dir['lib/*.jar']
   s.files += Dir['spec/*.rb']
   s.files += Dir['spec/*/*'].delete_if { |f| f =~ /~$/ }
   s.files += Dir['MIT-LICENSE']
@@ -30,8 +29,7 @@ END
   s.add_runtime_dependency 'maven-tools', '~> 1.0.6'
 
   s.add_runtime_dependency "ruby-maven", ">= 3.1.1.0.6", "< 3.1.2"
-  s.add_runtime_dependency "bundler", "~> 1.5"
-  s.add_runtime_dependency "jar-dependencies", "~> 0.1.8"
+  s.add_runtime_dependency "jar-dependencies", "~> 0.1.10"
   s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency "minitest", "~> 5.3"
 end
