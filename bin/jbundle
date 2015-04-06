@@ -44,9 +44,12 @@ else
       ARGV.delete( '--skip-verbose' )
       
       # HACK get the module-class hierachy in place
-      module Bundler
-        class Thor
-          module Actions
+      gem 'bundler'
+      if Gem.loaded_specs['bundler'].version >= Gem::Version.new('1.9.0')
+        module Bundler
+          class Thor
+            module Actions
+            end
           end
         end
       end

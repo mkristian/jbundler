@@ -26,7 +26,7 @@ require 'jbundler/lock_down'
 require 'jbundler/jruby_complete'
 module JBundler
   # As of v1.9.0, bundler's vendored version of thor is namespaced
-  Thor = Bundler::Thor if Bundler.const_defined?(:Thor)
+  Thor = Bundler::Thor if Gem.loaded_specs['bundler'].version >= Gem::Version.new('1.9.0')
 
   class Cli < Thor
     no_tasks do
