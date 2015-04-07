@@ -17,7 +17,7 @@ module JBundler
     def maven_new
       m = Maven::Ruby::Maven.new
       m.property( 'jbundler.basedir', File.expand_path( basedir ) )
-      m.property( 'jbundler.jarfile', JBundler.jarfile )
+      m.property( 'jbundler.jarfile', File.expand_path( JBundler.jarfile ) )
       m.property( 'verbose', (debug || verbose) == true )
       if debug
         m.options[ '-X' ] = nil

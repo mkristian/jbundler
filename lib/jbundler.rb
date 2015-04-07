@@ -18,15 +18,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+require 'jbundler/executor'
 module JBundler
 
   def self.install( debug = false, verbose = false )
-    require 'jbundler/executor'
-    JBundler::Executor.new( debug, verbose ).exec
+    JBundler::Executor.new( debug, verbose ).lock_down
   end
 
   def self.jarfile
-    ENV[ 'jbundler.jarfile' ] || ENV_JAVA[ 'jbundler.jarfile' ] || 'Jarfile'
+    ENV[ 'JBUNDLER_JARFILE' ] || ENV_JAVA[ 'jbundler.jarfile' ] || 'Jarfile'
   end
 end
 
