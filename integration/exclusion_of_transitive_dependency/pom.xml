@@ -8,12 +8,13 @@
   <packaging>pom</packaging>
   <name>exclusion_of_transitive_dependency</name>
   <properties>
-    <jruby.version>1.7.16.1</jruby.version>
+    <jruby.version>1.7.19</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
     <gem.home>${project.basedir}/pkg/rubygems</gem.home>
-    <jruby.plugins.version>1.0.7</jruby.plugins.version>
+    <jruby.plugins.version>1.0.9</jruby.plugins.version>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <tesla.version>0.1.1</tesla.version>
   </properties>
   <dependencies>
     <dependency>
@@ -27,12 +28,6 @@
       <version>${jbundler.version}</version>
       <type>gem</type>
     </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>bundler</artifactId>
-      <version>1.7.7</version>
-      <type>gem</type>
-    </dependency>
   </dependencies>
   <repositories>
     <repository>
@@ -42,6 +37,18 @@
   </repositories>
   <build>
     <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>initialize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -57,7 +64,7 @@
                 <argument>-classpath</argument>
                 <classpath />
                 <argument>org.jruby.Main</argument>
-                <argument>test.rb</argument>
+                <argument>${gem.home}/bin/jbundle</argument>
               </arguments>
             </configuration>
           </execution>
@@ -72,16 +79,29 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>gem-maven-plugin</artifactId>
-        <version>${jruby.plugins.version}</version>
+        <groupId>io.tesla.polyglot</groupId>
+        <artifactId>tesla-polyglot-maven-plugin</artifactId>
+        <version>${tesla.version}</version>
         <executions>
           <execution>
+            <id>verify</id>
+            <phase>test</phase>
             <goals>
-              <goal>initialize</goal>
+              <goal>execute</goal>
             </goals>
+            <configuration>
+              <taskId>verify</taskId>
+              <nativePom>Mavenfile</nativePom>
+            </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>io.tesla.polyglot</groupId>
+            <artifactId>tesla-polyglot-ruby</artifactId>
+            <version>${tesla.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

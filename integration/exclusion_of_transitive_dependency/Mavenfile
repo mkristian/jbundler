@@ -6,25 +6,29 @@ jar 'org.jruby:jruby', '${jruby.version}'
 
 gem 'jbundler', '${jbundler.version}'
 
-gem 'bundler', '1.7.7'
-
 repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
-
-plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
-        :executable => :java,
-        :environmentVariables => { 'GEM_HOME' => '${gem.home}',
-          'GEM_PATH' => '${gem.home}',
-          # for travis
-          'BUNDLE_GEMFILE' => '${project.basedir}/Gemfile' } ) do
-  execute_goal( :exec, :phase => :test,
-                :arguments => ['-classpath',
-                               xml('<classpath/>'),
-                               'org.jruby.Main',
-                               'test.rb' ] )
-end
 
 jruby_plugin :gem do
   execute_goal :initialize
+end
+
+phase :test do
+  plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
+          :executable => :java,
+          :environmentVariables => { 'GEM_HOME' => '${gem.home}',
+            'GEM_PATH' => '${gem.home}',
+            # for travis
+            'BUNDLE_GEMFILE' => '${project.basedir}/Gemfile' } ) do
+    execute_goal( :exec,
+                  :arguments => ['-classpath',
+                                 xml('<classpath/>'),
+                                 'org.jruby.Main',
+                                 '${gem.home}/bin/jbundle' ] )
+  end
+  
+  execute :verify do
+    raise 'found unexpected bouncy-castle dependency' if File.read( 'Jars.lock' ) =~ /bouncycastle/
+  end
 end
 
 properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
