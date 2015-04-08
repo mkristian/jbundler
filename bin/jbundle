@@ -36,7 +36,7 @@ optparse = OptionParser.new do|opts|
   end
 
   opts.on( '--vendor-dir DIRECTORY', 'Vendor directory where to copy the installed jars.', 'add this directory to $LOAD_PATH or set JARS_HOME respectively.' ) do |dir|
-    options[:vendor_dir] = File.expand_path( dir )
+    options[:vendor_dir] = dir
   end
 
   opts.on( '-h', '--help', 'Display this screen' ) do

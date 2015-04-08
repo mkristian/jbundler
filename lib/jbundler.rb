@@ -21,12 +21,11 @@
 require 'jbundler/executor'
 module JBundler
 
-  def self.install( debug = false, verbose = false )
-    JBundler::Executor.new( debug, verbose ).lock_down
+  def self.install( debug = false, verbose = false, options = {} )
+    JBundler::Executor.new( debug, verbose ).lock_down( options )
   end
 
   def self.jarfile
     ENV[ 'JBUNDLER_JARFILE' ] || ENV_JAVA[ 'jbundler.jarfile' ] || 'Jarfile'
   end
 end
-

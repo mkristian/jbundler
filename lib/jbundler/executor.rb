@@ -68,11 +68,12 @@ module JBundler
     end
 
     def lock_down( options = {} )
+      vendor_dir = File.expand_path( options[ :vendor_dir ] ) if options[ :vendor_dir ]
       out = File.expand_path( '.jbundler.output' )
       tree = File.expand_path( '.jbundler.tree' )
       maven.property( 'jars.outputFile', out )
       maven.property( 'maven.repo.local', Jars.home )
-      maven.property( 'jars.home', options[ :vendor_dir ] || Jars.home )
+      maven.property( 'jars.home', vendor_dir ) if vendor_dir
       # TODO move into jar-dependencies
       maven.property( 'jars.lock', File.expand_path( 'Jars.lock' ) )
       maven.property( 'jars.force', options[ :force ] == true )
