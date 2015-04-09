@@ -1,0 +1,8 @@
+org.bouncycastle:bcpkix-jdk15on:1.47:compile:
+org.bouncycastle:bcprov-jdk15on:1.47:compile:
+org.apache.hbase:hbase-annotations:0.98.7-hadoop2:compile:
+jdk.tools:jdk.tools:1.7:system:${java.home}/../lib/tools.jar
+com.github.stephenc.findbugs:findbugs-annotations:1.3.9-1:compile:
+log4j:log4j:1.2.17:compile:
+junit:junit:4.11:compile:
+org.hamcrest:hamcrest-core:1.3:compile:

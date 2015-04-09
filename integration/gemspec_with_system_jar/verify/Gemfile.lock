@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    first (1.1.1)
+      jar-dependencies (~> 0.1.7)
+    jar-dependencies (0.1.10)
+
+PLATFORMS
+  java
+
+DEPENDENCIES
+  first (= 1.1.1)
+  jar-dependencies (= 0.1.10)
