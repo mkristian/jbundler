@@ -1,34 +1,13 @@
 #-*- mode: ruby -*-
 
+require 'maven/ruby/maven'
 
 task :default => [ :test ]
 
-desc 'run integration tests'
+desc 'run some integration test'
 task :test do
   warn "currently broken due to missing permissions on bin/mvn"
   Maven::Ruby::Maven.new.verify( '-Dmaven.test.skip' )
-end
-
-desc 'run all the specs, junit tests and integration tests'
-task :all => [ :specs, :junit, :integration ]
-
-desc 'run all the specs und junit tests'
-if ENV[ 'rvm_version' ]
-  task :test => [ :specs ]
-
-  warn 'rvm is not working properly with ruby-maven so NO junit tests'
-else
-  task :test => [ :specs, :junit ]
-end
-
-desc 'run specs'
-task :specs do
-  unless File.exists? File.join('lib', 'jbundler.jar' )
-    Rake::Task[ :jar ].invoke
-  end
-  $LOAD_PATH << "spec"
-
-  Dir['spec/*_spec.rb'].each { |f| require File.basename(f.sub(/.rb$/, '')) }
 end
 
 task :headers do
