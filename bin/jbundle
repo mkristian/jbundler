@@ -7,7 +7,7 @@ optparse = OptionParser.new do|opts|
   opts.banner = "Usage: jbundle [options]"
 
   opts.separator ''
-  opts.separator '* load jars: `Jars.require_jars_lock`'
+  opts.separator '* load jars: `Jars.require_jars_lock!`'
   opts.separator '* classpath features: see `Jars::Classpath'
   opts.separator ''
   opts.separator 'NOTE: JBundler is not need during runtime !'
