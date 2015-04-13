@@ -3,11 +3,11 @@ GEM
   specs:
     first (1.1.1)
       jar-dependencies (~> 0.1.7)
-    jar-dependencies (0.1.10)
+    jar-dependencies (0.1.11)
 
 PLATFORMS
   java
 
 DEPENDENCIES
   first (= 1.1.1)
-  jar-dependencies (= 0.1.10)
+  jar-dependencies (= 0.1.11)

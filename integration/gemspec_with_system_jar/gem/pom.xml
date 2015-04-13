@@ -14,11 +14,9 @@
     </developer>
   </developers>
   <properties>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
-    <gem.home>${project.basedir}/../pkg/rubygems</gem.home>
+    <gem.home>${project.basedir}/../../rubygems</gem.home>
     <jruby.plugins.version>1.0.8</jruby.plugins.version>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
   <dependencies>
     <dependency>

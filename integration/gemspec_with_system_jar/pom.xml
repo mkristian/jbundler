@@ -11,11 +11,4 @@
     <module>gem</module>
     <module>verify</module>
   </modules>
-  <properties>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
-  </properties>
-  <build>
-    <directory>pkg</directory>
-  </build>
 </project>

@@ -13,16 +13,14 @@
   <packaging>pom</packaging>
   <name>verify</name>
   <properties>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
-    <gem.home>${project.basedir}/../pkg/rubygems</gem.home>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <gem.home>${project.basedir}/../../rubygems</gem.home>
   </properties>
   <dependencies>
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
-      <version>1.7.19</version>
+      <version>${jruby.version}</version>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
@@ -33,7 +31,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>bundler</artifactId>
-      <version>1.7.7</version>
+      <version>${bundler.version}</version>
       <type>gem</type>
     </dependency>
   </dependencies>
@@ -48,7 +46,7 @@
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-        <version>1.0.9</version>
+        <version>${jruby.plugins.version}</version>
         <executions>
           <execution>
             <goals>

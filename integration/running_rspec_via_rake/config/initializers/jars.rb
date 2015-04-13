@@ -1,1 +1,1 @@
-Jars.require_jars_lock
+Jars.require_jars_lock!

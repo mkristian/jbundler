@@ -8,12 +8,9 @@
   <packaging>pom</packaging>
   <name>running_rspec_via_rake</name>
   <properties>
-    <jruby.version>1.7.19</jruby.version>
     <gem_path>${gem.home}${path.separator}${gem.home}-test${path.separator}${gem.home}-provided</gem_path>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.home>${project.basedir}/pkg/rubygems</gem.home>
-    <jruby.plugins.version>1.0.6</jruby.plugins.version>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <jruby.plugins.version>1.0.8</jruby.plugins.version>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
@@ -146,7 +143,7 @@
         <dependency>
           <groupId>rubygems</groupId>
           <artifactId>jar-dependencies</artifactId>
-          <version>0.1.10</version>
+          <version>[0.1.11,0.1.99999]</version>
           <type>gem</type>
         </dependency>
         <dependency>
@@ -213,7 +210,7 @@
                     <jdbc-sqlite3>3.8.7</jdbc-sqlite3>
                     <therubyrhino>2.0.4</therubyrhino>
                     <therubyrhino_jar>1.7.4</therubyrhino_jar>
-                    <jar-dependencies>0.1.10</jar-dependencies>
+                    <jar-dependencies>0.1.11</jar-dependencies>
                   </gems>
                 </configuration>
               </execution>

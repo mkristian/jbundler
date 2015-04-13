@@ -3,17 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>no_group_id_given</groupId>
-  <artifactId>give_priority_to_jars_from_jarfile</artifactId>
+  <artifactId>give_priority_to_jars_from_jarfile_and_local_jar</artifactId>
   <version>0.0.0</version>
   <packaging>pom</packaging>
-  <name>give_priority_to_jars_from_jarfile</name>
+  <name>give_priority_to_jars_from_jarfile_and_local_jar</name>
   <properties>
-    <jruby.version>1.7.19</jruby.version>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
-    <gem.home>${project.basedir}/rubygems</gem.home>
-    <jruby.plugins.version>1.0.9</jruby.plugins.version>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <gem.home>${project.basedir}/../rubygems</gem.home>
+    <jruby.plugins.version>1.0.8</jruby.plugins.version>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
@@ -24,12 +21,6 @@
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>hermann</artifactId>
-      <version>0.20.1</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
       <artifactId>jbundler</artifactId>
       <version>${jbundler.version}</version>
       <type>gem</type>
@@ -37,7 +28,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>bundler</artifactId>
-      <version>1.7.7</version>
+      <version>${bundler.version}</version>
       <type>gem</type>
     </dependency>
   </dependencies>
@@ -93,4 +84,64 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>gemfile</id>
+      <activation>
+        <file>
+          <missing>Gemfile.lock</missing>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>hermann</artifactId>
+          <version>0.20.1</version>
+          <type>gem</type>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>gemfile_lock</id>
+      <activation>
+        <file>
+          <exists>Gemfile.lock</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.saumya.mojo</groupId>
+            <artifactId>gem-maven-plugin</artifactId>
+            <version>${jruby.plugins.version}</version>
+            <executions>
+              <execution>
+                <id>install gem sets for compile</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>sets</goal>
+                </goals>
+                <configuration>
+                  <scope>compile</scope>
+                  <gems>
+                    <hermann>0.20.1</hermann>
+                    <concurrent-ruby>0.7.2</concurrent-ruby>
+                    <jar-dependencies>0.1.11</jar-dependencies>
+                    <thread_safe>0.3.5</thread_safe>
+                    <zk>1.9.5</zk>
+                    <logging>1.8.2</logging>
+                    <little-plugger>1.1.3</little-plugger>
+                    <multi_json>1.11.0</multi_json>
+                    <zookeeper>1.4.10</zookeeper>
+                    <slyphon-log4j>1.2.15</slyphon-log4j>
+                    <slyphon-zookeeper_jar>3.3.5</slyphon-zookeeper_jar>
+                  </gems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

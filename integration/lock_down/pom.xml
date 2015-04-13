@@ -8,14 +8,10 @@
   <packaging>pom</packaging>
   <name>lock_down</name>
   <properties>
-    <jruby.version>1.7.19</jruby.version>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
     <gem.home>${project.basedir}/pkg/rubygems</gem.home>
-    <jruby.plugins.version>1.0.9</jruby.plugins.version>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <jruby.plugins.version>1.0.8</jruby.plugins.version>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    <tesla.version>0.1.1</tesla.version>
   </properties>
   <dependencies>
     <dependency>
@@ -106,9 +102,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>io.tesla.polyglot</groupId>
-        <artifactId>tesla-polyglot-maven-plugin</artifactId>
-        <version>${tesla.version}</version>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-maven-plugin</artifactId>
+        <version>0.1.8</version>
         <executions>
           <execution>
             <id>cleanup</id>
@@ -124,9 +120,9 @@
         </executions>
         <dependencies>
           <dependency>
-            <groupId>io.tesla.polyglot</groupId>
-            <artifactId>tesla-polyglot-ruby</artifactId>
-            <version>${tesla.version}</version>
+            <groupId>io.takari.polyglot</groupId>
+            <artifactId>polyglot-ruby</artifactId>
+            <version>0.1.8</version>
           </dependency>
         </dependencies>
       </plugin>

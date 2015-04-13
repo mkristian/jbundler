@@ -31,11 +31,7 @@ phase :test do
   end
 end
 
-properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
-            'gem.path' => '${gem.home}',
-            'jruby.version' => '1.7.19',
-            'jruby.plugins.version' => '1.0.9',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+properties( 'gem.home' => '${project.basedir}/../rubygems',
+            'gem.path' => '${gem.home}' )
 
 # vim: syntax=Ruby

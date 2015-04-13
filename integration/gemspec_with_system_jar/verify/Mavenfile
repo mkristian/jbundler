@@ -4,15 +4,15 @@ inherit 'jbundler:gemspec_with_system_jar:0'
 
 packaging 'pom'
 
-jar 'org.jruby:jruby', '1.7.19'
+jar 'org.jruby:jruby', '${jruby.version}'
 
 gem 'jbundler', '${jbundler.version}'
 
-gem 'bundler', '1.7.7'
+gem 'bundler', '${bundler.version}'
 
 repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
 
-jruby_plugin :gem, '1.0.9' do
+jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
 
@@ -29,9 +29,7 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
                                'test.rb' ] )
 end
 
-properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
-            'gem.path' => '${gem.home}',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+properties( 'gem.home' => '${project.basedir}/../../rubygems',
+            'gem.path' => '${gem.home}' )
 
 # vim: syntax=Ruby

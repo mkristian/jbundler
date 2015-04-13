@@ -1,5 +1,6 @@
-language: ruby
-script: mvn verify
+language: java
+before_script: ./mvnw initialize
+script: ./mvnw verify
 jdk:
   - openjdk7
   - oraclejdk7
