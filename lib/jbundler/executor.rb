@@ -75,7 +75,7 @@ module JBundler
       maven.property( 'maven.repo.local', Jars.home )
       maven.property( 'jars.home', vendor_dir ) if vendor_dir
       # TODO move into jar-dependencies
-      maven.property( 'jars.lock', File.expand_path( 'Jars.lock' ) )
+      maven.property( 'jars.lock', File.expand_path( Jars.lock ) )
       maven.property( 'jars.force', options[ :force ] == true )
       maven.property( 'jars.update', options[ :update ] ) if options[ :update ]
 
