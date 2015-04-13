@@ -4,9 +4,10 @@ require 'maven/ruby/maven'
 
 task :default => [ :test ]
 
-desc 'run some integration test'
+desc 'run integration tests'
 task :test do
-  maven.verify( '-Dmaven.test.skip' )
+  warn "currently broken due to missing permissions on bin/mvn"
+  Maven::Ruby::Maven.new.verify( '-Dmaven.test.skip' )
 end
 
 task :headers do
