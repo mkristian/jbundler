@@ -7,9 +7,13 @@ manage jar dependencies similar than **bundler** manages gem dependencies.
 * the DSL mimics the one from bundler
 * you can use maven like version declaration or rubygems/bundler like version ranges
 * it locks down the jar versions inside "Jarfile.lock"
-* you can declare jar dependency within a rubygems using the requirements directive of the gem specification. jbundler will include those jar dependencies into its classpath
-* on the first run everything get resolved, any further run just the setup of classpath is done (without any maven involved)
-* it integrates nicely with bundler when Bundler.require is used (like Rails does it)
+* you can declare jar dependency within a gem using the requirements directive of the gem specification. jbundler will include those jar dependencies into its classpath
+
+the difference to **bundler**
+
+* it is just a development gem - no need for it during runtime. just add ```Jars.require_jars_lock!``` to your code and for older JRuby add ```gem 'jar-dependencies', '~> 0.1.11'``` as runtime dependency.
+* you need to run ```bundle install``` first if any of the gems has jar dependencies.
+* all one command ```jbundle```, see ```jbundle --help``` on the possible options and how to update a single jar, etc.
 
 ## get started
 
@@ -19,91 +23,28 @@ install JBundler with
 	
 first create a **Jarfile**, something like
     
-	jar 'org.yaml:snakeyaml'
+	jar 'org.yaml:snakeyaml', '1.14'
 	jar 'org.slf4j:slf4j-simple', '>1.1'
-
-### together with Bundler
-
-just add it as **first** entry in your *Gemfile* 
-
-```gem 'jbundler'```
-
-and now install the bundle both **gems and jars**
-
-    jbundle install
-
-#### Building
-
-building the jar
-```rake jar```
-
-building the gem
-```rake build```
-
-running the junit test
-```rake junit```
-
-running the minitest
-```rake minitest```
-
-make sure you use jruby ;)
-
-#### Gemfile and Jarfile
-
-if there is only a **Gemfile** and no Jarfile **jbundler** handles all the declared [jar dependencies of gems](https://github.com/mkristian/jbundler/wiki/Build) as well all the jars from the Jarfile. it will only look into gems which bundler loaded.
-
-### without Bundler - Jarfile only
-
-requiring **jbundler** will trigger the classpath setup
-
-```require 'jbundler'```
-
-this you can use with **rubygems** or **isolate** or . . .
 
 ### Jarfile
 
 more info about the **[Jarfile](https://github.com/torquebox/maven-tools/wiki/Jarfile)** and about [versions](https://github.com/torquebox/maven-tools/wiki/Versions).
 
 for adding a maven repository see [Jarfile](https://github.com/torquebox/maven-tools/wiki/Jarfile).
-    
-## console ##
 
-like bundler there is a console which sets up the gems (if there is Gemfile otherwise that part get skipped) and sets up the classloader:
+# Building the jbundler gem
 
-    jbundle console
+running the integration test
 
-further it adds two methods to the root level:
+    ./mvnw verify
 
-    > jars
+building the gem (see ./pkg)
 
-to list the loaded jars and
+    ./mvnw package -Dinvoker.skip
 
-    > jar 'org.yaml:snakeyaml'
+or just
 
-using the same syntax as use in the **Jarfile**. there are limitations with such a lazy jar loading but it is very convenient when trying out things.
-
-## lazy jar loading ##
-
-    require 'jbundler/lazy'
-	include JBundler::Lazy
-	
-will offer the same `jar`/`jars` method than you have inside the console.
-
-# extra commands
-
-## jbundler tree
-
-shows the dependency tree - without the locked version. i.e. an install or update would result in the shown version.
-
-with locked down versions that tree is more hint then a real picture of the situation !!
-
-## jruby executable -b start.rb
-
-will create an executable jar file using the given ruby script as bootstrap script. it will include the comple jruby and all the dependent jars as well all the gems packed into it as well. the
-
-     jruby '1.7.4'
-
-declaration in the *Jarfile* will determinate the jruby version to use for the executable jar.
+    gem build jbundler.gemspec
 
 ## example ##
 
@@ -117,36 +58,7 @@ execute *src/example/my_project/info.rb* to see it in action:
 
 ## limitations ##
 
-update of single artifacts is not possible.
-
 since the version resolution happens in two steps - first the gems then the jars/poms - it is possible in case of a failure that there is a valid gems/jars version resolution which satisfies all version contraints. so there is plenty of space for improvements (like maven could resolve the gems as well, etc)
-
-**Jarfile** is **not** a DSL but it could use a ruby DSL to read the data (any contribution welcome).
-
-jbundler does not completely obey the **$HOME/.m2/settings.xml** from maven where you usually declare proxies, mirrors, etc. see [jbundler configuration](https://github.com/mkristian/jbundler/wiki/Configuration) for what is already possible.
-
-## RVM and/or rubygems-bundler ##
-
-some tests did not work with RVM and/or rubygems-bundler - there are some weird classloader issue popping up. there is a problem with the way the classloader gets setup. but a manual jruby installion or using rbenv is just working fine.
-
-those issue might pop up with ```jbundle tree``` and ```jbundle executable```
-
-## running tests ##
-
-* ```rake``` will execute all tests without integration tests
-* ```rake all``` will execute all tests
-* ```rake minitest``` runs the minitest specs
-* ```rake integration``` runs the integration tests where poms are used (might fail due to hardcoded absolute paths)
-* ```rake junit``` runs the junit java tests
-* ```jruby spec/abc_spec.rb``` runs that given tests (just use the right file)
-* ```mvn test``` will also run all tests
-* ```rmvn test`` same as ```mvn test```
-
-## update ##
-
-update of a single artifact is not possible (yet). but to update the whole set of artifacts just delete the lockfile *Jarfile.lock*
-
-if jbundler sees that **Gemfile.lock** or **Jarfile** is newer then the **.jbundler/classpath.rb** file then jbundler tries to gracefully upgrade towards the changes.
 
 # special thanks #
 

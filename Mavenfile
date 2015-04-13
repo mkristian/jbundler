@@ -2,28 +2,11 @@
 
 gemfile
 
-jarfile
-
-jruby_plugin :minitest do
-  # restrict the specs since we have more *_spec.rb files deeper in the 
-  # directory tree
-  execute_goals( :spec, :minispecDirectory => 'spec/*_spec.rb' )
-end
-
-properties( 'jruby.versions' => ['1.6.8','1.7.20'].join(','),
-            'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
+properties( 'maven.test.skip' => true,
             # just lock the versions
-            'jruby.version' => '1.7.20',
-            'jruby.plugins.version' => '1.0.7',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            'jruby.version' => '1.7.22',
+            'jruby.plugins.version' => '1.0.10' )
 
-plugin :compiler, '3.1' do
-  execute_goals( :testCompile, :phase => 'test-compile' )
-end
-
-# TODO use ruby-maven invoker to avoid prebuild pom.xml
-#require'ruby-maven'
 plugin :invoker, '1.8' do
   execute_goals( :install, :run,
                  :id => 'integration-test',
