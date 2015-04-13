@@ -1,17 +1,12 @@
 #-*- mode: ruby -*-
 
-require 'maven/ruby/tasks'
 
 task :default => [ :test ]
 
-desc 'run all tests'
-task :all do
-  maven.verify
-end
-
-desc 'run some integration test'
-task :integration do
-  maven.verify( '-Dmaven.test.skip' )
+desc 'run integration tests'
+task :test do
+  warn "currently broken due to missing permissions on bin/mvn"
+  Maven::Ruby::Maven.new.verify( '-Dmaven.test.skip' )
 end
 
 desc 'run all the specs, junit tests and integration tests'
