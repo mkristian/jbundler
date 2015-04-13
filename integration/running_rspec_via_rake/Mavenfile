@@ -35,10 +35,7 @@ build do
 end
 
 properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
-            'gem.path' => '${gem.home}${path.separator}${gem.home}-test${path.separator}${gem.home}-provided',
-            'jruby.version' => '1.7.16.1',
-            'jruby.plugins.version' => '1.0.6',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            # keep the _ to avoid using it with gem-maven-plugin
+            'gem_path' => '${gem.home}${path.separator}${gem.home}-test${path.separator}${gem.home}-provided' )
 
 # vim: syntax=Ruby

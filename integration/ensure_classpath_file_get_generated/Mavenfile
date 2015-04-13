@@ -6,7 +6,7 @@ jar 'org.jruby:jruby', '${jruby.version}'
 
 gem 'jbundler', '${jbundler.version}'
 
-gem 'bundler', '1.7.7'
+gem 'bundler', '${bundler.version}'
 
 repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
 
@@ -27,11 +27,7 @@ jruby_plugin :gem do
   execute_goal :initialize
 end
 
-properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
-            'gem.path' => '${gem.home}',
-            'jruby.version' => '1.7.16.1',
-            'jruby.plugins.version' => '1.0.7',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+properties( 'gem.home' => '${project.basedir}/../rubygems',
+            'gem.path' => '${gem.home}' )
 
 # vim: syntax=Ruby

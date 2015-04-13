@@ -3,17 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>no_group_id_given</groupId>
-  <artifactId>ensure_classpath_file_get_generated</artifactId>
+  <artifactId>ensure_vendored_jars_are_created</artifactId>
   <version>0.0.0</version>
   <packaging>pom</packaging>
-  <name>ensure_classpath_file_get_generated</name>
+  <name>ensure_vendored_jars_are_created</name>
   <properties>
-    <jruby.version>1.7.16.1</jruby.version>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
-    <gem.home>${project.basedir}/pkg/rubygems</gem.home>
-    <jruby.plugins.version>1.0.7</jruby.plugins.version>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <gem.home>${project.basedir}/../rubygems</gem.home>
+    <jruby.plugins.version>1.0.8</jruby.plugins.version>
   </properties>
   <dependencies>
     <dependency>
@@ -30,7 +27,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>bundler</artifactId>
-      <version>1.7.7</version>
+      <version>${bundler.version}</version>
       <type>gem</type>
     </dependency>
   </dependencies>

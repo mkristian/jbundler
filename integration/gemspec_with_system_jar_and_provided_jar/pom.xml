@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>jbundler</groupId>
-  <artifactId>gemspec_with_system_jar</artifactId>
-  <version>0</version>
-  <packaging>pom</packaging>
-  <name>aggregator</name>
-  <modules>
-    <module>gem</module>
-    <module>verify</module>
-  </modules>
-  <properties>
-    <tesla.dump.readonly>true</tesla.dump.readonly>
-    <tesla.dump.pom>pom.xml</tesla.dump.pom>
-  </properties>
-  <build>
-    <directory>pkg</directory>
-  </build>
+  <groupId>no_group_id_given</groupId>
+  <artifactId>dummy</artifactId>
+  <version>0.0.0</version>
 </project>

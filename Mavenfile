@@ -13,7 +13,12 @@ plugin :invoker, '1.8' do
                  :projectsDirectory => 'integration',
                  :streamLogs => true,
                  :cloneProjectsTo => '${project.build.directory}',
-                 :properties => { 'jbundler.version' => '${project.version}' } )
+                 :properties => { 'jbundler.version' => '${project.version}',
+                   'jruby.version' => '${jruby.version}',
+                   'jruby.plugins.version' => '${jruby.plugins.version}',
+                   'bundler.version' => '1.9.3', 
+                   # dump pom for the time being - for travis
+                   'polyglot.dump.pom' => 'pom.xml' } )
 end
 
 profile!( :gemfile_lock ) do

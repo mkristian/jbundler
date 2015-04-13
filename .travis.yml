@@ -1,23 +1,9 @@
-language: ruby
+language: java
 before_script:
   - export MAVEN_SKIP_RC=true
-bundler_args: --without copyright
-matrix:
-  include:
-    - rvm: jruby
-      jdk: openjdk6
-      script: rm -r src/test/java; mvn test
-    - rvm: jruby
-      jdk: openjdk7
-      script: rm -r src/test/java; mvn test
-    - rvm: jruby
-      jdk: oraclejdk7
-      script: rm -r src/test/java; mvn test
-    - rvm: jruby
-      jdk: oraclejdk8
-      script: rm -r src/test/java; mvn test
-    - rvm: ruby
-      jdk: openjdk7
-      script: mvn verify -DskipTests
-  allow_failures:
-    - rvm: ruby
+before_script: ./mvnw initialize
+script: ./mvnw verify
+jdk:
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
