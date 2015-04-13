@@ -2,7 +2,8 @@
 
 gemfile
 
-properties( # just lock the versions
+properties( 'maven.test.skip' => true,
+            # just lock the versions
             'jruby.version' => '1.7.19',
             'jruby.plugins.version' => '1.0.9' )
 
