@@ -2,6 +2,8 @@
 
 gemfile
 
+gem 'ruby-maven', '3.3.0.dev-SNAPSHOT'
+
 properties( 'maven.test.skip' => true,
             # just lock the versions
             'jruby.version' => '1.7.19',
