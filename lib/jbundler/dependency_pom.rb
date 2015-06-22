@@ -10,7 +10,8 @@ if basedir != bdir
 end
 
 ( 0..(java.lang.System.getProperty( "jbundler.jars.size" ).to_i - 1) ).each do |i|
-  dependency_artifact Maven::Tools::Artifact.from_coordinate( java.lang.System.getProperty( "jbundler.jars.#{i}" ).to_s )
+  coord = java.lang.System.getProperty( "jbundler.jars.#{i}" )
+  dependency_artifact( Maven::Tools::Artifact.from_coordinate( coord.to_s ) )
 end
 
 jarfile( jfile )

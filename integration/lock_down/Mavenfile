@@ -1,6 +1,6 @@
 #-*- mode: ruby -*-
 
-eval_pom( File.read( '../../lib/jbundler/lock_down_pom.rb' ) )
+eval_pom( File.read( '../../lib/jbundler/dependency_pom.rb' ), 'dependency_pom.rb' )
 
 properties( 'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )

@@ -1,3 +1,0 @@
-jar 'junit:junit', '4.11'
-
-jruby '1.7.9'
