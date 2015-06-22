@@ -51,7 +51,7 @@ module JBundler
             warn "\t#{path}"
         end
       end
-      Jars.freeze_loading
+      Jars.no_more_warnings
     end
   end
     
