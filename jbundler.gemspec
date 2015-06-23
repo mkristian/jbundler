@@ -19,7 +19,6 @@ END
   s.license = 'MIT'
 
   s.files += Dir['lib/**/*.rb']
-  s.files += Dir['lib/*.jar']
   s.files += Dir['spec/*.rb']
   s.files += Dir['spec/*/*'].delete_if { |f| f =~ /~$/ }
   s.files += Dir['MIT-LICENSE']
