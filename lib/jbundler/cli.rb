@@ -20,7 +20,6 @@
 #
 require 'bundler/vendored_thor'
 require 'jbundler/config'
-require 'jbundler/executable'
 require 'jbundler/tree'
 require 'jbundler/lock_down'
 require 'jbundler/jruby_complete'
@@ -51,20 +50,6 @@ module JBundler
       def say_bundle_complete
         puts ''
         puts 'Your jbundle is complete! Use `jbundle show` to see where the bundled jars are installed.'
-      end
-    end
-
-    desc 'jruby_complete', 'pack a jruby-complete jar with custom dependencies and maybe adjust jruby dependencies like newer versions of joda-time or snakeyaml', :hide => true
-    method_option :clean, :type => :boolean, :default => false
-    method_option :verbose, :type => :boolean, :default => false
-    method_option :debug, :type => :boolean, :default => false
-    method_option :show, :type => :boolean, :default => false, :desc => 'show versions of all libraries from jruby'
-    def jruby_complete
-      jc = JBundler::JRubyComplete.new( config, options )
-      if options[ :show ]
-        jc.show_versions
-      else
-        jc.packit
       end
     end
 
@@ -102,16 +87,6 @@ module JBundler
         puts
       end
       puts msg if msg
-    end
-
-    desc 'executable', 'create an executable jar with a given bootstrap.rb file\nLIMITATION: only for jruby 1.6.x and newer'
-    method_option :bootstrap, :type => :string, :aliases => '-b', :required => true, :desc => 'file which will be executed when the jar gets executed'
-    method_option :compile, :type => :boolean, :aliases => '-c', :default => false, :desc => 'compile the ruby files from the lib directory'
-    method_option :verbose, :type => :boolean, :aliases => '-v', :default => false, :desc => 'more output'
-    method_option :groups, :type => :array, :aliases => '-g', :desc => 'bundler groups to use for determine the gems to include in the jar file'
-    def executable
-      ex = JBundler::Executable.new( options[ 'bootstrap' ], config, options[ 'compile' ], options[ :verbose ], *( options[ 'groups' ] || [:default] ) )
-      ex.packit
     end
 
     desc 'console', 'irb session with gems and/or jars and with lazy jar loading.'
