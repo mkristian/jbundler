@@ -1,4 +1,6 @@
 language: ruby
+before_script:
+  - export MAVEN_SKIP_RC=true
 bundler_args: --without copyright
 matrix:
   include:
