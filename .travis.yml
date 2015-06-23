@@ -16,9 +16,6 @@ matrix:
       script: rm -r src/test/java; mvn test
     - rvm: ruby
       jdk: openjdk7
-      script: mvn verify -DskipTests -Dinvoker.test='*,!executable_*'
-    - rvm: ruby
-      jdk: oraclejdk8
-      script: mvn verify -DskipTests -Dinvoker.test=executable_*
+      script: mvn verify -DskipTests
   allow_failures:
     - rvm: ruby
