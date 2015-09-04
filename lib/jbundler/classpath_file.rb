@@ -99,7 +99,7 @@ module JBundler
     def dump_jar( file, path, prefix, local_repo )
       return if path =~ /pom$/
       if local_repo
-        path.sub!( /#{local_repo}/, '' )
+        path = path.sub( /#{local_repo}/, '' )
         unless File.exists?( path )
           file.puts "JBUNDLER_#{prefix}CLASSPATH << (JBUNDLER_LOCAL_REPO + '#{path}')"
           path = nil
