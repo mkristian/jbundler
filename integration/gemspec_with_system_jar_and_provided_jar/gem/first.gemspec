@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'jar-dependencies', '~> 0.1.7'
 
   s.requirements << "jar 'org.apache.hbase:hbase-annotations', '=0.98.7-hadoop2'"
+  s.requirements << 'jar org.jruby:jruby, 1.7.20, :scope => :provided'
 end
 
 # vim: syntax=Ruby

@@ -149,7 +149,7 @@ module JBundler
         # TODO get rid of this somehow
         deps = Maven::Tools::GemspecDependencies.new( spec )
         deps.java_dependency_artifacts.each do |a|
-          unless done.include? a.key
+          if not done.include?( a.key ) and (a.scope.nil? or a.scope == :compile or a.scope == :runtime)
             maven.property( "jbundler.jars.#{index}", a.to_s )
             index += 1
             done << a.key

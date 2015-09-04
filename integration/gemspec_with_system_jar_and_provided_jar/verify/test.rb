@@ -8,5 +8,6 @@ JBundler.install( true )
 JBundler.setup
 
 raise "missing tools.jar" unless $CLASSPATH.detect { |c| c =~ /tools.jar/ }
+raise "found unexpected jruby-core-1.7.20.jar" if $CLASSPATH.detect { |c| c =~ /jruby-core-1.7.20.jar/ }
 
 # vim: syntax=Ruby
