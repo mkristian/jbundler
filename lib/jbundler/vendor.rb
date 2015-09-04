@@ -11,6 +11,18 @@ module JBundler
     end
 
     def require_jars
+      jars_lock = File.join( @dir, 'Jars.lock' )
+      if File.exists?(jars_lock)
+        $LOAD_PATH << @dir unless $LOAD_PATH.include? @dir
+        ENV_JAVA['jars.lock'] = jars_lock
+        Jars.require_jars_lock!
+        true
+      else
+        require_jars_legacy
+      end
+    end
+
+    def require_jars_legacy
       jars = File.join( @dir, 'jbundler.rb' )
       if File.exists?( jars )
         $LOAD_PATH << @dir unless $LOAD_PATH.include? @dir
@@ -19,7 +31,7 @@ module JBundler
         Dir[ File.join( @dir, '**', '*' ) ].each do |f|
           require f
         end
-        Jars.freeze_loading
+        Jars.no_more_warnings
         true
       end
     end
@@ -32,10 +44,18 @@ module JBundler
     end
 
     def vendor_dependencies( deps )
-      require_file = File.join( @dir, 'jbundler.rb' )
+      jars_lock = File.join( @dir, 'Jars.lock' )
+      FileUtils.mkdir_p( @dir )
+      File.open(jars_lock, 'w') do |f|
+        deps.each do |dep|
+          line = dep.gav + ':runtime:'
+          f.puts line
+        end
+      end
+      require_file = File.join( @dir, 'jbundle.rb' )
       Jars::JarInstaller.install_deps( deps, @dir, require_file, true ) do |f|
         f.puts
-        f.puts 'Jars.freeze_loading'
+        f.puts 'Jars.no_more_warnings'
       end
     end
 

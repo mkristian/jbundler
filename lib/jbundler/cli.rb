@@ -95,7 +95,7 @@ module JBundler
     end
     
     desc 'lock_down', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given. that is kept as fall back in cases where the new install does not work as before."
-    method_option :deployment, :type => :boolean, :default => false, :desc => "copy the jars into the vendor/jars directory (or as configured). these vendored jars have preference before the classpath jars !"
+    method_option :deployment, :type => :boolean, :default => false, :desc => "copy the jars into the vendor/jars directory (or as configured). add the vendor/jars $LOAD_PATH and Jars.require_jars_lock! - no need for any jbundler files at runtime !"
     method_option :no_deployment, :type => :boolean, :default => false, :desc => 'clears the vendored jars'
     method_option :path, :type => :string
     method_option :without, :type => :array
