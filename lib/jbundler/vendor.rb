@@ -4,6 +4,7 @@ module JBundler
 
     def initialize( dir )
       @dir = File.expand_path( dir )
+      @jars_lock = File.join( @dir, 'Jars.lock' )
     end
 
     def vendored?
@@ -11,10 +12,9 @@ module JBundler
     end
 
     def require_jars
-      jars_lock = File.join( @dir, 'Jars.lock' )
-      if File.exists?(jars_lock)
+      if File.exists?(@jars_lock)
         $LOAD_PATH << @dir unless $LOAD_PATH.include? @dir
-        ENV_JAVA['jars.lock'] = jars_lock
+        ENV_JAVA['jars.lock'] = @jars_lock
         Jars.require_jars_lock!
         true
       else
@@ -44,18 +44,16 @@ module JBundler
     end
 
     def vendor_dependencies( deps )
-      jars_lock = File.join( @dir, 'Jars.lock' )
       FileUtils.mkdir_p( @dir )
-      File.open(jars_lock, 'w') do |f|
+      File.open(@jars_lock, 'w') do |f|
         deps.each do |dep|
           line = dep.gav + ':runtime:'
           f.puts line
         end
       end
-      require_file = File.join( @dir, 'jbundle.rb' )
-      Jars::JarInstaller.install_deps( deps, @dir, require_file, true ) do |f|
-        f.puts
-        f.puts 'Jars.no_more_warnings'
+      ['jbundler.rb', 'jbundle.rb'].each do |filename|
+        File.write( File.join( @dir, filename ), 
+                    "ENV['JARS_LOCK'] = File.join( File.dirname( __FILE__ ), 'Jars.lock' )\nrequire 'jars/setup" )
       end
     end
 
