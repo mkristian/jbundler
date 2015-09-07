@@ -4,7 +4,7 @@ require 'fileutils'
 
 describe JBundler::Config do
 
-  let( :basedir ){ File.dirname( File.dirname( File.expand_path( __FILE__ ) ) ) }
+  let( :basedir ){ File.dirname( File.expand_path( "../", __FILE__ ) ) }
   let( :spec ){ 'spec' }
   let( :spec_dir ){ File.join( basedir, spec ) }
   let( :project ){ File.join( spec, 'project' ) }
@@ -32,13 +32,13 @@ describe JBundler::Config do
       c = JBundler::Config.new
       c.verbose.must_equal nil
       c.local_repository.must_equal './.m2/repository'
-      c.jarfile.must_equal File.join( basedir, 'Jarfile' )
-      c.gemfile.must_equal File.join( basedir, 'Gemfile' )
+      c.jarfile.must_equal File.join( basedir, 'spec', 'Jarfile' )
+      c.gemfile.must_equal File.join( basedir, 'spec', 'Gemfile' )
       c.skip.must_equal nil
       c.settings.must_equal "./.m2/settings.xml"
       c.offline.must_equal false
-      c.work_dir.must_equal File.join( basedir, 'pkg' )
-      c.vendor_dir.must_equal File.join( basedir, 'vendor/jars' )
+      c.work_dir.must_equal File.join( basedir, 'spec','pkg' )
+      c.vendor_dir.must_equal File.join( basedir, 'spec', 'vendor', 'jars' )
     end
   end
 
@@ -59,20 +59,20 @@ describe JBundler::Config do
   end
 
   it 'has following defaults with home and without local config' do
-    ENV['HOME'] = File.join( 'home' )
+    home = ENV['HOME'] = File.join( File.expand_path( '../home', __FILE__ ) )
 
-    FileUtils.cd( spec ) do
+    FileUtils.cd( home ) do
       c = JBundler::Config.new
-          
+
       c.verbose.must_equal false
-      c.local_repository.must_equal File.join( spec_dir, 'localrepo' )
-      c.jarfile.must_equal File.join( spec_dir, 'jarfile' )
-      c.gemfile.must_equal File.join( spec_dir, 'Gem_file' )
+      c.local_repository.must_equal File.join( spec_dir, 'home', 'localrepo' )
+      c.jarfile.must_equal File.join( spec_dir, 'home', 'jarfile' )
+      c.gemfile.must_equal File.join( spec_dir, 'home', 'Gem_file' )
       c.skip.must_equal true
-      c.settings.must_equal File.join( spec_dir, 'Settings.xml' )
+      c.settings.must_equal nil
       c.offline.must_equal false
-      c.work_dir.must_equal File.join( spec_dir, 'target/pkg' )
-      c.vendor_dir.must_equal File.join( spec_dir, 'vendor/my_jars' )
+      c.work_dir.must_equal File.join( spec_dir, 'home', 'target/pkg' )
+      c.vendor_dir.must_equal File.join( spec_dir, 'home', 'vendor/my_jars' )
     end
   end
 
@@ -129,7 +129,6 @@ describe JBundler::Config do
 
         it "uses ENV with home #{home} and local dir #{dir}" do
           ENV['HOME'] = eval "\"#{File.expand_path( home )}\""
-          
           FileUtils.cd eval "\"#{dir}\"" do
             pdir = eval "#{File.basename( dir )}_dir"
             Jars.reset

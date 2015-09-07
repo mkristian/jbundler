@@ -1,10 +1,15 @@
-#-*- mode: ruby -*-
+task :default => [ :specs ]
 
-require 'maven/ruby/maven'
+desc 'run specs'
+task :specs do
+  $LOAD_PATH << "spec"
 
-task :default => [ :test ]
+  Dir['spec/*_spec.rb'].each do |f| 
+    require File.basename( f.sub(/.rb$/, '' ) )
+  end
+end
 
-desc 'run some integration test'
+desc 'run integration test'
 task :test do
   warn "currently broken due to missing permissions on bin/mvn"
   Maven::Ruby::Maven.new.verify( '-Dmaven.test.skip' )

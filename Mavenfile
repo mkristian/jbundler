@@ -2,10 +2,13 @@
 
 gemfile
 
-properties( 'maven.test.skip' => true,
-            # just lock the versions
+properties( # just lock the versions
             'jruby.version' => '1.7.22',
             'jruby.plugins.version' => '1.0.10' )
+
+jruby_plugin( :minitest, :minispecDirectory => "spec/*_spec.rb" ) do
+  execute_goals(:spec)
+end
 
 plugin :invoker, '1.8' do
   execute_goals( :install, :run,
