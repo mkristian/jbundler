@@ -20,7 +20,7 @@ end
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => '${project.basedir}/pkg/jruby-${jruby.version}/bin/jruby',
         :environmentVariables => { 'GEM_HOME' => '${gem.home}',
-          'GEM_PATH' => '${gem.path}',
+          'GEM_PATH' => '${gem_path}',
           # for travis
           'BUNDLE_GEMFILE' => '${project.basedir}/Gemfile',
           'PATH' => '${project.basedir}/pkg/jruby-${jruby.version}/bin${path.separator}${gem.home}/bin${path.separator}${env.PATH}' } ) do

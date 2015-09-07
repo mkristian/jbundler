@@ -3,17 +3,18 @@ import org.codehaus.plexus.util.FileUtils;
 
 
 String log = FileUtils.fileRead( new File( basedir, "build.log" ) );
-String expected = "junit:junit:jar:4.11:compile";
-if ( !log.contains( expected ) )
-{
-    throw new RuntimeException( "log file does not contain '" + expected + "'" );
-}
-expected = "org.hamcrest:hamcrest-core:jar:1.3:compile";
-if ( !log.contains( expected ) )
-{
-    throw new RuntimeException( "log file does not contain '" + expected + "'" );
-}
-expected = "ruby.maven-tools.jar:myfirst:jar:0:system";
+// TODO use hermann gem again after it can use jar-dependencies 0.2.0+
+// String expected = "junit:junit:jar:4.11:compile";
+// if ( !log.contains( expected ) )
+// {
+//     throw new RuntimeException( "log file does not contain '" + expected + "'" );
+// }
+// expected = "org.hamcrest:hamcrest-core:jar:1.3:compile";
+// if ( !log.contains( expected ) )
+// {
+//     throw new RuntimeException( "log file does not contain '" + expected + "'" );
+// }
+String expected = "ruby.maven-tools.jar:myfirst:jar:0:system";
 if ( !log.contains( expected ) )
 {
     throw new RuntimeException( "log file does not contain '" + expected + "'" );

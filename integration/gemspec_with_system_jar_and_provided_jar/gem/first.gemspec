@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.files << 'first.gemspec'
 
   s.platform = 'java'
-  s.add_runtime_dependency 'jar-dependencies', '~> 0.1.7'
+  s.add_runtime_dependency 'jar-dependencies', '~> 0.1'
 
   s.requirements << "jar 'org.apache.hbase:hbase-annotations', '=0.98.7-hadoop2'"
   s.requirements << 'jar org.jruby:jruby, 1.7.20, :scope => :provided'
