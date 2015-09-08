@@ -1,1 +1,3 @@
 jar "io.netty:netty-all", "4.0.28.Final"
+
+jar 'org.jruby:jruby-complete', '1.7.22', :scope => :provided

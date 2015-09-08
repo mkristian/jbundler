@@ -47,8 +47,13 @@ module JBundler
       FileUtils.mkdir_p( @dir )
       File.open(@jars_lock, 'w') do |f|
         deps.each do |dep|
-          line = dep.gav + ':runtime:'
-          f.puts line
+          if dep.scope == :runtime
+            target = File.join( @dir, dep.path )
+            FileUtils.mkdir_p( File.dirname( target ) )
+            FileUtils.cp( dep.file, target )
+            line = dep.gav + ':runtime:'
+            f.puts line
+          end
         end
       end
       ['jbundler.rb', 'jbundle.rb'].each do |filename|
