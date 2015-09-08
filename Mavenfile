@@ -2,7 +2,8 @@
 
 gemfile
 
-properties( # just lock the versions
+properties( 'jruby.versions' => "${jruby.version}, 9.0.1.0",
+            # just lock the versions
             'jruby.version' => '1.7.22',
             'jruby.plugins.version' => '1.0.10' )
 

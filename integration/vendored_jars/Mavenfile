@@ -30,7 +30,7 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
                                'test.rb' ] )
 end
 
-properties( 'gem.home' => '${project.basedir}//rubygems',
+properties( 'gem.home' => '${project.basedir}/../rubygems',
             'gem.path' => '${gem.home}',
             'jruby.version' => '1.7.22',
             'jruby.plugins.version' => '1.0.7',
