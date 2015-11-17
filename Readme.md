@@ -2,17 +2,17 @@
 
 * [![Build Status](https://secure.travis-ci.org/mkristian/jbundler.png)](http://travis-ci.org/mkristian/jbundler) #
 
-manage jar dependencies similar than **bundler** manages gem dependencies.
+manage jar dependencies similar to how **bundler** manages gem dependencies:
 
 * the DSL mimics the one from bundler
-* you can use maven like version declaration or rubygems/bundler like version ranges
+* you can use maven-like version declarations or rubygems/bundler version ranges
 * it locks down the jar versions inside "Jarfile.lock"
-* you can declare jar dependency within a gem using the requirements directive of the gem specification. jbundler will include those jar dependencies into its classpath
+* you can declare jar dependencies within a gem using the requirements directive of the gem specification. jbundler will include those jar dependencies into its classpath
 
-the difference to **bundler**
+differences compared to **bundler**
 
-* it is just a development gem - no need for it during runtime. just add ```Jars.require_jars_lock!``` to your code and for older JRuby add ```gem 'jar-dependencies', '~> 0.1.11'``` as runtime dependency.
-* you need to run ```bundle install``` first if any of the gems has jar dependencies.
+* it is just a development gem - no need for it during runtime. just add ```Jars.require_jars_lock!``` to your code and for older JRuby versions add ```gem 'jar-dependencies', '~> 0.1.11'``` as a runtime dependency.
+* you need to run ```bundle install``` first if any of the gems have jar dependencies.
 * all one command ```jbundle```, see ```jbundle --help``` on the possible options and how to update a single jar, etc.
 
 ## get started
@@ -21,7 +21,7 @@ install JBundler with
 
     jruby -S gem install jbundler
 	
-first create a **Jarfile**, something like
+first create a **Jarfile**, something like:
     
 	jar 'org.yaml:snakeyaml', '1.14'
 	jar 'org.slf4j:slf4j-simple', '>1.1'
