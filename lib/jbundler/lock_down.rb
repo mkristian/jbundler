@@ -23,7 +23,7 @@ module JBundler
 
     def update( debug = false, verbose = false )
       if vendor.vendored?
-        raise 'can not update vendored jars'
+        raise 'Cannot update vendored jars'
       end
 
       FileUtils.rm_f( @config.jarfile_lock )
