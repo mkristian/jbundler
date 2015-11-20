@@ -93,7 +93,7 @@ module JBundler
     def console
       # dummy - never executed !!!
     end
-    
+
     desc 'lock_down', "first `bundle install` is called and then the jar dependencies will be installed. for more details see `bundle help install`, jbundler will ignore all options. the install command is also the default when no command is given. that is kept as fall back in cases where the new install does not work as before."
     method_option :deployment, :type => :boolean, :default => false, :desc => "copy the jars into the vendor/jars directory (or as configured). add the vendor/jars $LOAD_PATH and Jars.require_jars_lock! - no need for any jbundler files at runtime !"
     method_option :no_deployment, :type => :boolean, :default => false, :desc => 'clears the vendored jars'
@@ -123,18 +123,20 @@ module JBundler
     end
 
     desc 'update', "first `bundle update` is called and if there are no options then the jar dependencies will be updated. for more details see `bundle help update`."
-    method_option :debug, :type => :boolean, :default => false, :desc => 'enable maven debug output (jbundler only).'
+    method_option :debug,   :type => :boolean, :default => false, :desc => 'enable maven debug output (jbundler only).'
     method_option :verbose, :type => :boolean, :default => false, :desc => 'enable maven output (jbundler only).'
+    method_option :quiet,   :type => :boolean
     def update
-      return unless ARGV.size == 1
-        
-      JBundler::LockDown.new( config ).update( options[ :debug ] ,
-                                               options[ :verbose ] )
+      msg = JBundler::LockDown.new( config ).update( options[ :debug ] ,
+                                                     options[ :verbose ] )
 
       config.verbose = ! options[ :quiet ]
       Show.new( config ).show_classpath
-      puts ''
-      puts 'Your jbundle is updated! Use `jbundle show` to see where the bundled jars are installed.'
+      unless options[ :quiet ]
+        puts ''
+        puts 'Your jbundle is updated! Use `jbundle show` to see where the bundled jars are installed.'
+      end
+      puts msg if msg
     end
 
     desc 'show', "first `bundle show` is called and if there are no options then the jar dependencies will be displayed. for more details see `bundle help show`."
