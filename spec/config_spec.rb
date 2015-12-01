@@ -35,7 +35,7 @@ describe JBundler::Config do
       c.jarfile.must_equal File.join( basedir, 'spec', 'Jarfile' )
       c.gemfile.must_equal File.join( basedir, 'spec', 'Gemfile' )
       c.skip.must_equal nil
-      c.settings.must_equal "./.m2/settings.xml"
+      c.settings.must_equal File.expand_path("settings.xml")
       c.offline.must_equal false
       c.work_dir.must_equal File.join( basedir, 'spec','pkg' )
       c.vendor_dir.must_equal File.join( basedir, 'spec', 'vendor', 'jars' )
@@ -138,7 +138,8 @@ describe JBundler::Config do
             c.jarfile.must_equal File.join( pdir, 'JarFile' )
             c.gemfile.must_equal File.join( pdir, 'GemFile' )
             c.skip.must_equal false
-            c.settings.must_equal File.join( pdir, 'Settings.xml' )
+            # names are case insensitive
+            c.settings.downcase.must_equal File.join( pdir, 'Settings.xml' ).downcase
             c.offline.must_equal true
             c.work_dir.must_equal File.join( pdir, 'pkg/work' )
             c.vendor_dir.must_equal File.join( pdir, 'vendor/localjars' )
