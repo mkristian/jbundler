@@ -1,4 +1,5 @@
 language: java
+sudo: false
 before_script:
   - export MAVEN_SKIP_RC=true
 before_script: ./mvnw initialize
