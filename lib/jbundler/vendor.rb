@@ -58,7 +58,7 @@ module JBundler
       end
       ['jbundler.rb', 'jbundle.rb'].each do |filename|
         File.write( File.join( @dir, filename ), 
-                    "ENV['JARS_LOCK'] = File.join( File.dirname( __FILE__ ), 'Jars.lock' )\nrequire 'jars/setup" )
+                    "ENV['JARS_LOCK'] = File.join( File.dirname( __FILE__ ), 'Jars.lock' )\nrequire 'jars/setup'" )
       end
     end
 
