@@ -13,7 +13,7 @@ differences compared to **bundler**
 
 * it is just a development gem - no need for it during runtime. just add ```Jars.require_jars_lock!``` to your code and for older JRuby versions add ```gem 'jar-dependencies', '~> 0.1.11'``` as a runtime dependency.
 * you need to run ```bundle install``` first if any of the gems have jar dependencies.
-* all one command ```jbundle```, see ```jbundle --help``` on the possible options and how to update a single jar, etc.
+* all one command ```jbundle```, see ```jbundle help``` on the possible options and how to update a single jar, etc.
 
 ## get started
 
