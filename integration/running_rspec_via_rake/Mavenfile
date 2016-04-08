@@ -5,6 +5,7 @@ packaging 'pom'
 gemfile
 
 gem 'jbundler', '${jbundler.version}'
+gem! 'bundler', '1.10.6'
 
 plugin( :dependency, '2.8' ) do
   execute_goal( :unpack, :id => 'unpack jruby',
