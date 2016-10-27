@@ -1,4 +1,4 @@
-# jbundler 
+# jbundler
 
 * [![Build Status](https://secure.travis-ci.org/mkristian/jbundler.png)](http://travis-ci.org/mkristian/jbundler) #
 
@@ -11,7 +11,6 @@ manage jar dependencies similar to how **bundler** manages gem dependencies:
 
 differences compared to **bundler**
 
-* it is just a development gem - no need for it during runtime. just add ```Jars.require_jars_lock!``` to your code and for older JRuby versions add ```gem 'jar-dependencies', '~> 0.1.11'``` as a runtime dependency.
 * you need to run ```bundle install``` first if any of the gems have jar dependencies.
 * all one command ```jbundle```, see ```jbundle help``` on the possible options and how to update a single jar, etc.
 
@@ -20,11 +19,21 @@ differences compared to **bundler**
 install JBundler with
 
     jruby -S gem install jbundler
-	
+
 first create a **Jarfile**, something like:
-    
+
 	jar 'org.yaml:snakeyaml', '1.14'
 	jar 'org.slf4j:slf4j-simple', '>1.1'
+
+install jar dependencies
+
+    jruby -S jbundler install
+
+loading the jar files
+
+    require 'jbundler'
+
+it will add all the jar dependencies in the java classpath from the Jarfile.lock
 
 ### Jarfile
 
@@ -81,4 +90,4 @@ Contributing
 meta-fu
 -------
 
-enjoy :) 
+enjoy :)
