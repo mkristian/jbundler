@@ -27,7 +27,7 @@ first create a **Jarfile**, something like:
 
 install jar dependencies
 
-    jruby -S jbundler install
+    jruby -S jbundle install
 
 loading the jar files
 
