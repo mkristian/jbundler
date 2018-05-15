@@ -17,21 +17,25 @@ differences compared to **bundler**
 ## Get started
 
 Install JBundler with:
-
-    jruby -S gem install jbundler
+```bash
+jruby -S gem install jbundler
+```
 
 First, create a **Jarfile**, something like:
-
-	jar 'org.yaml:snakeyaml', '1.14'
-	jar 'org.slf4j:slf4j-simple', '>1.1'
+```bash
+jar 'org.yaml:snakeyaml', '1.14'
+jar 'org.slf4j:slf4j-simple', '>1.1'
+```
 
 Install jar dependencies
-
-    jruby -S jbundle install
+```bash
+jruby -S jbundle install
+```
 
 Loading the jar files
-
-    require 'jbundler'
+```bash
+require 'jbundler'
+```
 
 It will add all the jar dependencies in the java classpath from the `Jarfile.lock`.
 
@@ -41,26 +45,49 @@ More info about the **[Jarfile](https://github.com/torquebox/maven-tools/wiki/Ja
 
 For adding a maven repository see [Jarfile](https://github.com/torquebox/maven-tools/wiki/Jarfile).
 
-# Building the jbundler gem
+## Building the jbundler gem
 
 Running the integration test
 
-    ./mvnw verify
+```bash
+./mvnw verify
+```
 
 Building the gem (see ./pkg)
-
-    ./mvnw package -Dinvoker.skip
+```bash
+./mvnw package -Dinvoker.skip
+```
 
 Or just
+```bash
+gem build jbundler.gemspec
+```
 
-    gem build jbundler.gemspec
+## Usage
 
+Here is an example usage of the AliasEvent class from the snakeyaml package
+
+```ruby
+#test_file.rb
+require 'jbundler'
+require 'java'
+
+java_import 'org.yaml.snakeyaml.events.AliasEvent'
+
+class TestClass
+  def my_method
+    puts AliasEvent.methods
+  end
+end
+
+TestClass.new.my_method
+```
 
 ## Limitations
 
 Since the version resolution happens in two steps - first the gems, and then the jars/poms - it is possible in case of a failure that there is a valid gems/jars version resolution which satisfies all version contraints. So there is plenty of space for improvements (like maven could resolve the gems as well, etc).
 
-# Special thanks
+## Special thanks
 
 The whole project actually started with a controversial discussion on a [pull request on bundler](https://github.com/carlhuda/bundler/pull/1683). This very same pull request were the starting point of that project here. Probably by now there is not much left of the original code, but many thanks to [ANithian](https://github.com/ANithian) for giving the seed of that project.
 
