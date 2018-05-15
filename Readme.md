@@ -55,15 +55,6 @@ Or just
 
     gem build jbundler.gemspec
 
-## Example
-
-*src/example/my_project* has a Gemfile which uses a gem which depends on jar dependency. See *src/example/gem_with_jar/gem_with_jar.gemspec* how the jar gets declared.
-
-Execute *src/example/my_project/info.rb* to see it in action:
-
-      cd src/example/my_project
-      jbundle install
-      bundle exec info.rb
 
 ## Limitations
 
