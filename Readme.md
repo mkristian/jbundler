@@ -51,6 +51,12 @@ Running the integration test
 
 ```bash
 ./mvnw verify
+./mvnw clean verify
+```
+or a single integration test
+```bash
+./mvnw verify -Dinvoker.test=running_rspec_via_rake
+./mvnw clean verify -Dinvoker.test=running_rspec_via_rake
 ```
 
 Building the gem (see ./pkg)

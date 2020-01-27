@@ -4,8 +4,8 @@ gemfile
 
 properties( 'jruby.versions' => "${jruby.version}, 9.0.4.0",
             # just lock the versions
-            'jruby.version' => '1.7.23',
-            'jruby.plugins.version' => '1.1.3' )
+            'jruby.version' => '9.2.9.0',
+            'jruby.plugins.version' => '1.1.8' )
 
 jruby_plugin( :minitest, :minispecDirectory => "spec/*_spec.rb" ) do
   execute_goals(:spec)
