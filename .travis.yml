@@ -6,5 +6,5 @@ before_script: ./mvnw initialize
 script: ./mvnw verify
 jdk:
   - openjdk9
-  - oraclejdk9
-  - oraclejdk10
+  - openjdk10
+  - openjdk11
