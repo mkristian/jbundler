@@ -1,3 +1,4 @@
+require "bundler/gem_tasks"
 task :default => [ :specs ]
 
 desc 'run specs'
