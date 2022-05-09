@@ -1,5 +1,11 @@
 task :default => [ :specs ]
 
+unless Rake::Application.method_defined? :last_comment
+  Rake::Application.module_eval do
+    alias_method :last_comment, :last_description
+  end
+end # Rake 11 compatibility (due rspec/core/rake_task < 3.0)
+
 desc 'run specs'
 task :specs do
   $LOAD_PATH << "spec"
