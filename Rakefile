@@ -1,3 +1,4 @@
+require "bundler/gem_tasks"
 task :default => [ :specs ]
 
 unless Rake::Application.method_defined? :last_comment

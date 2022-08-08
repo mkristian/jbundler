@@ -2,9 +2,9 @@ language: java
 sudo: false
 before_script:
   - export MAVEN_SKIP_RC=true
-before_script: ./mvnw initialize
-script: ./mvnw verify
+before_script: mvn initialize
+script: mvn verify
 jdk:
-  - openjdk7
-  - oraclejdk7
-  - oraclejdk8
+  - openjdk9
+  - openjdk10
+  - openjdk11

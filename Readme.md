@@ -50,18 +50,18 @@ For adding a maven repository see [Jarfile](https://github.com/torquebox/maven-t
 Running the integration test
 
 ```bash
-./mvnw verify
-./mvnw clean verify
+mvn verify
+mvn clean verify
 ```
 or a single integration test
 ```bash
-./mvnw verify -Dinvoker.test=running_rspec_via_rake
-./mvnw clean verify -Dinvoker.test=running_rspec_via_rake
+mvn verify -Dinvoker.test=running_rspec_via_rake
+mvn clean verify -Dinvoker.test=running_rspec_via_rake
 ```
 
 Building the gem (see ./pkg)
 ```bash
-./mvnw package -Dinvoker.skip
+mvn package -Dinvoker.skip
 ```
 
 Or just
