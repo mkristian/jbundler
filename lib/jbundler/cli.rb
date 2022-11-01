@@ -89,6 +89,23 @@ module JBundler
       puts msg if msg
     end
 
+    desc 'init', 'creates an empty Jarfile'
+    def init
+      if File.exists?('Jarfile')
+        puts "Jarfile already exist in this folder"
+        return
+      end
+      example_content = """# Example Usage
+# jar 'org.yaml:snakeyaml', '1.14'
+# jar 'org.slf4j:slf4j-simple', '>1.1'
+"""
+      file = File.open("Jarfile", 'w')
+      file << example_content
+      file.close
+      msg = "Writing new Jarfile to #{Dir.pwd}/Jarfile"
+      puts msg
+    end
+
     desc 'console', 'irb session with gems and/or jars and with lazy jar loading.'
     def console
       # dummy - never executed !!!
